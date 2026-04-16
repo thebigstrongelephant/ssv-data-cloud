@@ -1,0 +1,920 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SSV Data Cloud · 产品演示</title>
+<style>
+  :root {
+    --primary: #1677ff;
+    --primary-light: #e6f4ff;
+    --bg: #f0f2f5;
+    --card-bg: #fff;
+    --text: #1f1f1f;
+    --text-secondary: #666;
+    --border: #e8e8e8;
+    --success: #52c41a;
+    --warning: #faad14;
+    --danger: #ff4d4f;
+    --info: #1677ff;
+    --radius: 12px;
+    --shadow: 0 2px 8px rgba(0,0,0,0.08);
+    --shadow-hover: 0 4px 16px rgba(0,0,0,0.12);
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Microsoft YaHei", sans-serif; background:var(--bg); color:var(--text); line-height:1.6; }
+
+  /* Header */
+  .header { background: linear-gradient(135deg, #1677ff 0%, #0958d9 100%); color:#fff; padding:20px 32px; position:sticky; top:0; z-index:100; box-shadow:0 2px 8px rgba(0,0,0,0.15); }
+  .header-inner { max-width:1400px; margin:0 auto; display:flex; justify-content:space-between; align-items:center; }
+  .header h1 { font-size:22px; font-weight:600; letter-spacing:0.5px; }
+  .header h1 span { font-size:12px; background:rgba(255,255,255,0.2); padding:2px 8px; border-radius:4px; margin-left:8px; vertical-align:middle; }
+  .role-switcher { display:flex; gap:8px; align-items:center; }
+  .role-switcher label { font-size:13px; opacity:0.8; }
+  .role-switcher select { padding:6px 12px; border-radius:6px; border:none; font-size:13px; background:rgba(255,255,255,0.9); cursor:pointer; }
+
+  /* Nav */
+  .nav { background:#fff; border-bottom:1px solid var(--border); padding:0 32px; }
+  .nav-inner { max-width:1400px; margin:0 auto; display:flex; gap:0; }
+  .nav-tab { padding:14px 24px; font-size:14px; color:var(--text-secondary); cursor:pointer; border-bottom:2px solid transparent; transition:all 0.2s; font-weight:500; }
+  .nav-tab:hover { color:var(--primary); }
+  .nav-tab.active { color:var(--primary); border-bottom-color:var(--primary); }
+
+  /* Main */
+  .main { max-width:1400px; margin:0 auto; padding:24px 32px; }
+  .section { display:none; }
+  .section.active { display:block; }
+
+  /* Cards */
+  .card { background:var(--card-bg); border-radius:var(--radius); padding:24px; box-shadow:var(--shadow); margin-bottom:20px; }
+  .card-title { font-size:16px; font-weight:600; margin-bottom:16px; display:flex; align-items:center; gap:8px; }
+  .card-title .icon { font-size:20px; }
+
+  /* Architecture diagram */
+  .arch-diagram { display:flex; flex-direction:column; gap:16px; }
+  .arch-layer { border-radius:var(--radius); padding:20px 24px; position:relative; }
+  .arch-layer.layer3 { background:linear-gradient(135deg, #f0f5ff 0%, #e6f4ff 100%); border:2px solid #91caff; }
+  .arch-layer.layer2 { background:linear-gradient(135deg, #f6ffed 0%, #d9f7be 100%); border:2px solid #b7eb8f; }
+  .arch-layer.layer1 { background:linear-gradient(135deg, #fff7e6 0%, #ffe7ba 100%); border:2px solid #ffd591; }
+  .arch-layer-label { font-size:14px; font-weight:700; margin-bottom:10px; }
+  .arch-layer-desc { font-size:13px; color:var(--text-secondary); margin-bottom:12px; }
+  .arch-modules { display:flex; flex-wrap:wrap; gap:8px; }
+  .arch-module { background:rgba(255,255,255,0.8); border-radius:8px; padding:8px 14px; font-size:12px; border:1px solid rgba(0,0,0,0.06); }
+  .arch-arrow { text-align:center; font-size:20px; color:var(--text-secondary); }
+  .arch-value { background:rgba(255,255,255,0.6); border-radius:8px; padding:8px 14px; font-size:12px; color:var(--text-secondary); margin-top:8px; display:inline-block; }
+
+  /* Stats grid */
+  .stats-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:16px; margin-bottom:20px; }
+  .stat-card { background:var(--card-bg); border-radius:var(--radius); padding:20px; box-shadow:var(--shadow); text-align:center; }
+  .stat-value { font-size:28px; font-weight:700; color:var(--primary); }
+  .stat-label { font-size:13px; color:var(--text-secondary); margin-top:4px; }
+  .stat-change { font-size:12px; margin-top:4px; }
+  .stat-change.up { color:var(--success); }
+  .stat-change.down { color:var(--danger); }
+
+  /* Table */
+  .data-table { width:100%; border-collapse:collapse; font-size:13px; }
+  .data-table th { background:#fafafa; text-align:left; padding:12px 16px; font-weight:600; border-bottom:2px solid var(--border); }
+  .data-table td { padding:12px 16px; border-bottom:1px solid var(--border); }
+  .data-table tr:hover td { background:#fafafa; }
+  .badge { display:inline-block; padding:2px 8px; border-radius:4px; font-size:11px; font-weight:500; }
+  .badge-blue { background:#e6f4ff; color:#1677ff; }
+  .badge-green { background:#f6ffed; color:#52c41a; }
+  .badge-orange { background:#fff7e6; color:#fa8c16; }
+  .badge-red { background:#fff2f0; color:#ff4d4f; }
+  .badge-purple { background:#f9f0ff; color:#722ed1; }
+
+  /* Chat demo */
+  .chat-container { max-width:700px; background:#f5f5f5; border-radius:var(--radius); padding:20px; }
+  .chat-msg { margin-bottom:16px; }
+  .chat-msg.user { text-align:right; }
+  .chat-msg .bubble { display:inline-block; max-width:85%; padding:12px 16px; border-radius:12px; font-size:13px; line-height:1.6; text-align:left; }
+  .chat-msg.user .bubble { background:var(--primary); color:#fff; border-bottom-right-radius:4px; }
+  .chat-msg.bot .bubble { background:#fff; border:1px solid var(--border); border-bottom-left-radius:4px; }
+  .chat-msg .name { font-size:11px; color:var(--text-secondary); margin-bottom:4px; }
+  .chat-result { background:#fafafa; border-radius:8px; padding:12px; margin-top:8px; font-family:monospace; font-size:12px; white-space:pre-wrap; line-height:1.5; border:1px solid #eee; }
+
+  /* App market cards */
+  .app-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(280px, 1fr)); gap:20px; }
+  .app-card { background:var(--card-bg); border-radius:var(--radius); overflow:hidden; box-shadow:var(--shadow); transition:transform 0.2s, box-shadow 0.2s; cursor:pointer; }
+  .app-card:hover { transform:translateY(-4px); box-shadow:var(--shadow-hover); }
+  .app-cover { height:140px; display:flex; align-items:center; justify-content:center; font-size:48px; }
+  .app-cover.c1 { background:linear-gradient(135deg, #1677ff, #69b1ff); }
+  .app-cover.c2 { background:linear-gradient(135deg, #52c41a, #95de64); }
+  .app-cover.c3 { background:linear-gradient(135deg, #722ed1, #b37feb); }
+  .app-cover.c4 { background:linear-gradient(135deg, #fa8c16, #ffc53d); }
+  .app-cover.c5 { background:linear-gradient(135deg, #eb2f96, #ff85c0); }
+  .app-cover.c6 { background:linear-gradient(135deg, #13c2c2, #5cdbd3); }
+  .app-body { padding:16px; }
+  .app-body h3 { font-size:15px; margin-bottom:6px; }
+  .app-body p { font-size:12px; color:var(--text-secondary); margin-bottom:10px; line-height:1.5; }
+  .app-meta { display:flex; justify-content:space-between; align-items:center; font-size:11px; color:var(--text-secondary); }
+  .app-tags { display:flex; gap:6px; margin-bottom:10px; }
+
+  /* Timeline */
+  .timeline { position:relative; padding-left:24px; }
+  .timeline::before { content:''; position:absolute; left:8px; top:4px; bottom:4px; width:2px; background:#e8e8e8; }
+  .timeline-item { position:relative; margin-bottom:20px; }
+  .timeline-item::before { content:''; position:absolute; left:-20px; top:6px; width:12px; height:12px; border-radius:50%; background:var(--primary); border:2px solid #fff; box-shadow:0 0 0 2px var(--primary); }
+  .timeline-item.done::before { background:var(--success); box-shadow:0 0 0 2px var(--success); }
+  .timeline-item.pending::before { background:#d9d9d9; box-shadow:0 0 0 2px #d9d9d9; }
+  .timeline-title { font-size:14px; font-weight:600; }
+  .timeline-desc { font-size:12px; color:var(--text-secondary); margin-top:4px; }
+
+  /* Role-specific notice */
+  .role-notice { background:var(--primary-light); border:1px solid #91caff; border-radius:8px; padding:12px 16px; margin-bottom:20px; font-size:13px; display:flex; align-items:center; gap:8px; }
+
+  /* Chart placeholder */
+  .chart-placeholder { display:flex; align-items:flex-end; gap:6px; height:160px; padding:16px 0; }
+  .chart-bar { flex:1; border-radius:4px 4px 0 0; transition:height 0.5s; position:relative; }
+  .chart-bar .label { position:absolute; bottom:-20px; left:50%; transform:translateX(-50%); font-size:10px; color:var(--text-secondary); white-space:nowrap; }
+  .chart-bar .val { position:absolute; top:-18px; left:50%; transform:translateX(-50%); font-size:10px; font-weight:600; }
+
+  /* Phase cards */
+  .phase-cards { display:grid; grid-template-columns:repeat(3, 1fr); gap:20px; }
+  .phase-card { border-radius:var(--radius); padding:24px; text-align:center; }
+  .phase-card.p1 { background:linear-gradient(135deg, #fff7e6, #ffe7ba); border:2px solid #ffd591; }
+  .phase-card.p2 { background:linear-gradient(135deg, #f6ffed, #d9f7be); border:2px solid #b7eb8f; }
+  .phase-card.p3 { background:linear-gradient(135deg, #f0f5ff, #e6f4ff); border:2px solid #91caff; }
+  .phase-card h3 { font-size:16px; margin-bottom:8px; }
+  .phase-card .phase-time { font-size:12px; color:var(--text-secondary); margin-bottom:12px; }
+  .phase-card ul { text-align:left; font-size:13px; list-style:none; }
+  .phase-card ul li { padding:4px 0; }
+  .phase-card ul li::before { content:'✓ '; color:var(--success); font-weight:bold; }
+  .phase-value { background:rgba(255,255,255,0.7); border-radius:8px; padding:10px; margin-top:12px; font-size:12px; color:var(--text-secondary); }
+
+  /* Footer */
+  .footer { text-align:center; padding:40px 32px; color:var(--text-secondary); font-size:12px; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-inner">
+    <h1>☁️ SSV Data Cloud <span>v3.0 Demo</span></h1>
+    <div class="role-switcher">
+      <label>切换角色视角：</label>
+      <select id="roleSwitcher" onchange="switchRole(this.value)">
+        <option value="boss">👔 管理者/老板</option>
+        <option value="pm">📋 产品经理</option>
+        <option value="data">📊 数据同学</option>
+        <option value="ops">🎯 运营</option>
+      </select>
+    </div>
+  </div>
+</div>
+
+<div class="nav">
+  <div class="nav-inner">
+    <div class="nav-tab active" onclick="switchTab('overview')">🏠 架构总览</div>
+    <div class="nav-tab" onclick="switchTab('layer1')">📥 第一层·信息流</div>
+    <div class="nav-tab" onclick="switchTab('layer2')">📊 第二层·数据层</div>
+    <div class="nav-tab" onclick="switchTab('layer3')">☁️ 第三层·应用Cloud</div>
+    <div class="nav-tab" onclick="switchTab('roadmap')">🗺️ 路线图</div>
+  </div>
+</div>
+
+<div class="main">
+
+  <!-- ============ 架构总览 ============ -->
+  <div class="section active" id="sec-overview">
+    <div class="role-notice" id="roleNotice">
+      👔 当前视角：<strong>管理者/老板</strong> — 关注全局业务进展和资源投入产出
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="icon">☁️</span> SSV Data Cloud · 三层架构</div>
+      <div class="arch-diagram">
+        <div class="arch-layer layer3">
+          <div class="arch-layer-label">☁️ 第三层 · 应用 Cloud</div>
+          <div class="arch-layer-desc">不同角色看到定制化应用视图，支持问答、机器人、决策追溯</div>
+          <div class="arch-modules">
+            <div class="arch-module">🤖 数据问答机器人</div>
+            <div class="arch-module">📊 管理者全景仪表盘</div>
+            <div class="arch-module">🔍 产品决策追溯</div>
+            <div class="arch-module">📋 发版影响预览</div>
+            <div class="arch-module">🎯 运营策略助手</div>
+            <div class="arch-module">🚨 异动归因看板</div>
+          </div>
+          <div class="arch-value">💎 独立价值：角色化定制 + 智能问答 + 历史决策追溯</div>
+        </div>
+        <div class="arch-arrow">⬆ 调用 数据API · 关联分析API · AI脚手架</div>
+        <div class="arch-layer layer2">
+          <div class="arch-layer-label">📊 第二层 · 业务数据层</div>
+          <div class="arch-layer-desc">数据标准化清洗 + 口径引擎 + 关联分析引擎 + PM/业务确认标记</div>
+          <div class="arch-modules">
+            <div class="arch-module">🏷️ 全量指标名词库</div>
+            <div class="arch-module">⚙️ 口径引擎</div>
+            <div class="arch-module">🔗 关联分析引擎</div>
+            <div class="arch-module">🗄️ TDW 四层底仓</div>
+            <div class="arch-module">✅ PM/业务确认标记</div>
+          </div>
+          <div class="arch-value">💎 独立价值：各业务线生成数据看板 + 统一口径 + 标准化底板</div>
+        </div>
+        <div class="arch-arrow">⬆ 基于 标准化数据 · 口径定义 · 关联关系</div>
+        <div class="arch-layer layer1">
+          <div class="arch-layer-label">📥 第一层 · 研发设计层（基础业务信息流）</div>
+          <div class="arch-layer-desc">PM/研发/设计共同完成业务信息录入，管理者直接受益</div>
+          <div class="arch-modules">
+            <div class="arch-module">📋 产品进展（TAPD同步）</div>
+            <div class="arch-module">🚀 发版记录</div>
+            <div class="arch-module">🧑‍💻 研发投入</div>
+            <div class="arch-module">🎨 设计信息</div>
+            <div class="arch-module">📈 经营概况</div>
+            <div class="arch-module">🔒 权限底座(S1-S5)</div>
+          </div>
+          <div class="arch-value">💎 独立价值：管理者一页看全部业务进展 + 上线功能数 + 人力投入</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 渐进式价值 -->
+    <div class="card">
+      <div class="card-title"><span class="icon">📈</span> 渐进式价值交付</div>
+      <div class="phase-cards">
+        <div class="phase-card p1">
+          <h3>Step 1 · 信息流录入</h3>
+          <div class="phase-time">6-8 周</div>
+          <ul>
+            <li>业务全景注册</li>
+            <li>权限底座搭建</li>
+            <li>TAPD/发版信息同步</li>
+          </ul>
+          <div class="phase-value">✨ 管理者看到全部业务进展全貌，清晰知道上线了多少功能</div>
+        </div>
+        <div class="phase-card p2">
+          <h3>Step 2 · 数据清洗+底板</h3>
+          <div class="phase-time">8-10 周</div>
+          <ul>
+            <li>全量数据标准化清洗</li>
+            <li>口径引擎上线</li>
+            <li>关联分析 v1</li>
+            <li>业务数据看板</li>
+          </ul>
+          <div class="phase-value">✨ 各业务线有标准化底板 + 统一口径 + 基础看板</div>
+        </div>
+        <div class="phase-card p3">
+          <h3>Step 3 · 应用Cloud</h3>
+          <div class="phase-time">10-14 周</div>
+          <ul>
+            <li>应用市场上线</li>
+            <li>角色化视图</li>
+            <li>数据问答机器人</li>
+            <li>AI应用生态</li>
+          </ul>
+          <div class="phase-value">✨ 不同角色定制化 + 智能问答 + 决策追溯</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 第一层·信息流 ============ -->
+  <div class="section" id="sec-layer1">
+    <div class="role-notice" id="roleNotice1">
+      👔 当前视角：<strong>管理者</strong> — 信息流让您一页看到全部业务进展
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-value">7</div>
+        <div class="stat-label">已注册业务线</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">42</div>
+        <div class="stat-label">本月上线功能数</div>
+        <div class="stat-change up">↑ 比上月 +12</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">12 次</div>
+        <div class="stat-label">本月发版次数</div>
+        <div class="stat-change up">↑ +3</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">42 人·月</div>
+        <div class="stat-label">研发资源投入</div>
+        <div class="stat-change down">↓ -2 人·月</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="icon">📋</span> 各业务线进展总览</div>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>业务线</th>
+            <th>本月需求数</th>
+            <th>已上线</th>
+            <th>进行中</th>
+            <th>发版次数</th>
+            <th>人力投入</th>
+            <th>DAU</th>
+            <th>DAU 环比</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>数字关爱平台</strong></td>
+            <td>18</td>
+            <td><span class="badge badge-green">14</span></td>
+            <td><span class="badge badge-blue">4</span></td>
+            <td>3</td>
+            <td>18 人·月</td>
+            <td>128,500</td>
+            <td><span class="badge badge-green">+20.3%</span></td>
+          </tr>
+          <tr>
+            <td><strong>善治美</strong></td>
+            <td>12</td>
+            <td><span class="badge badge-green">9</span></td>
+            <td><span class="badge badge-blue">3</span></td>
+            <td>2</td>
+            <td>12 人·月</td>
+            <td>45,200</td>
+            <td><span class="badge badge-green">+8.1%</span></td>
+          </tr>
+          <tr>
+            <td><strong>文化实验室</strong></td>
+            <td>6</td>
+            <td><span class="badge badge-green">5</span></td>
+            <td><span class="badge badge-blue">1</span></td>
+            <td>1</td>
+            <td>5 人·月</td>
+            <td>12,800</td>
+            <td><span class="badge badge-red">-2.3%</span></td>
+          </tr>
+          <tr>
+            <td><strong>公益补贴</strong></td>
+            <td>8</td>
+            <td><span class="badge badge-green">7</span></td>
+            <td><span class="badge badge-blue">1</span></td>
+            <td>2</td>
+            <td>4 人·月</td>
+            <td>38,900</td>
+            <td><span class="badge badge-green">+5.7%</span></td>
+          </tr>
+          <tr>
+            <td><strong>帮帮卡</strong></td>
+            <td>4</td>
+            <td><span class="badge badge-green">3</span></td>
+            <td><span class="badge badge-blue">1</span></td>
+            <td>2</td>
+            <td>2 人·月</td>
+            <td>8,500</td>
+            <td><span class="badge badge-green">+3.2%</span></td>
+          </tr>
+          <tr>
+            <td><strong>关爱礼物</strong></td>
+            <td>3</td>
+            <td><span class="badge badge-green">3</span></td>
+            <td><span class="badge badge-blue">0</span></td>
+            <td>1</td>
+            <td>1 人·月</td>
+            <td>5,200</td>
+            <td><span class="badge badge-green">+1.1%</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="icon">📈</span> 各业务线 DAU 对比</div>
+      <div class="chart-placeholder">
+        <div class="chart-bar" style="height:90%;background:linear-gradient(180deg,#1677ff,#69b1ff)"><div class="val" style="color:#1677ff">128.5K</div><div class="label">关爱平台</div></div>
+        <div class="chart-bar" style="height:35%;background:linear-gradient(180deg,#52c41a,#95de64)"><div class="val" style="color:#52c41a">45.2K</div><div class="label">善治美</div></div>
+        <div class="chart-bar" style="height:30%;background:linear-gradient(180deg,#fa8c16,#ffc53d)"><div class="val" style="color:#fa8c16">38.9K</div><div class="label">公益补贴</div></div>
+        <div class="chart-bar" style="height:10%;background:linear-gradient(180deg,#722ed1,#b37feb)"><div class="val" style="color:#722ed1">12.8K</div><div class="label">文化实验室</div></div>
+        <div class="chart-bar" style="height:7%;background:linear-gradient(180deg,#eb2f96,#ff85c0)"><div class="val" style="color:#eb2f96">8.5K</div><div class="label">帮帮卡</div></div>
+        <div class="chart-bar" style="height:4%;background:linear-gradient(180deg,#13c2c2,#5cdbd3)"><div class="val" style="color:#13c2c2">5.2K</div><div class="label">关爱礼物</div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="icon">🚨</span> 需要关注</div>
+      <div style="display:flex;flex-direction:column;gap:12px;">
+        <div style="padding:12px 16px;background:#fff2f0;border-radius:8px;border-left:4px solid #ff4d4f;font-size:13px;">
+          <strong>⚠️ 文化实验室 DAU 连续 2 周下降</strong><br>
+          <span style="color:#666">当前 12,800（-2.3%），建议排查近期变更</span>
+        </div>
+        <div style="padding:12px 16px;background:#fff7e6;border-radius:8px;border-left:4px solid #faad14;font-size:13px;">
+          <strong>📌 核销商户关联率仍为 41.4%</strong><br>
+          <span style="color:#666">58.6% 核销发生在未入驻的外部商户，数据追踪存在盲区</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 第二层·数据层 ============ -->
+  <div class="section" id="sec-layer2">
+    <div class="role-notice" id="roleNotice2">
+      👔 当前视角：<strong>管理者</strong> — 数据层为您提供标准化底板和统一口径
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-value">156</div>
+        <div class="stat-label">已定义指标数</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">89%</div>
+        <div class="stat-label">口径确认率</div>
+        <div class="stat-change up">↑ 本周 +4%</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">1,247</div>
+        <div class="stat-label">TAPD-指标关联数</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">3</div>
+        <div class="stat-label">口径冲突待解决</div>
+        <div class="stat-change down">需处理</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="icon">🏷️</span> 指标名词库 · 部分示例</div>
+      <table class="data-table">
+        <thead>
+          <tr><th>指标名称</th><th>业务线</th><th>口径状态</th><th>敏感等级</th><th>负责人</th><th>最近更新</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>DAU</strong></td><td><span class="badge badge-blue">数字关爱平台</span></td><td><span class="badge badge-green">已确认</span></td><td><span class="badge badge-blue">S2 内部</span></td><td>数据团队</td><td>04-10</td></tr>
+          <tr><td><strong>领券率</strong></td><td><span class="badge badge-blue">数字关爱平台</span></td><td><span class="badge badge-green">已确认</span></td><td><span class="badge badge-blue">S2 内部</span></td><td>数据团队</td><td>04-08</td></tr>
+          <tr><td><strong>核销率</strong></td><td><span class="badge badge-blue">数字关爱平台</span></td><td><span class="badge badge-green">已确认</span></td><td><span class="badge badge-orange">S3 敏感</span></td><td>数据团队</td><td>04-10</td></tr>
+          <tr><td><strong>自领率</strong></td><td><span class="badge badge-blue">数字关爱平台</span></td><td><span class="badge badge-green">已确认</span></td><td><span class="badge badge-orange">S3 敏感</span></td><td>weima</td><td>04-10</td></tr>
+          <tr><td><strong>商户覆盖率</strong></td><td><span class="badge badge-blue">数字关爱平台</span></td><td><span class="badge badge-orange">待确认</span></td><td><span class="badge badge-blue">S2 内部</span></td><td>数据团队</td><td>04-05</td></tr>
+          <tr><td><strong>开村数</strong></td><td><span class="badge badge-green">善治美</span></td><td><span class="badge badge-green">已确认</span></td><td><span class="badge badge-blue">S2 内部</span></td><td>coffeezhong</td><td>04-12</td></tr>
+          <tr><td><strong>非遗项目覆盖数</strong></td><td><span class="badge badge-purple">文化实验室</span></td><td><span class="badge badge-red">口径冲突</span></td><td><span class="badge badge-blue">S2 内部</span></td><td>—</td><td>04-01</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="icon">🔗</span> 关联分析 · 最近发版影响</div>
+      <table class="data-table">
+        <thead>
+          <tr><th>发版</th><th>日期</th><th>包含需求</th><th>关联指标</th><th>实际影响</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>v2.7.0</strong></td><td>04-14</td>
+            <td>TAPD#12345 公益首页改版<br><span style="color:#999">TAPD#12360 推荐算法优化</span></td>
+            <td>DAU <span class="badge badge-red">强</span><br>领券率 <span class="badge badge-orange">中</span></td>
+            <td><span class="badge badge-green">DAU +20.3%</span><br><span class="badge badge-orange">领券率 -6.3pp（待排查）</span></td>
+          </tr>
+          <tr>
+            <td><strong>v2.6.9</strong></td><td>04-07</td>
+            <td>TAPD#12200 乡村公示灰度</td>
+            <td>善治美DAU <span class="badge badge-red">强</span></td>
+            <td><span class="badge badge-green">善治美DAU +8.1%</span></td>
+          </tr>
+          <tr>
+            <td><strong>v2.6.8</strong></td><td>03-31</td>
+            <td>TAPD#12100 版权字体替换</td>
+            <td>无指标关联</td>
+            <td>无显著变化</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ============ 第三层·应用Cloud ============ -->
+  <div class="section" id="sec-layer3">
+    <div class="role-notice" id="roleNotice3">
+      👔 当前视角：<strong>管理者</strong> — 以下是为您推荐的应用
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="icon">☁️</span> 应用市场</div>
+      <div class="app-grid">
+        <div class="app-card" onclick="showAppDemo('bot')">
+          <div class="app-cover c1">🤖</div>
+          <div class="app-body">
+            <div class="app-tags"><span class="badge badge-blue">官方</span><span class="badge badge-green">S2 内部</span></div>
+            <h3>数据问答机器人</h3>
+            <p>在企微中 @机器人 即可查询数据异动、指标变化、归因分析。支持自然语言提问。</p>
+            <div class="app-meta"><span>平台团队</span><span>👁 1,293 👤 366</span></div>
+          </div>
+        </div>
+        <div class="app-card" onclick="showAppDemo('dashboard')">
+          <div class="app-cover c2">📊</div>
+          <div class="app-body">
+            <div class="app-tags"><span class="badge badge-blue">官方</span><span class="badge badge-green">S2 内部</span></div>
+            <h3>管理者全景仪表盘</h3>
+            <p>一页查看全部业务线的核心指标、资源投入、发版影响。数据实时更新。</p>
+            <div class="app-meta"><span>平台团队</span><span>👁 486 👤 128</span></div>
+          </div>
+        </div>
+        <div class="app-card" onclick="showAppDemo('trace')">
+          <div class="app-cover c3">🔍</div>
+          <div class="app-body">
+            <div class="app-tags"><span class="badge badge-blue">官方</span><span class="badge badge-orange">S3 敏感</span></div>
+            <h3>产品决策追溯</h3>
+            <p>搜索任意功能模块，查看历史需求、上线效果、决策点和经验教训，辅助新需求决策。</p>
+            <div class="app-meta"><span>平台团队</span><span>👁 328 👤 89</span></div>
+          </div>
+        </div>
+        <div class="app-card" onclick="showAppDemo('release')">
+          <div class="app-cover c4">📋</div>
+          <div class="app-body">
+            <div class="app-tags"><span class="badge badge-blue">官方</span><span class="badge badge-green">S2 内部</span></div>
+            <h3>发版影响预览</h3>
+            <p>每次发版前自动分析关联指标和预估影响，附带历史同类参照和风险提示。</p>
+            <div class="app-meta"><span>平台团队</span><span>👁 412 👤 156</span></div>
+          </div>
+        </div>
+        <div class="app-card">
+          <div class="app-cover c5">🎯</div>
+          <div class="app-body">
+            <div class="app-tags"><span class="badge badge-blue">官方</span><span class="badge badge-orange">S3 敏感</span></div>
+            <h3>运营策略助手</h3>
+            <p>基于地域/人群差异数据，自动诊断薄弱环节并推荐差异化运营策略。</p>
+            <div class="app-meta"><span>平台团队</span><span>👁 256 👤 67</span></div>
+          </div>
+        </div>
+        <div class="app-card">
+          <div class="app-cover c6">🚨</div>
+          <div class="app-body">
+            <div class="app-tags"><span class="badge badge-blue">官方</span><span class="badge badge-green">S2 内部</span></div>
+            <h3>异动归因看板</h3>
+            <p>指标异动时自动告警，关联近期发版和TAPD变更，一键溯源到具体原因。</p>
+            <div class="app-meta"><span>平台团队</span><span>👁 589 👤 201</span></div>
+          </div>
+        </div>
+        <div class="app-card">
+          <div class="app-cover c1" style="opacity:0.7">📝</div>
+          <div class="app-body">
+            <div class="app-tags"><span class="badge badge-purple">团队</span><span class="badge badge-green">S2 内部</span></div>
+            <h3>关爱券运营周报</h3>
+            <p>自动生成数字关爱平台每周运营数据报告，含核心指标、活动效果、商户动态。</p>
+            <div class="app-meta"><span>coffeezhong</span><span>👁 189 👤 42</span></div>
+          </div>
+        </div>
+        <div class="app-card">
+          <div class="app-cover c2" style="opacity:0.7">🏘️</div>
+          <div class="app-body">
+            <div class="app-tags"><span class="badge badge-purple">团队</span><span class="badge badge-green">S2 内部</span></div>
+            <h3>善治美开村追踪</h3>
+            <p>追踪善治美项目开村进展、村支书认证情况、乡村公示效果。</p>
+            <div class="app-meta"><span>bephenwang</span><span>👁 95 👤 28</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- App Demo Modal -->
+    <div id="appDemoArea" style="display:none;">
+      <div class="card" id="demoBot" style="display:none;">
+        <div class="card-title"><span class="icon">🤖</span> 数据问答机器人 · 交互演示</div>
+        <div class="chat-container">
+          <div class="chat-msg user"><div class="name">weima</div><div class="bubble">今天 DAU 暴涨了，具体情况是什么？</div></div>
+          <div class="chat-msg bot">
+            <div class="name">📊 SSV 数据机器人</div>
+            <div class="bubble">
+              已为您分析 DAU 异动情况：
+              <div class="chat-result">📊 DAU 异动分析
+━━━━━━━━━━━━━━━━━━━━━━
+今日 DAU: 128,500（+20.3%）
+
+🔍 暴涨来源拆解：
+├─ 数字关爱平台 +15.2% ← 主要贡献
+│  └─ 原因：公益首页改版上线
+│  └─ TAPD#12345 · PM: coffeezhong
+├─ 善治美 +3.8%
+│  └─ 乡村公示功能灰度放量
+└─ 其他业务 +1.3%（正常波动）
+
+💰 资金指标同步变化：
+├─ 领券量 +18.7%
+├─ 核销率 持平（32.1%）
+└─ GMV +12.4%</div>
+            </div>
+          </div>
+          <div class="chat-msg user"><div class="name">weima</div><div class="bubble">领券率为什么反而下降了？</div></div>
+          <div class="chat-msg bot">
+            <div class="name">📊 SSV 数据机器人</div>
+            <div class="bubble">
+              领券率下降的归因分析：
+              <div class="chat-result">🔍 领券率下降归因
+━━━━━━━━━━━━━━━━━━━━━━
+领券率：18.2%（昨日 24.5%，-6.3pp）
+
+关联变更：
+① [强关联] v2.7.0 发版
+   └─ TAPD#12980 领券页面重构
+   └─ 可能原因：领券按钮位置变更
+② [中关联] "春日关爱季"活动下线
+   └─ 活动期间领券率偏高
+   └─ 下线后回归基线属正常
+
+💡 建议：
+· 优先排查 TAPD#12980 按钮交互
+· 扣除活动影响后基线约 20-21%</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" id="demoTrace" style="display:none;">
+        <div class="card-title"><span class="icon">🔍</span> 产品决策追溯 · 交互演示</div>
+        <div style="background:#f5f5f5;border-radius:8px;padding:16px;margin-bottom:16px;">
+          <input type="text" value="核销流程 历史需求" style="width:100%;padding:10px 16px;border:1px solid #d9d9d9;border-radius:8px;font-size:14px;" readonly>
+        </div>
+        <div class="timeline">
+          <div class="timeline-item done">
+            <div class="timeline-title">TAPD#10455 扫码核销优化 <span class="badge badge-green">+效果显著</span></div>
+            <div class="timeline-desc">
+              2026-02 · PM: weima<br>
+              效果：核销时长 8s → 3s · 决策：手动输入改为扫码<br>
+              发现：老年用户扫码成功率较低（68%）
+            </div>
+          </div>
+          <div class="timeline-item done">
+            <div class="timeline-title">TAPD#9102 核销地图导航 <span class="badge badge-orange">效果一般</span></div>
+            <div class="timeline-desc">
+              2025-11 · PM: coffeezhong<br>
+              效果：核销率无显著变化 · 决策：增加"附近核销点"<br>
+              发现：使用率仅 4.2%，入口位置太深
+            </div>
+          </div>
+          <div class="timeline-item done">
+            <div class="timeline-title">TAPD#8801 核销流程简化 v1 <span class="badge badge-green">+效果显著</span></div>
+            <div class="timeline-desc">
+              2025-08 · PM: bephenwang<br>
+              效果：核销率 28.5% → 32.1%（+3.6pp）· 决策：去掉二次确认弹窗<br>
+              发现：商户端误核销率上升 0.3%
+            </div>
+          </div>
+        </div>
+        <div style="background:#f0f5ff;border-radius:8px;padding:12px 16px;margin-top:16px;font-size:13px;">
+          💡 <strong>系统建议：</strong>核销率当前 32.1%（历史峰值 34.8%）。主要瓶颈：老年用户群体 + 商户端培训。
+        </div>
+      </div>
+
+      <div class="card" id="demoDashboard" style="display:none;">
+        <div class="card-title"><span class="icon">📊</span> 管理者全景仪表盘</div>
+        <!-- KPI strip -->
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px;">
+          <div style="background:#f0f5ff;border-radius:8px;padding:12px 16px;text-align:center;">
+            <div style="font-size:11px;color:#666;">全业务总 DAU</div>
+            <div style="font-size:24px;font-weight:700;color:#1677ff;">239.1K</div>
+            <div style="font-size:11px;color:#52c41a;">↑ 12.8%</div>
+          </div>
+          <div style="background:#f6ffed;border-radius:8px;padding:12px 16px;text-align:center;">
+            <div style="font-size:11px;color:#666;">本月上线功能</div>
+            <div style="font-size:24px;font-weight:700;color:#52c41a;">42</div>
+            <div style="font-size:11px;color:#52c41a;">↑ +12</div>
+          </div>
+          <div style="background:#fff7e6;border-radius:8px;padding:12px 16px;text-align:center;">
+            <div style="font-size:11px;color:#666;">研发资源投入</div>
+            <div style="font-size:24px;font-weight:700;color:#fa8c16;">42 人·月</div>
+            <div style="font-size:11px;color:#ff4d4f;">↓ -2</div>
+          </div>
+        </div>
+        <!-- 业务表 -->
+        <div style="font-size:14px;font-weight:600;margin-bottom:8px;">📈 各业务线概览</div>
+        <table class="data-table">
+          <thead><tr><th>业务线</th><th>DAU</th><th>环比</th><th>发版</th><th>人力</th><th>状态</th></tr></thead>
+          <tbody>
+            <tr><td><strong>数字关爱平台</strong></td><td>128,500</td><td><span class="badge badge-green">+20.3%</span></td><td>3次</td><td>18人·月</td><td>🟢 增长</td></tr>
+            <tr><td><strong>善治美</strong></td><td>45,200</td><td><span class="badge badge-green">+8.1%</span></td><td>2次</td><td>12人·月</td><td>🟢 增长</td></tr>
+            <tr><td><strong>公益补贴</strong></td><td>38,900</td><td><span class="badge badge-green">+5.7%</span></td><td>1次</td><td>4人·月</td><td>🔵 稳定</td></tr>
+            <tr><td><strong>文化实验室</strong></td><td>12,800</td><td><span class="badge badge-red">-2.3%</span></td><td>1次</td><td>5人·月</td><td>🔴 下降</td></tr>
+            <tr><td><strong>帮帮卡</strong></td><td>8,500</td><td><span class="badge badge-green">+3.2%</span></td><td>2次</td><td>2人·月</td><td>🔵 稳定</td></tr>
+            <tr><td><strong>关爱礼物</strong></td><td>5,200</td><td><span class="badge badge-green">+1.1%</span></td><td>1次</td><td>1人·月</td><td>🔵 稳定</td></tr>
+          </tbody>
+        </table>
+        <!-- 产品波动 -->
+        <div style="font-size:14px;font-weight:600;margin:16px 0 8px;">📉 产品关键指标波动</div>
+        <table class="data-table">
+          <thead><tr><th>指标</th><th>业务线</th><th>本周</th><th>上周</th><th>变化</th><th>关联变更</th></tr></thead>
+          <tbody>
+            <tr><td><strong>DAU</strong></td><td>关爱平台</td><td>128,500</td><td>106,800</td><td><span class="badge badge-green">+20.3%</span></td><td>TAPD#12345 公益首页改版</td></tr>
+            <tr><td><strong>领券率</strong></td><td>关爱平台</td><td>18.2%</td><td>24.5%</td><td><span class="badge badge-red">-6.3pp ⚠️</span></td><td>TAPD#12980 领券页面重构</td></tr>
+            <tr><td><strong>核销率</strong></td><td>关爱平台</td><td>32.1%</td><td>31.8%</td><td><span class="badge badge-green">+0.3pp</span></td><td>无明显关联</td></tr>
+            <tr><td><strong>DAU</strong></td><td>善治美</td><td>45,200</td><td>41,800</td><td><span class="badge badge-green">+8.1%</span></td><td>TAPD#12200 乡村公示灰度</td></tr>
+            <tr><td><strong>DAU</strong></td><td>文化实验室</td><td>12,800</td><td>13,100</td><td><span class="badge badge-red">-2.3% ⚠️</span></td><td>连续2周下降，待排查</td></tr>
+          </tbody>
+        </table>
+        <!-- 近期重点 -->
+        <div style="font-size:14px;font-weight:600;margin:16px 0 8px;">🎯 近期重点优化</div>
+        <div style="border-left:3px solid #52c41a;padding-left:12px;margin-bottom:10px;">
+          <div style="font-size:13px;font-weight:600;">v2.7.0 · 公益首页改版 <span class="badge badge-green">DAU +20.3%</span></div>
+          <div style="font-size:11px;color:#999;">04-14 · PM: coffeezhong · TAPD#12345</div>
+        </div>
+        <div style="border-left:3px solid #ff4d4f;padding-left:12px;margin-bottom:10px;">
+          <div style="font-size:13px;font-weight:600;">v2.7.0 · 领券页面重构 <span class="badge badge-red">领券率 -6.3pp</span></div>
+          <div style="font-size:11px;color:#999;">04-14 · PM: bephenwang · TAPD#12980 · 建议紧急排查</div>
+        </div>
+        <div style="border-left:3px solid #52c41a;padding-left:12px;margin-bottom:10px;">
+          <div style="font-size:13px;font-weight:600;">v2.6.9 · 乡村公示灰度 <span class="badge badge-green">善治美 +8.1%</span></div>
+          <div style="font-size:11px;color:#999;">04-07 · PM: weima · TAPD#12200 · 效果超预期</div>
+        </div>
+        <div style="border-left:3px solid #1677ff;padding-left:12px;margin-bottom:10px;">
+          <div style="font-size:13px;font-weight:600;">即将发版 · v2.7.1 <span class="badge badge-blue">预计 04-16</span></div>
+          <div style="font-size:11px;color:#999;">3个需求 · 预计影响 DAU/商户数/领券量</div>
+        </div>
+        <!-- 数据情况 -->
+        <div style="font-size:14px;font-weight:600;margin:16px 0 8px;">💰 核心业务数据（数字关爱平台）</div>
+        <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:16px;">
+          <div style="background:#f0f5ff;border-radius:8px;padding:10px 14px;">
+            <div style="font-size:11px;color:#666;">本月 GMV</div>
+            <div style="font-size:20px;font-weight:700;color:#1677ff;">¥2,847万</div>
+            <div style="font-size:11px;color:#52c41a;">↑ +18.4%</div>
+          </div>
+          <div style="background:#f6ffed;border-radius:8px;padding:10px 14px;">
+            <div style="font-size:11px;color:#666;">领券量</div>
+            <div style="font-size:20px;font-weight:700;color:#52c41a;">89.2万张</div>
+            <div style="font-size:11px;color:#52c41a;">↑ +15.7%</div>
+          </div>
+          <div style="background:#fff7e6;border-radius:8px;padding:10px 14px;">
+            <div style="font-size:11px;color:#666;">核销率</div>
+            <div style="font-size:20px;font-weight:700;color:#fa8c16;">32.1%</div>
+            <div style="font-size:11px;color:#52c41a;">↑ +0.3pp</div>
+          </div>
+          <div style="background:#f9f0ff;border-radius:8px;padding:10px 14px;">
+            <div style="font-size:11px;color:#666;">受益人数</div>
+            <div style="font-size:20px;font-weight:700;color:#722ed1;">34.6万人</div>
+            <div style="font-size:11px;color:#52c41a;">↑ +8.2%</div>
+          </div>
+        </div>
+        <!-- 告警 -->
+        <div style="font-size:14px;font-weight:600;margin-bottom:8px;">🚨 需要关注</div>
+        <div style="padding:10px 14px;background:#fff2f0;border-radius:8px;border-left:4px solid #ff4d4f;font-size:12px;margin-bottom:8px;">
+          <strong>🔴 领券率异常下降 -6.3pp</strong><br>关联 TAPD#12980 领券页面重构，建议紧急排查按钮交互
+        </div>
+        <div style="padding:10px 14px;background:#fff2f0;border-radius:8px;border-left:4px solid #ff4d4f;font-size:12px;margin-bottom:8px;">
+          <strong>🔴 文化实验室 DAU 连续2周下降</strong><br>当前12,800（-2.3%），可能为内容运营不足
+        </div>
+        <div style="padding:10px 14px;background:#fff7e6;border-radius:8px;border-left:4px solid #faad14;font-size:12px;margin-bottom:8px;">
+          <strong>🟡 核销商户关联率停滞 41.4%</strong><br>58.6%核销在未入驻外部商户，数据追踪盲区
+        </div>
+        <div style="padding:10px 14px;background:#f6ffed;border-radius:8px;border-left:4px solid #52c41a;font-size:12px;">
+          <strong>🟢 乡村公示灰度效果超预期</strong><br>善治美DAU +8.1%，建议加速全量发布
+        </div>
+      </div>
+
+      <div class="card" id="demoRelease" style="display:none;">
+        <div class="card-title"><span class="icon">📋</span> 发版影响预览 · 交互演示</div>
+        <div style="background:#f5f5f5;border-radius:8px;padding:16px;margin-bottom:16px;font-size:14px;font-weight:600;">
+          📋 发版影响预览 · v2.7.1（即将发版：2026-04-16 14:00）
+        </div>
+        <table class="data-table">
+          <thead><tr><th>TAPD</th><th>需求</th><th>关联指标</th><th>关联强度</th><th>历史参照</th></tr></thead>
+          <tbody>
+            <tr>
+              <td>#13001</td><td>首页推荐优化</td>
+              <td>DAU<br>留存率<br>领券率</td>
+              <td><span class="badge badge-red">强</span><br><span class="badge badge-orange">中</span><br><span class="badge badge-blue">弱</span></td>
+              <td>同类"首页优化"历史平均 DAU +5-12%</td>
+            </tr>
+            <tr>
+              <td>#13002</td><td>商户入驻简化</td>
+              <td>商户数<br>核销率</td>
+              <td><span class="badge badge-red">强</span><br><span class="badge badge-orange">中</span></td>
+              <td>同类需求平均新增 8-15 家/周</td>
+            </tr>
+            <tr>
+              <td>#13003</td><td>修复领券bug</td>
+              <td>领券量<br>投诉率</td>
+              <td><span class="badge badge-red">强</span><br><span class="badge badge-orange">中</span></td>
+              <td>bug修复后领券恢复率 95%+</td>
+            </tr>
+          </tbody>
+        </table>
+        <div style="background:#fff7e6;border-radius:8px;padding:12px 16px;margin-top:16px;font-size:13px;border-left:4px solid #faad14;">
+          ⚠️ <strong>风险提示：</strong>#13001 影响首页核心链路，建议灰度发布。
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 路线图 ============ -->
+  <div class="section" id="sec-roadmap">
+    <div class="card">
+      <div class="card-title"><span class="icon">🗺️</span> SSV Data Cloud · 分阶段路线图</div>
+      <div class="phase-cards">
+        <div class="phase-card p1">
+          <h3>🟡 Phase 1 · 信息流</h3>
+          <div class="phase-time">6-8 周</div>
+          <ul>
+            <li>业务全景注册</li>
+            <li>权限底座 + WA 对接</li>
+            <li>TAPD/发版信息同步</li>
+            <li>设计/产品信息录入</li>
+          </ul>
+          <div class="phase-value">
+            <strong>做什么：</strong>全部业务信息归集到统一平台<br>
+            <strong>产生的价值：</strong>管理者一页看全部业务进展 + 上线功能数 + 资源投入
+          </div>
+        </div>
+        <div class="phase-card p2">
+          <h3>🟢 Phase 2 · 数据层</h3>
+          <div class="phase-time">8-10 周</div>
+          <ul>
+            <li>全量数据标准化清洗</li>
+            <li>口径引擎上线</li>
+            <li>关联分析引擎 v1</li>
+            <li>各业务线数据看板</li>
+            <li>核心指标标记确认</li>
+          </ul>
+          <div class="phase-value">
+            <strong>做什么：</strong>形成标准化底板数据 + 统一口径 + TAPD↔指标关联<br>
+            <strong>产生的价值：</strong>数据看板 + 发版关联预览 + 指标异动溯源
+          </div>
+        </div>
+        <div class="phase-card p3">
+          <h3>🔵 Phase 3 · 应用Cloud</h3>
+          <div class="phase-time">10-14 周</div>
+          <ul>
+            <li>应用市场上线</li>
+            <li>角色化视图</li>
+            <li>数据问答机器人</li>
+            <li>产品决策追溯</li>
+            <li>AI 应用生态开放</li>
+          </ul>
+          <div class="phase-value">
+            <strong>做什么：</strong>提供应用舞台，不同角色定制化使用<br>
+            <strong>产生的价值：</strong>智能问答 + 历史决策追溯 + 机器人集成 + 团队自建应用
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="icon">💎</span> 价值总结</div>
+      <table class="data-table">
+        <thead>
+          <tr><th>受益角色</th><th>Phase 1 价值</th><th>Phase 2 价值</th><th>Phase 3 价值</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>👔 管理者</strong></td>
+            <td>全业务进展全貌<br>资源投入清晰可见</td>
+            <td>核心指标统一口径<br>发版→指标关联可见</td>
+            <td>全景仪表盘<br>智能问答秒级响应</td>
+          </tr>
+          <tr>
+            <td><strong>📋 PM</strong></td>
+            <td>需求进展一页汇总</td>
+            <td>口径字典随查随用<br>发版影响预览</td>
+            <td>历史决策追溯<br>同类需求参照</td>
+          </tr>
+          <tr>
+            <td><strong>📊 数据同学</strong></td>
+            <td>数据资产登记规范化</td>
+            <td>口径引擎工作台<br>校验+冲突检测</td>
+            <td>异动归因自动化<br>数据质量看板</td>
+          </tr>
+          <tr>
+            <td><strong>🎯 运营</strong></td>
+            <td>活动进展可见</td>
+            <td>运营效果数据看板</td>
+            <td>策略推荐<br>转化漏斗分析</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">
+  SSV Data Cloud · 产品演示 Demo · v3.0 · 2026-04-15 · weima
+</div>
+
+<script>
+const roleTexts = {
+  boss: { name: '管理者/老板', desc: '关注全局业务进展和资源投入产出', icon: '👔' },
+  pm: { name: '产品经理', desc: '关注需求进展、功能效果、决策追溯', icon: '📋' },
+  data: { name: '数据同学', desc: '关注指标定义、数据质量、异动归因', icon: '📊' },
+  ops: { name: '运营', desc: '关注转化效果、地域差异、策略推荐', icon: '🎯' }
+};
+
+function switchRole(role) {
+  const r = roleTexts[role];
+  document.getElementById('roleNotice').innerHTML = `${r.icon} 当前视角：<strong>${r.name}</strong> — ${r.desc}`;
+  document.getElementById('roleNotice1').innerHTML = `${r.icon} 当前视角：<strong>${r.name}</strong> — 信息流为您展示业务全貌`;
+  document.getElementById('roleNotice2').innerHTML = `${r.icon} 当前视角：<strong>${r.name}</strong> — 数据层为您提供标准化底板`;
+  document.getElementById('roleNotice3').innerHTML = `${r.icon} 当前视角：<strong>${r.name}</strong> — 以下是为您推荐的应用`;
+}
+
+function switchTab(tab) {
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  event.target.classList.add('active');
+  document.getElementById('sec-' + tab).classList.add('active');
+}
+
+function showAppDemo(type) {
+  const area = document.getElementById('appDemoArea');
+  area.style.display = 'block';
+  document.getElementById('demoBot').style.display = type === 'bot' ? 'block' : 'none';
+  document.getElementById('demoTrace').style.display = type === 'trace' ? 'block' : 'none';
+  document.getElementById('demoDashboard').style.display = type === 'dashboard' ? 'block' : 'none';
+  document.getElementById('demoRelease').style.display = type === 'release' ? 'block' : 'none';
+  area.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+</script>
+</body>
+</html>

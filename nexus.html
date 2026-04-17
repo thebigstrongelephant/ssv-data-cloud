@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SSV Nexus</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700;900&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="nexus1.0.css">
+</head>
+<body>
+
+<!-- TOP NAV -->
+<nav class="top-nav">
+  <div class="nav-left">
+    <div class="nav-brand">
+      <div class="nav-logo">N</div>
+      <div class="nav-title">SSV Nexus</div>
+    </div>
+    <div class="nav-sep"></div>
+    <div class="nav-search">
+      <span>🔍</span> 搜索团队、项目、知识库…
+      <kbd>⌘K</kbd>
+    </div>
+  </div>
+  <div class="nav-right">
+    <div class="nav-notification" id="navNotification" onclick="goTeam('notifications')" style="cursor:pointer">
+      <span class="nav-bell">🔔</span>
+      <span class="nav-bell-dot" id="navBellDot"></span>
+    </div>
+    <div class="nav-user-name">Hi, Suri</div>
+    <div class="nav-avatar" onclick="goTeam('my-profile')" style="cursor:pointer" title="我的">S</div>
+  </div>
+</nav>
+
+<!-- APP LAYOUT -->
+<div class="app-layout">
+
+<!-- SIDEBAR 纵轴 -->
+<aside class="sidebar">
+  <div class="sidebar-group">
+    <div class="sidebar-group-label">Teams</div>
+    <div class="sidebar-item active" data-team="ssver">
+      <span class="sidebar-icon">👤</span> My Nexus
+    </div>
+    <div class="sidebar-item" data-team="gongyipingtai">
+      <span class="sidebar-icon">💚</span> 公益平台
+    </div>
+    <div class="sidebar-item" data-team="jiaoyu">
+      <span class="sidebar-icon">📚</span> 教育实验室
+    </div>
+    <div class="sidebar-item" data-team="wenhua">
+      <span class="sidebar-icon">🎭</span> 文化实验室
+    </div>
+    <div class="sidebar-item" data-team="shiguang">
+      <span class="sidebar-icon">🕰️</span> 时光实验室
+    </div>
+    <div class="sidebar-item" data-team="xinjishi">
+      <span class="sidebar-icon">🔬</span> 新基石
+    </div>
+    <div class="sidebar-item" data-team="jishujiagou">
+      <span class="sidebar-icon">⚙️</span> 技术架构部
+    </div>
+    <div class="sidebar-item" data-team="jingyingguanli">
+      <span class="sidebar-icon">📈</span> 经营管理
+    </div>
+  </div>
+
+  <div class="sidebar-divider"></div>
+
+  <div class="sidebar-group">
+    <div class="sidebar-group-label">Tools</div>
+    <div class="sidebar-item" data-team="skills">
+      <span class="sidebar-icon">⚡</span> Skills
+      <span class="sidebar-badge">12</span>
+    </div>
+    <div class="sidebar-item" data-team="plugins">
+      <span class="sidebar-icon">🧩</span> 插件
+      <span class="sidebar-badge">5</span>
+    </div>
+  </div>
+
+  <div class="sidebar-divider"></div>
+
+  <div class="sidebar-group">
+    <div class="sidebar-group-label">Admin</div>
+    <div class="sidebar-item" data-team="charter">
+      <span class="sidebar-icon">📜</span> 宪章宗旨
+    </div>
+    <div class="sidebar-item" data-team="architecture">
+      <span class="sidebar-icon">🏗️</span> Nexus 架构
+    </div>
+    <div class="sidebar-item" data-team="settings">
+      <span class="sidebar-icon">⚙️</span> 设置
+    </div>
+  </div>
+</aside>
+
+<!-- MAIN AREA -->
+<main class="main-area" id="mainArea"></main>
+
+</div>
+
+<!-- Nexus AI 悬浮助手 -->
+<div id="nexusAiFab" class="nexus-ai-fab" onclick="toggleNexusAi()">
+  <span class="nexus-ai-fab-icon">✦</span>
+  <span class="nexus-ai-fab-label">Nexus AI</span>
+</div>
+
+<div id="nexusAiPanel" class="nexus-ai-panel hidden">
+  <div class="nexus-ai-header">
+    <div class="nexus-ai-header-left">
+      <span class="nexus-ai-logo">✦</span>
+      <span class="nexus-ai-title">Nexus AI</span>
+      <span class="nexus-ai-badge">Beta</span>
+    </div>
+    <div class="nexus-ai-header-right">
+      <button class="nexus-ai-clear-btn" onclick="clearNexusAiChat()" title="清空对话">🗑️</button>
+      <button class="nexus-ai-close-btn" onclick="toggleNexusAi()">✕</button>
+    </div>
+  </div>
+  <div class="nexus-ai-messages" id="nexusAiMessages">
+    <div class="nexus-ai-welcome">
+      <div class="nexus-ai-welcome-icon">✦</div>
+      <div class="nexus-ai-welcome-title">你好，我是 Nexus AI</div>
+      <div class="nexus-ai-welcome-desc">我了解 SSV 所有 Topics、项目进展和组织信息。试试问我：</div>
+      <div class="nexus-ai-suggestions">
+        <button class="nexus-ai-suggest-btn" onclick="askNexusAi('景德镇项目目前进展如何？')">景德镇项目目前进展如何？</button>
+        <button class="nexus-ai-suggest-btn" onclick="askNexusAi('教育实验室 Q2 有哪些风险点？')">教育实验室 Q2 有哪些风险点？</button>
+        <button class="nexus-ai-suggest-btn" onclick="askNexusAi('哪些 Topic 和 Suri 相关？')">哪些 Topic 和 Suri 相关？</button>
+        <button class="nexus-ai-suggest-btn" onclick="askNexusAi('SSV 各团队的 OKR 完成情况怎么样？')">SSV 各团队的 OKR 完成情况</button>
+      </div>
+    </div>
+  </div>
+  <div class="nexus-ai-input-area">
+    <input type="text" class="nexus-ai-input" id="nexusAiInput" placeholder="问问 Nexus AI…" onkeydown="if(event.key==='Enter')sendNexusAi()">
+    <button class="nexus-ai-send-btn" onclick="sendNexusAi()">→</button>
+  </div>
+</div>
+
+
+<script src="nexus1.0.js"></script>
+</body>
+</html>

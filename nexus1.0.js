@@ -882,7 +882,7 @@ function renderPulse(pulse, projects) {
 
 // ---- 文化实验室数据看板 ----
 function renderWenhuaDashboard() {
-  const DATA_ADMIN_URL = '../culture-data-base.html';
+  const DATA_ADMIN_URL = './index.html';
   let h = `<div style="margin-bottom:20px">
     <div style="font-size:16px;font-weight:700">📊 核心数据看板</div>
     <div style="font-size:12px;color:var(--ink-muted);margin-top:4px">数据来源：SSV 数据管理后台已确认口径 · 自动更新</div>

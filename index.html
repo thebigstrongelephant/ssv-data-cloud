@@ -33,6 +33,18 @@ body{font-family:var(--f);background:var(--bg);color:var(--ink);line-height:1.65
 .nav-title{font-size:15px;font-weight:800;color:var(--ink);font-family:var(--fh);letter-spacing:-.3px}
 .nav-desc{font-size:11px;color:var(--ink3);margin-left:12px}
 .nav-right{font-size:11px;color:var(--ink3);font-family:var(--fm)}
+/* Lab Switcher */
+.lab-switch{position:relative;display:inline-flex;align-items:center;gap:6px;padding:4px 12px 4px 8px;border:1px solid var(--bd);border-radius:var(--r-sm);cursor:pointer;font-size:12px;font-weight:600;color:var(--blue);background:var(--blue-bg);transition:.15s;user-select:none}
+.lab-switch:hover{border-color:var(--blue);box-shadow:0 2px 8px rgba(37,99,235,.1)}
+.lab-switch .arrow{font-size:8px;color:var(--ink3);transition:.2s}
+.lab-switch.open .arrow{transform:rotate(180deg)}
+.lab-menu{display:none;position:absolute;top:calc(100% + 6px);left:0;z-index:200;width:240px;background:var(--white);border:1px solid var(--bd);border-radius:var(--r-md);box-shadow:var(--sh-lg);padding:6px;overflow:hidden}
+.lab-switch.open .lab-menu{display:block}
+.lab-opt{display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:var(--r-sm);font-size:13px;font-weight:500;color:var(--ink2);cursor:pointer;transition:.1s}
+.lab-opt:hover{background:var(--bg-hover)}
+.lab-opt.active{background:var(--blue-bg);color:var(--blue);font-weight:600}
+.lab-opt .lab-badge{margin-left:auto;font-size:9px;padding:1px 6px;border-radius:10px;background:var(--bg);color:var(--ink4);font-weight:600}
+.lab-opt.active .lab-badge{display:none}
 
 /* TABS */
 .tab-bar{display:flex;gap:2px;border-bottom:1px solid var(--bd);padding:0 32px;background:var(--white)}
@@ -142,7 +154,19 @@ tr:hover td{background:var(--bg-hover)}
   <div class="nav-brand">
     <div class="nav-logo">S</div>
     <span class="nav-title">SSV 数据管理后台</span>
-    <span class="nav-desc">数据确认 · 工作流配置 · 质检管理</span>
+    <div class="lab-switch" id="labSwitch" onclick="this.classList.toggle('open')">
+      <span>🏛️</span>
+      <span id="labCurrent">文化实验室</span>
+      <span class="arrow">▼</span>
+      <div class="lab-menu" onclick="event.stopPropagation()">
+        <div class="lab-opt" onclick="switchLab('gongyipingtai','💚','公益平台')"><span>💚</span> 公益平台 <span class="lab-badge">待上线</span></div>
+        <div class="lab-opt" onclick="switchLab('jiaoyu','📚','教育实验室')"><span>📚</span> 教育实验室 <span class="lab-badge">待上线</span></div>
+        <div class="lab-opt active" onclick="switchLab('wenhua','🏛️','文化实验室')"><span>🏛️</span> 文化实验室</div>
+        <div class="lab-opt" onclick="switchLab('shiguang','🕰️','时光实验室')"><span>🕰️</span> 时光实验室 <span class="lab-badge">待上线</span></div>
+        <div class="lab-opt" onclick="switchLab('xinjishi','🔬','新基石')"><span>🔬</span> 新基石 <span class="lab-badge">待上线</span></div>
+        <div class="lab-opt" onclick="switchLab('jishu','⚙️','技术架构部')"><span>⚙️</span> 技术架构部 <span class="lab-badge">待上线</span></div>
+      </div>
+    </div>
   </div>
   <div class="nav-right">SSV Data Manager · 2026-04-17</div>
 </nav>
@@ -1059,6 +1083,21 @@ function sw(id,el){document.querySelectorAll('.tab-item').forEach(t=>t.classList
 function addLink(){var v=document.getElementById('linkInput').value.trim();if(!v)return;var t=document.createElement('div');t.className='tag-chip';t.innerHTML='<span>📄</span> '+v+' <span class="x" onclick="this.parentElement.remove()">✕</span>';document.getElementById('linkTags').appendChild(t);document.getElementById('linkInput').value='';}
 function tog(el){var ul=el.parentElement.querySelector(':scope > ul');if(ul){ul.style.display=ul.style.display==='none'?'block':'none';el.textContent=ul.style.display==='none'?'▶':'▼';}}
 function togC(el){if(el.classList.contains('core')){el.classList.remove('core');el.classList.add('normal');var d=el.querySelector('.dot');if(d)d.className='dot dot-x';}else{el.classList.remove('normal');el.classList.add('core');var d=el.querySelector('.dot');if(d)d.className='dot dot-g';}}
+function switchLab(id,emoji,name){
+var sw=document.getElementById('labSwitch');
+sw.classList.remove('open');
+if(id!=='wenhua'){
+var mask=document.createElement('div');
+mask.style.cssText='position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.3);z-index:500;display:flex;align-items:center;justify-content:center';
+mask.innerHTML='<div style="background:#fff;border-radius:14px;padding:32px 40px;text-align:center;box-shadow:0 8px 30px rgba(0,0,0,.15);max-width:360px"><div style="font-size:36px;margin-bottom:12px">🚧</div><div style="font-size:16px;font-weight:700;margin-bottom:6px">'+emoji+' '+name+'</div><div style="font-size:13px;color:#5a6275;margin-bottom:16px">该实验室数据管理功能正在建设中，敬请期待</div><button onclick="this.closest(\'div[style]\').remove()" style="padding:8px 24px;border-radius:6px;border:none;background:#2563eb;color:#fff;font-size:13px;font-weight:600;cursor:pointer">我知道了</button></div>';
+document.body.appendChild(mask);
+return;
+}
+document.querySelectorAll('.lab-opt').forEach(function(o){o.classList.remove('active')});
+event.target.closest('.lab-opt').classList.add('active');
+document.getElementById('labCurrent').textContent=name;
+}
+document.addEventListener('click',function(e){var sw=document.getElementById('labSwitch');if(sw&&!sw.contains(e.target))sw.classList.remove('open');});
 </script>
 </body>
 </html>

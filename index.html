@@ -3,1116 +3,1048 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>数据基座 · SSV Data Cloud</title>
+<title>SSV 数据管理后台</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-:root{--p:#1677ff;--pl:#e6f4ff;--bg:#f0f2f5;--c:#fff;--t:#1f1f1f;--t2:#666;--t3:#999;--b:#e8e8e8;--g:#52c41a;--r:#ff4d4f;--o:#fa8c16;--pu:#722ed1;--cy:#13c2c2;--pk:#eb2f96;--rd:12px;--sh:0 2px 8px rgba(0,0,0,.06)}
+:root{
+  --white:#fff;--bg:#fafbfc;--bg-hover:#f4f5f7;--bg-active:#eef1f5;--bg-subtle:#f8f9fb;
+  --bd:#e8ecf1;--bd-light:#f0f2f5;--bd-active:#c4cdd8;
+  --ink:#1a1d26;--ink2:#5a6275;--ink3:#9aa1b3;--ink4:#c2c8d4;
+  --blue:#2563eb;--blue-bg:#eff4ff;--blue-bd:rgba(37,99,235,.15);
+  --green:#059669;--green-bg:#ecfdf5;
+  --violet:#7c3aed;--violet-bg:#f5f3ff;
+  --amber:#d97706;--amber-bg:#fffbeb;
+  --red:#e11d48;--red-bg:#fff1f2;
+  --cyan:#0891b2;--cyan-bg:#ecfeff;
+  --r-sm:6px;--r-md:10px;--r-lg:14px;--r-xl:18px;
+  --sh-sm:0 1px 2px rgba(0,0,0,.04);--sh-md:0 2px 8px rgba(0,0,0,.06);--sh-lg:0 4px 20px rgba(0,0,0,.08);
+  --f:'Noto Sans SC','Plus Jakarta Sans',-apple-system,sans-serif;
+  --fm:'JetBrains Mono','SF Mono',Consolas,monospace;
+  --fh:'Plus Jakarta Sans',-apple-system,sans-serif;
+}
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--t);line-height:1.6;font-size:14px}
-.hd{background:linear-gradient(135deg,#722ed1,#531dab);color:#fff;padding:16px 32px;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.15)}
-.hd-in{max-width:1400px;margin:0 auto;display:flex;justify-content:space-between;align-items:center}
-.hd h1{font-size:18px;font-weight:600}.hd-m{font-size:12px;opacity:.8}
-.nav{background:#fff;border-bottom:1px solid var(--b);padding:0 32px;overflow-x:auto;white-space:nowrap}
-.nav-in{max-width:1400px;margin:0 auto;display:flex;gap:0}
-.nt{padding:12px 24px;font-size:13px;color:var(--t2);cursor:pointer;border-bottom:2px solid transparent;transition:.2s;font-weight:500;flex-shrink:0}
-.nt:hover{color:var(--p)}.nt.a{color:var(--pu);border-bottom-color:var(--pu)}
-.mn{max-width:1400px;margin:0 auto;padding:20px 32px}
+body{font-family:var(--f);background:var(--bg);color:var(--ink);line-height:1.65;-webkit-font-smoothing:antialiased}
+::-webkit-scrollbar{width:6px}::-webkit-scrollbar-thumb{background:var(--bd-active);border-radius:3px}
+
+/* TOP NAV */
+.top-nav{position:sticky;top:0;z-index:100;height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 32px;background:rgba(255,255,255,.92);backdrop-filter:blur(20px) saturate(1.2);border-bottom:1px solid var(--bd)}
+.nav-brand{display:flex;align-items:center;gap:10px}
+.nav-logo{width:28px;height:28px;border-radius:7px;background:var(--ink);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:#fff;font-family:var(--fh);letter-spacing:-.5px}
+.nav-title{font-size:15px;font-weight:800;color:var(--ink);font-family:var(--fh);letter-spacing:-.3px}
+.nav-desc{font-size:11px;color:var(--ink3);margin-left:12px}
+.nav-right{font-size:11px;color:var(--ink3);font-family:var(--fm)}
+
+/* TABS */
+.tab-bar{display:flex;gap:2px;border-bottom:1px solid var(--bd);padding:0 32px;background:var(--white)}
+.tab-item{padding:12px 20px;font-size:13px;font-weight:600;color:var(--ink3);cursor:pointer;border-bottom:2px solid transparent;transition:all .15s;background:none;border-top:none;border-left:none;border-right:none;font-family:var(--f)}
+.tab-item:hover{color:var(--ink)}
+.tab-item.active{color:var(--blue);border-bottom-color:var(--blue)}
+
+/* MAIN */
+.main{max-width:1200px;margin:0 auto;padding:24px 32px 60px}
 .sec{display:none}.sec.a{display:block}
-.cd{background:var(--c);border-radius:var(--rd);padding:20px 24px;box-shadow:var(--sh);margin-bottom:16px}
-.ct{font-size:15px;font-weight:600;margin-bottom:14px;display:flex;align-items:center;gap:8px}
-table{width:100%;border-collapse:collapse;font-size:12px}
-th{background:#fafafa;text-align:left;padding:8px 12px;font-weight:600;border-bottom:2px solid var(--b);font-size:11px}
-td{padding:8px 12px;border-bottom:1px solid #f0f0f0}
-tr:hover td{background:#fafafa}
-.b{display:inline-block;padding:2px 6px;border-radius:4px;font-size:10px;font-weight:500}
-.bg{background:#f6ffed;color:#52c41a}.br{background:#fff2f0;color:#ff4d4f}
-.bb{background:#e6f4ff;color:#1677ff}.bo{background:#fff7e6;color:#fa8c16}
-.bp{background:#f9f0ff;color:#722ed1}.bc{background:#e6fffb;color:#13c2c2}
-.sg{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:16px}
-.sk{background:var(--c);border-radius:var(--rd);padding:14px 16px;box-shadow:var(--sh);text-align:center}
-.sv{font-size:22px;font-weight:700}.sl{font-size:11px;color:var(--t2);margin-top:2px}
-.sc{font-size:10px;margin-top:2px}.sc.u{color:var(--g)}.sc.d{color:var(--r)}
-.al{padding:10px 14px;border-radius:8px;font-size:12px;margin-bottom:8px;display:flex;gap:8px;align-items:flex-start}
-.al-d{background:#fff2f0;border-left:4px solid var(--r)}.al-w{background:#fff7e6;border-left:4px solid var(--o)}
-.al-i{background:var(--pl);border-left:4px solid var(--p)}.al-s{background:#f6ffed;border-left:4px solid var(--g)}
+
+/* CARDS */
+.card{background:var(--white);border:1px solid var(--bd);border-radius:var(--r-lg);padding:22px 26px;margin-bottom:16px;box-shadow:var(--sh-sm)}
+.card-title{font-size:15px;font-weight:700;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.card-accent{border-left:3px solid var(--blue)}
+
+/* TABLE */
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{text-align:left;padding:10px 14px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--ink3);background:var(--bg-subtle);border-bottom:1px solid var(--bd)}
+td{padding:10px 14px;border-bottom:1px solid var(--bd-light);color:var(--ink2)}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:var(--bg-hover)}
+.mono{font-family:var(--fm);font-size:12px;color:var(--blue)}
+
+/* TAGS */
+.tag{display:inline-block;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:600}
+.tag-green{background:var(--green-bg);color:var(--green)}
+.tag-blue{background:var(--blue-bg);color:var(--blue)}
+.tag-amber{background:var(--amber-bg);color:var(--amber)}
+.tag-red{background:var(--red-bg);color:var(--red)}
+.tag-violet{background:var(--violet-bg);color:var(--violet)}
+.tag-cyan{background:var(--cyan-bg);color:var(--cyan)}
+
+/* STAT ROW */
+.stat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}
+.stat-card{background:var(--white);border:1px solid var(--bd);border-radius:var(--r-md);padding:16px 18px;box-shadow:var(--sh-sm);text-align:center}
+.stat-val{font-size:26px;font-weight:800;font-family:var(--fh);letter-spacing:-.5px}
+.stat-label{font-size:12px;color:var(--ink3);margin-top:2px}
+
+/* GRID */
 .g2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
-@media(max-width:900px){.g2,.g3{grid-template-columns:1fr}}
-.tl{position:relative;padding-left:18px}.tl::before{content:'';position:absolute;left:5px;top:6px;bottom:6px;width:2px;background:#e8e8e8}
-.ti{position:relative;padding-bottom:14px}.ti:last-child{padding-bottom:0}
-.ti::before{content:'';position:absolute;left:-16px;top:5px;width:8px;height:8px;border-radius:50%;border:2px solid #fff}
-.ti.tg::before{background:var(--g);box-shadow:0 0 0 2px var(--g)}
-.ti.tb::before{background:var(--p);box-shadow:0 0 0 2px var(--p)}
-.ti.to::before{background:var(--o);box-shadow:0 0 0 2px var(--o)}
-.ti.tp::before{background:var(--pu);box-shadow:0 0 0 2px var(--pu)}
-.tt{font-size:12px;font-weight:600}.tm{font-size:10px;color:var(--t3)}.td{font-size:11px;color:var(--t2);margin-top:2px}
-.src{font-size:10px;color:var(--t3);margin-top:8px;padding-top:8px;border-top:1px dashed #e8e8e8}
-.src span{font-weight:500;color:var(--t2)}
-.mini-chart{display:flex;align-items:flex-end;gap:2px;height:50px;margin-top:8px;padding:4px 0}
-.mini-chart .mc-bar{flex:1;border-radius:2px 2px 0 0;min-width:4px;transition:.3s}
-.metric-card{background:var(--c);border-radius:var(--rd);padding:16px;box-shadow:var(--sh);margin-bottom:12px}
-.mc-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px}
-.mc-title{font-size:12px;font-weight:600}.mc-val{font-size:20px;font-weight:700}
-.mc-sub{font-size:10px;color:var(--t3)}
-.mc-insight{font-size:10px;color:var(--t2);margin-top:6px;padding:6px 8px;background:#fafafa;border-radius:4px}
-/* Input styles */
-.input-box{width:100%;padding:10px 14px;border:1px solid #d9d9d9;border-radius:8px;font-size:13px;font-family:inherit;transition:.2s;resize:vertical}
-.input-box:focus{border-color:var(--pu);outline:none;box-shadow:0 0 0 2px rgba(114,46,209,.1)}
+@media(max-width:900px){.g2,.stat-row{grid-template-columns:1fr}}
+
+/* INPUT */
+.input{width:100%;padding:10px 14px;border:1px solid var(--bd);border-radius:var(--r-sm);font-size:13px;font-family:var(--f);transition:.2s;resize:vertical}
+.input:focus{border-color:var(--blue);outline:none;box-shadow:0 0 0 2px rgba(37,99,235,.1)}
 .input-row{display:flex;gap:8px;margin-bottom:10px;align-items:center}
-.input-row .input-box{flex:1}
-.btn{padding:8px 16px;border-radius:8px;border:none;font-size:12px;font-weight:500;cursor:pointer;transition:.2s}
-.btn-primary{background:var(--pu);color:#fff}.btn-primary:hover{background:#531dab}
-.btn-outline{background:#fff;color:var(--pu);border:1px solid var(--pu)}.btn-outline:hover{background:#f9f0ff}
+.btn{padding:8px 16px;border-radius:var(--r-sm);border:none;font-size:12px;font-weight:600;cursor:pointer;transition:.15s;font-family:var(--f)}
+.btn-primary{background:var(--blue);color:#fff}.btn-primary:hover{background:#1d4ed8}
+.btn-ghost{background:none;color:var(--blue);border:1px solid var(--blue)}.btn-ghost:hover{background:var(--blue-bg)}
 .btn-sm{padding:4px 10px;font-size:11px}
-.tag-input{display:flex;flex-wrap:wrap;gap:6px;padding:8px;border:1px solid #d9d9d9;border-radius:8px;min-height:40px;align-items:center}
-.tag-item{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;background:#f9f0ff;border-radius:4px;font-size:11px;color:var(--pu)}
-.tag-item .tag-close{cursor:pointer;font-size:10px;opacity:.6}
-.tag-item .tag-close:hover{opacity:1}
-.editable{border:1px dashed transparent;padding:4px 8px;border-radius:4px;transition:.2s;cursor:text}
-.editable:hover{border-color:#d9d9d9;background:#fafafa}
-.editable:focus{border-color:var(--pu);background:#fff;outline:none}
-.chat{max-width:680px;background:#f5f5f5;border-radius:var(--rd);padding:16px}
+
+/* TAG INPUT */
+.tag-input{display:flex;flex-wrap:wrap;gap:6px;padding:8px;border:1px solid var(--bd);border-radius:var(--r-sm);min-height:40px;align-items:center}
+.tag-chip{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;background:var(--blue-bg);border-radius:4px;font-size:11px;color:var(--blue);font-weight:500}
+.tag-chip .x{cursor:pointer;opacity:.6;font-size:10px}.tag-chip .x:hover{opacity:1}
+
+/* TREE */
+.tree{font-size:13px}.tree ul{list-style:none;padding-left:22px;margin-top:4px}
+.tree>ul{padding-left:0}
+.tree li{padding:3px 0}
+.node{display:inline-flex;align-items:center;gap:6px;padding:5px 12px;border-radius:var(--r-sm);cursor:pointer;transition:.12s;font-weight:500}
+.node:hover{background:var(--bg-hover)}
+.node.core{background:var(--blue-bg);color:var(--blue);font-weight:600}
+.node.normal{background:var(--bg);color:var(--ink3)}
+.node .dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.dot-g{background:var(--green)}.dot-b{background:var(--blue)}.dot-o{background:var(--amber)}.dot-x{background:var(--ink4)}
+.toggle{cursor:pointer;font-size:10px;color:var(--ink3);margin-right:4px;user-select:none}
+
+/* WORKFLOW */
+.wf{background:var(--white);border:1px solid var(--bd);border-radius:var(--r-lg);padding:16px 20px;margin-bottom:12px;transition:.15s;box-shadow:var(--sh-sm)}
+.wf:hover{border-color:var(--blue);box-shadow:var(--sh-md)}
+.wf-name{font-size:13px;font-weight:700;margin-bottom:4px}.wf-desc{font-size:12px;color:var(--ink3);margin-bottom:8px}
+.wf-chips{display:flex;gap:6px;flex-wrap:wrap}
+
+/* SCORE */
+.score-bg{height:5px;background:var(--bd-light);border-radius:3px;overflow:hidden;flex:1}
+.score-fill{height:100%;border-radius:3px}
+
+/* CHAT */
+.chat-win{border:1px solid var(--bd);border-radius:var(--r-lg);overflow:hidden;box-shadow:var(--sh-md);margin-bottom:16px}
+.chat-hd{background:var(--ink);color:#fff;padding:10px 16px;display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600}
+.chat-body{padding:16px;background:var(--bg)}
 .cm{margin-bottom:12px}.cm.u{text-align:right}
-.bub{display:inline-block;max-width:85%;padding:10px 14px;border-radius:12px;font-size:12px;line-height:1.6;text-align:left}
-.cm.u .bub{background:var(--pu);color:#fff;border-bottom-right-radius:4px}
-.cm.b .bub{background:#fff;border:1px solid var(--b);border-bottom-left-radius:4px}
-.cm .nm{font-size:10px;color:var(--t3);margin-bottom:2px}
-.cr{background:#fafafa;border-radius:6px;padding:10px;margin-top:6px;font-family:monospace;font-size:11px;white-space:pre-wrap;line-height:1.5;border:1px solid #eee}
-.ft{text-align:center;padding:32px;font-size:11px;color:var(--t3)}
-/* Step animation */
-.step-demo{position:relative;overflow:hidden}
-.step{opacity:.3;transform:translateY(12px);transition:all .5s ease;padding:14px 16px;border-radius:8px;margin-bottom:8px;border:2px solid transparent}
-.step.active{opacity:1;transform:translateY(0);border-color:var(--pu);background:#f9f0ff}
-.step.done{opacity:.7;transform:translateY(0);border-color:var(--g);background:#f6ffed}
-.step-num{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:50%;font-size:11px;font-weight:700;color:#fff;margin-right:8px;flex-shrink:0}
-.step-num.pu{background:var(--pu)}.step-num.g{background:var(--g)}.step-num.b{background:var(--p)}.step-num.o{background:var(--o)}
-.step-head{display:flex;align-items:center;margin-bottom:4px;font-size:13px;font-weight:600}
-.step-body{font-size:11px;color:var(--t2);margin-left:32px}
-.step-result{margin-left:32px;margin-top:6px;padding:8px 12px;background:#fff;border-radius:6px;border:1px solid #e8e8e8;font-size:11px}
-.pulse-dot{width:8px;height:8px;border-radius:50%;background:var(--pu);display:inline-block;animation:pulse-anim 1.5s infinite;margin-left:6px;vertical-align:middle}
-@keyframes pulse-anim{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(1.3)}}
-.step-controls{display:flex;gap:8px;justify-content:center;margin:12px 0}
-.wf-arrow{text-align:center;font-size:16px;color:var(--pu);margin:4px 0}
+.bub{display:inline-block;max-width:85%;padding:10px 14px;border-radius:12px;font-size:12px;line-height:1.7;text-align:left}
+.cm.u .bub{background:var(--blue);color:#fff;border-bottom-right-radius:4px}
+.cm.b .bub{background:var(--white);border:1px solid var(--bd);border-bottom-left-radius:4px}
+.cm .nm{font-size:10px;color:var(--ink3);margin-bottom:2px}
+.code{background:var(--bg-subtle);border-radius:var(--r-sm);padding:10px 12px;margin-top:6px;font-family:var(--fm);font-size:11px;white-space:pre-wrap;line-height:1.6;border:1px solid var(--bd-light)}
+
+/* UPLOAD */
+.upload{border:2px dashed var(--bd);border-radius:var(--r-lg);padding:28px;text-align:center;cursor:pointer;transition:.2s}
+.upload:hover{border-color:var(--blue);background:var(--blue-bg)}
+
+/* FOOTER */
+.footer{text-align:center;padding:32px;font-size:11px;color:var(--ink4);border-top:1px solid var(--bd-light);margin-top:40px}
+
+/* SRC LABEL */
+.src{font-size:10px;color:var(--ink3);margin-top:10px;padding-top:10px;border-top:1px dashed var(--bd-light)}
+.src b{color:var(--ink2);font-weight:600}
 </style>
 </head>
 <body>
 
-<div class="hd"><div class="hd-in">
-<h1>📊 数据基座</h1>
-<div style="display:flex;align-items:center;gap:12px">
-<div class="hd-m">SSV Data Cloud · 2026-04-16</div>
-<div style="background:rgba(255,255,255,.15);border-radius:8px;padding:4px 8px;display:flex;align-items:center;gap:6px">
-<span style="font-size:11px;opacity:.7">🔒</span>
-<select id="permSwitcher" onchange="switchPerm(this.value)" style="background:transparent;border:none;color:#fff;font-size:12px;cursor:pointer;outline:none">
-<option value="culture_admin" style="color:#333">🏛️ 文化实验室 · 管理员</option>
-<option value="culture_pm" style="color:#333">📋 文化实验室 · PM</option>
-<option value="culture_data" style="color:#333">📊 文化实验室 · 数据同学</option>
-<option value="culture_dev" style="color:#333">🔧 文化实验室 · 研发</option>
-<option value="ssv_admin" style="color:#333">👔 SSV 全局 · 管理员</option>
-<option value="care_admin" style="color:#333">💝 数字关爱 · 管理员</option>
-<option value="shanzhimei_pm" style="color:#333">🏘️ 善治美 · PM</option>
-</select>
+<!-- TOP NAV -->
+<nav class="top-nav">
+  <div class="nav-brand">
+    <div class="nav-logo">S</div>
+    <span class="nav-title">SSV 数据管理后台</span>
+    <span class="nav-desc">数据确认 · 工作流配置 · 质检管理</span>
+  </div>
+  <div class="nav-right">SSV Data Manager · 2026-04-17</div>
+</nav>
+
+<!-- TABS -->
+<div class="tab-bar">
+  <button class="tab-item active" onclick="sw('t1',this)" title="录入 iWiki / 腾讯会议 / 腾讯文档等内容，完善平台业务认知">① 业务地图</button>
+  <button class="tab-item" onclick="sw('t2',this)" title="确认核心指标口径，AI 问询时按此标准答复">② 业务数据确认</button>
+  <button class="tab-item" onclick="sw('t3',this)" title="配置数据使用方式：周报/月报/告警等工作流，WorkBuddy 中生成的内容也会在此展现">③ 数据工作流配置</button>
+  <button class="tab-item" onclick="sw('t4',this)" title="用户通过 WorkBuddy/AI 问询数据时的质检沉淀，持续优化回答质量">④ 质检</button>
+  <button class="tab-item" onclick="sw('t5',this)">⑤ WorkBuddy 使用示例</button>
 </div>
-</div>
-</div></div>
 
-<div class="nav"><div class="nav-in">
-<div class="nt a" id="tab-l1" onclick="sw('l1',this)">① 业务地图</div>
-<div class="nt" id="tab-l2" onclick="sw('l2',this)">② 业务数据</div>
-<div class="nt" id="tab-l3" onclick="sw('l3',this)">③ 技能配置</div>
-<div class="nt" id="tab-l4" onclick="sw('l4',this)">④ Demo & 质检</div>
-</div></div>
+<div class="main">
 
-<div class="mn">
+<!-- ==================== Tab 1: 业务地图 ==================== -->
+<div class="sec a" id="s-t1">
 
-<!-- ===================== Tab 1: 业务地图 ===================== -->
-<div class="sec a" id="s-l1">
+<div style="font-size:13px;color:var(--ink2);margin-bottom:16px">录入 iWiki 文档、腾讯会议、腾讯文档等业务内容，让平台理解你的业务全貌。</div>
 
-<!-- 录入区 -->
-<div class="cd" style="border-left:4px solid var(--pu)">
-<div class="ct">📥 数据源录入</div>
-<p style="font-size:11px;color:var(--t3);margin-bottom:12px">关联 iWiki、会议、腾讯文档等链接，系统自动解析内容生成业务地图</p>
-
-<div style="margin-bottom:16px">
-<div style="font-size:12px;font-weight:500;margin-bottom:6px">🔗 链接录入（支持 iWiki / 腾讯会议 / 腾讯文档）</div>
+<div class="card card-accent">
+<div class="card-title">📥 数据源录入</div>
+<p style="font-size:12px;color:var(--ink3);margin-bottom:14px">关联 iWiki、腾讯会议、腾讯文档等链接，系统自动解析内容生成业务地图</p>
 <div class="tag-input" id="linkTags">
-<div class="tag-item"><span>📄</span> iwiki.woa.com/p/4017108326 <span class="tag-close" onclick="this.parentElement.remove()">✕</span></div>
-<div class="tag-item"><span>📄</span> iwiki.woa.com/p/4018777005 <span class="tag-close" onclick="this.parentElement.remove()">✕</span></div>
+<div class="tag-chip"><span>📄</span> iwiki.woa.com/p/4017108326 <span class="x" onclick="this.parentElement.remove()">✕</span></div>
+<div class="tag-chip"><span>📄</span> iwiki.woa.com/p/4018777005 <span class="x" onclick="this.parentElement.remove()">✕</span></div>
 </div>
 <div class="input-row" style="margin-top:8px">
-<input class="input-box" id="linkInput" placeholder="粘贴链接，如 https://iwiki.woa.com/p/... 或 https://docs.qq.com/... 或会议录制链接" style="flex:1">
+<input class="input" id="linkInput" placeholder="粘贴链接，回车添加" style="flex:1" onkeydown="if(event.key==='Enter')addLink()">
 <button class="btn btn-primary" onclick="addLink()">+ 添加</button>
 </div>
 </div>
 
-<div style="margin-bottom:16px">
-<div style="font-size:12px;font-weight:500;margin-bottom:6px">✏️ 文字补充（纠正/补充 AI 生成的内容）</div>
-<textarea class="input-box" rows="3" placeholder="输入补充信息，如：探元小程序核心用户群体是文博爱好者和学生群体，主要通过线下场景码扫码进入..."></textarea>
-<div style="display:flex;gap:8px;margin-top:8px;justify-content:flex-end">
-<button class="btn btn-outline btn-sm">🔄 重新生成</button>
-<button class="btn btn-primary btn-sm">✅ 应用补充</button>
-</div>
-</div>
-</div>
-
-<!-- AI 生成的业务总结（可编辑） -->
-<div class="cd">
-<div class="ct">🏛️ 业务定义 · 探元（TanYuan） <span style="font-size:10px;color:var(--t3);font-weight:400;margin-left:8px">以下内容由 AI 生成，点击可编辑</span></div>
-
-<div class="g2" style="margin-bottom:16px">
-<div>
-<h4 style="font-size:13px;margin-bottom:8px">产品定位</h4>
-<div class="editable" contenteditable="true" style="font-size:12px;color:var(--t2)">"探元"是一套面向<strong>文博/展览数字化</strong>场景的产品集合，覆盖 C 端微信小程序、H5/播放器端、管理后台 Web、后端微服务四大端侧。</div>
-</div>
-<div>
-<h4 style="font-size:13px;margin-bottom:8px">业务价值</h4>
-<div class="editable" contenteditable="true" style="font-size:12px;color:var(--t2)">
-• 提升文博内容线上触达与传播<br>
-• 增强沉浸式体验（3D/6DoF）<br>
-• 强化运营能力（后台配置）<br>
-• 引入 AI 生产与互动（AIGC/AI 解说）
-</div>
-</div>
-</div>
-
-<h4 style="font-size:13px;margin-bottom:8px">业务层级结构</h4>
+<div class="card">
+<div class="card-title">📄 iWiki 文档（已解析 3 篇）</div>
 <table>
-<thead><tr><th>产品线</th><th>端侧</th><th>核心能力</th><th>数据标识</th></tr></thead>
+<thead><tr><th>文档标题</th><th>来源</th><th>解析摘要</th><th>关联字段</th><th>时间</th><th>状态</th></tr></thead>
 <tbody>
-<tr><td><strong>探元小程序</strong></td><td>微信小程序</td><td class="editable" contenteditable="true">内容浏览·博物馆导览·AI互动·创作·活动</td><td>tanyuan_mp</td></tr>
-<tr><td><strong>探元平台</strong></td><td>Web 管理后台</td><td class="editable" contenteditable="true">博物馆管理·内容配置·资源管理·活动运营</td><td>tanyuan_db</td></tr>
-<tr><td><strong>探元 H5</strong></td><td>H5/播放器</td><td class="editable" contenteditable="true">3D预览·6DoF播放·外链分享</td><td>tanyuan_h5</td></tr>
-<tr><td><strong>大甲骨</strong></td><td>微信小程序</td><td class="editable" contenteditable="true">甲骨文主题互动体验</td><td>great_oracle_mp</td></tr>
-<tr><td><strong>云游</strong></td><td>微信小程序</td><td class="editable" contenteditable="true">云游博物馆</td><td>cloud_axis_mp</td></tr>
-<tr><td><strong>场景码</strong></td><td>微信小程序</td><td class="editable" contenteditable="true">线下扫码导览</td><td>scenes_code_mp</td></tr>
-<tr><td><strong>小元 AI</strong></td><td>AI 服务</td><td class="editable" contenteditable="true">AI 解说·问答·创作</td><td>tanyuan_xiaoyuan_ai_ai</td></tr>
+<tr><td style="font-weight:600">探元产品概述</td><td class="mono" style="font-size:10px">iwiki/p/4018777005</td><td style="font-size:12px">探元是文博/展览数字化产品集合，含小程序、H5、管理后台、AI 服务四端</td><td><span class="tag tag-blue">业务定义</span> <span class="tag tag-blue">产品架构</span></td><td style="font-size:10px;color:var(--ink3)">04-15</td><td><span class="tag tag-green">✅ 已确认</span></td></tr>
+<tr><td style="font-weight:600">探元功能模块清单</td><td class="mono" style="font-size:10px">iwiki/p/4018777006</td><td style="font-size:12px">63 个功能模块分 6 大类：核心浏览(4)、AI能力(7)、地图导览(5)、数字文物(5)、特色玩法(4)、互动活动(5)</td><td><span class="tag tag-blue">功能地图</span></td><td style="font-size:10px;color:var(--ink3)">04-15</td><td><span class="tag tag-green">✅ 已确认</span></td></tr>
+<tr><td style="font-weight:600">SSV 技术架构文档</td><td class="mono" style="font-size:10px">iwiki/p/4017108326</td><td style="font-size:12px">SSV 数据基座四层架构：数据基座层 → AI脚手架层 → 宪章治理层 → 应用层</td><td><span class="tag tag-violet">架构设计</span></td><td style="font-size:10px;color:var(--ink3)">04-15</td><td><span class="tag tag-green">✅ 已确认</span></td></tr>
 </tbody>
 </table>
-
-<div style="margin-top:12px;padding:8px 14px;background:var(--pl);border-radius:8px;font-size:12px">
-🔗 <strong>源文档</strong>：<a href="https://iwiki.woa.com/p/4017108326" style="color:var(--p)">SSV技术生态部/文化</a> · <a href="https://iwiki.woa.com/p/4018777005" style="color:var(--p)">产品概述</a> · <a href="https://iwiki.woa.com/p/4018777006" style="color:var(--p)">功能模块(63个)</a>
-</div>
-<div class="src">📎 数据来源：<span>iWiki MCP</span> · getDocument(4018777005) + getSpacePageTree · <span class="b bg">AI 生成</span> 可编辑</div>
 </div>
 
-<!-- 功能模块 -->
-<div class="cd">
-<div class="ct">📊 核心功能地图（63 个功能模块）</div>
-<div class="g3">
-<div style="background:#f0f5ff;border-radius:8px;padding:12px"><h5 style="font-size:12px;margin-bottom:6px">🏛️ 核心浏览（4）</h5><div style="font-size:11px;color:var(--t2)">启动登录 · 首页推荐 · 搜索 · 博物馆浏览</div></div>
-<div style="background:#f9f0ff;border-radius:8px;padding:12px"><h5 style="font-size:12px;margin-bottom:6px">🤖 AI 能力（7）</h5><div style="font-size:11px;color:var(--t2)">AI解说 · AI搜索 · AI问答 · AI对话 · AI创作 · AI创作工坊 · AI戏剧</div></div>
-<div style="background:#f6ffed;border-radius:8px;padding:12px"><h5 style="font-size:12px;margin-bottom:6px">🗺️ 地图导览（5）</h5><div style="font-size:11px;color:var(--t2)">地图导览 · 场景码 · 地图找馆 · 展览雷达 · 博物馆地图</div></div>
-<div style="background:#fff7e6;border-radius:8px;padding:12px"><h5 style="font-size:12px;margin-bottom:6px">🎨 数字文物（5）</h5><div style="font-size:11px;color:var(--t2)">数字文物库 · 素材库 · 素材详情 · 文创素材库 · 资源授权</div></div>
-<div style="background:#e6fffb;border-radius:8px;padding:12px"><h5 style="font-size:12px;margin-bottom:6px">🎮 特色玩法（4）</h5><div style="font-size:11px;color:var(--t2)">繁星时光镜 · 时光邮局 · 石镌魂韵 · AI剧</div></div>
-<div style="background:#fff0f6;border-radius:8px;padding:12px"><h5 style="font-size:12px;margin-bottom:6px">🏆 互动活动（5）</h5><div style="font-size:11px;color:var(--t2)">任务活动 · 作品投稿 · 创作者招募 · 赛事 · 共创任务</div></div>
-</div>
-</div>
-
-<!-- TAPD 时间轴 -->
-<div class="cd">
-<div class="ct">🚀 TAPD 需求与发版时间轴</div>
-<p style="font-size:11px;color:var(--t3);margin-bottom:12px"><span class="b bo">虚构示例</span> · 基于产品功能模块 + 真实 DAU 波动推导</p>
-<div class="tl">
-<div class="ti tg"><div class="tt">02-08 · v3.6.0 春节专题版本 <span class="b bg">已上线</span></div><div class="td"><strong>TAPD#01</strong> 春节文博专题页 | <strong>TAPD#02</strong> AI"年味讲解" | <strong>TAPD#03</strong> 时光邮局新年模板<br><span style="font-size:10px;color:var(--g)">📊 DAU ~4,800 → 16,966（+253%）</span></div></div>
-<div class="ti tg"><div class="tt">03-01 · v3.7.0 春季版本 <span class="b bg">已上线</span></div><div class="td"><strong>TAPD#04</strong> 春节专题下线 | <strong>TAPD#05</strong> 场景码语音自动播放 | <strong>TAPD#06</strong> 搜索页改版<br><span style="font-size:10px;color:var(--o)">📊 DAU 回落至 4,027</span></div></div>
-<div class="ti tg"><div class="tt">04-03 · v3.8.0 清明文博专题 <span class="b bg">已上线</span></div><div class="td"><strong>TAPD#07</strong> 清明专题页（湖北联动）| <strong>TAPD#08</strong> 湖北 5 家场景码 | <strong>TAPD#09</strong> 墨境·清明<br><span style="font-size:10px;color:var(--g)">📊 DAU 04-05 达 9,920，湖北 UV 占 35%</span></div></div>
-<div class="ti tb"><div class="tt">04-14 · v3.8.1 灰度中 <span class="b bb">灰度 20%</span></div><div class="td"><strong>TAPD#10</strong> 首页推荐优化 | <strong>TAPD#11</strong> 清明专题下线修复 | <strong>TAPD#12</strong> AI 创作新模板</div></div>
-<div class="ti tp"><div class="tt">04-21 · v3.9.0 <span class="b bp">规划中</span></div><div class="td"><strong>TAPD#13</strong> 5·18 博物馆日预热 | <strong>TAPD#14</strong> 石镌魂韵 v2 | <strong>TAPD#15</strong> 周边推荐</div></div>
-</div>
-</div>
-</div>
-
-<!-- ===================== Tab 2: 业务数据（合并数据字典+核心数据） ===================== -->
-<div class="sec" id="s-l2">
-
-<!-- 数据资产总览 -->
-<div class="cd">
-<div class="ct">📂 数据资产总览 · 工蜂 vs TDW 交叉验证</div>
+<div class="card">
+<div class="card-title">🎤 腾讯会议（已解析 2 次）</div>
 <table>
-<thead><tr><th>数据源</th><th>标识</th><th>工蜂文档</th><th>TDW 实际</th><th>差异</th><th>层级</th></tr></thead>
+<thead><tr><th>会议主题</th><th>会议号</th><th>参与人</th><th>关键信息</th><th>时间</th><th>状态</th></tr></thead>
 <tbody>
-<tr><td><strong>探元小程序</strong></td><td>tanyuan_mp</td><td>7</td><td>9</td><td><span class="b bo">+2</span></td><td>DWD·DWS·ADS</td></tr>
-<tr><td><strong>探元DB/平台</strong></td><td>tanyuan_db</td><td>7</td><td>15</td><td><span class="b br">+8</span></td><td>ODS·DIM·ADS</td></tr>
-<tr><td><strong>探元H5</strong></td><td>cltr_tanyuan_h5</td><td>5</td><td>12</td><td><span class="b br">+7</span></td><td>DWD·DWS·ADS</td></tr>
-<tr><td><strong>大甲骨</strong></td><td>great_oracle_mp</td><td>6</td><td>11</td><td><span class="b bo">+5</span></td><td>DWD·DWS·ADS</td></tr>
-<tr><td><strong>云游/场景码/繁星</strong></td><td>多个</td><td>12</td><td>14+</td><td><span class="b bo">+2</span></td><td>DWD·DWS·ADS</td></tr>
-<tr><td colspan="2"><strong>合计</strong></td><td><strong>47</strong></td><td><strong>74+</strong></td><td><span class="b br">~27 表缺文档</span></td><td>—</td></tr>
-</tbody>
-</table>
-<div class="src">📎 <span>工蜂 MCP</span>(ssv_data/ssv_data_docs/culture) + <span>WeData MCP</span>(SHOW TABLES) 交叉验证</div>
-</div>
-
-<!-- 业务数据分层体系 -->
-<div class="cd" style="border-left:4px solid var(--pu)">
-<div class="ct">📋 业务数据分层体系 <span style="font-size:10px;color:var(--t3);font-weight:400">文化实验室下设 3 条核心业务线，每条业务线有独立的核心数据和二层关联逻辑</span></div>
-
-<div style="margin-bottom:12px">
-<div style="font-size:12px;font-weight:500;margin-bottom:6px">✏️ 数据口径调整（产品/研发确认后应用）</div>
-<div class="input-row">
-<textarea class="input-box" rows="2" placeholder="输入口径调整说明，如：A1 的 DAU 应使用 h5_qimei 去重而非 user_id；入驻率分母需排除已关闭博物馆..."></textarea>
-<button class="btn btn-primary btn-sm" style="flex-shrink:0;height:fit-content">应用调整</button>
-</div>
-</div>
-
-<!-- ====== A1: 探元小程序 ====== -->
-<div style="background:#f9f0ff;border-radius:10px;padding:16px;margin-bottom:16px;border:1px solid #d3adf7">
-<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
-<h3 style="font-size:14px;color:var(--pu)">A1 · 探元小程序（C 端核心）</h3>
-<div style="display:flex;gap:6px">
-<span class="b bp">tanyuan_mp</span>
-<span class="b bg">主力产品</span>
-</div>
-</div>
-
-<!-- A1 核心数据 -->
-<div style="font-size:12px;font-weight:600;margin-bottom:6px;color:var(--pu)">⭐ 核心数据</div>
-<table style="margin-bottom:12px">
-<thead><tr><th>指标</th><th>当前值</th><th>口径定义</th><th>计算逻辑</th><th>来源表</th><th>再确认</th></tr></thead>
-<tbody>
-<tr>
-<td><strong>DAU</strong></td>
-<td style="font-weight:700;color:var(--pu)">2,711</td>
-<td class="editable" contenteditable="true">每日有页面访问行为的去重用户数</td>
-<td style="font-size:10px"><code>COUNT(*) FROM dws_tanyuan_mp_page_aggr_d_zl WHERE imp_date=?</code></td>
-<td style="font-size:10px">dws_tanyuan_mp_page_aggr_d_zl</td>
-<td><select style="font-size:10px;padding:2px;border-radius:4px;border:1px solid #d9d9d9"><option>✅ 已确认</option><option>⚠️ 待确认</option><option>❌ 需调整</option></select></td>
-</tr>
-<tr>
-<td><strong>页面 PV</strong></td>
-<td style="font-weight:700">—</td>
-<td class="editable" contenteditable="true">每日所有页面的总曝光次数</td>
-<td style="font-size:10px"><code>SUM(in_pgin_cnt)</code></td>
-<td style="font-size:10px">dws_tanyuan_mp_page_aggr_d_zl</td>
-<td><select style="font-size:10px;padding:2px;border-radius:4px;border:1px solid #d9d9d9"><option>✅ 已确认</option><option>⚠️ 待确认</option><option>❌ 需调整</option></select></td>
-</tr>
-<tr>
-<td><strong>人均停留时长</strong></td>
-<td style="font-weight:700">—</td>
-<td class="editable" contenteditable="true">平均每用户每日小程序内总停留时长（秒）</td>
-<td style="font-size:10px"><code>AVG(in_lvtm_ms)/1000</code></td>
-<td style="font-size:10px">dws_tanyuan_mp_page_aggr_d_zl</td>
-<td><select style="font-size:10px;padding:2px;border-radius:4px;border:1px solid #d9d9d9"><option>⚠️ 待确认</option><option>✅ 已确认</option><option>❌ 需调整</option></select></td>
-</tr>
-</tbody>
-</table>
-
-<!-- A1 二层关联逻辑 -->
-<div style="font-size:12px;font-weight:600;margin-bottom:6px;color:var(--p)">📊 二层业务逻辑（核心数据下钻）</div>
-<table style="font-size:11px">
-<thead><tr><th>关联维度</th><th>所属核心</th><th>口径</th><th>来源</th><th>再确认</th></tr></thead>
-<tbody>
-<tr><td>按省份 UV</td><td>DAU</td><td class="editable" contenteditable="true">GROUP BY province</td><td>page_aggr</td><td><select style="font-size:10px;padding:2px;border-radius:4px;border:1px solid #d9d9d9"><option>✅ 已确认</option><option>⚠️ 待确认</option></select></td></tr>
-<tr><td>按页面 PV</td><td>PV</td><td class="editable" contenteditable="true">GROUP BY pgid</td><td>page_aggr</td><td><select style="font-size:10px;padding:2px;border-radius:4px;border:1px solid #d9d9d9"><option>✅ 已确认</option><option>⚠️ 待确认</option></select></td></tr>
-<tr><td>按元素点击</td><td>PV</td><td class="editable" contenteditable="true">GROUP BY eid</td><td>ele_aggr</td><td><select style="font-size:10px;padding:2px;border-radius:4px;border:1px solid #d9d9d9"><option>✅ 已确认</option><option>⚠️ 待确认</option></select></td></tr>
-<tr><td>新增/回访拆分</td><td>DAU</td><td class="editable" contenteditable="true">首次出现日期比对</td><td>需跨表</td><td><select style="font-size:10px;padding:2px;border-radius:4px;border:1px solid #d9d9d9"><option>⚠️ 待确认</option><option>✅ 已确认</option></select></td></tr>
-<tr><td>AI 功能使用率</td><td>DAU</td><td class="editable" contenteditable="true">AI 页面 UV / 总 DAU</td><td>page_aggr WHERE pgid LIKE ai%</td><td><select style="font-size:10px;padding:2px;border-radius:4px;border:1px solid #d9d9d9"><option>⚠️ 待确认</option><option>✅ 已确认</option></select></td></tr>
-<tr><td>异常上报监控</td><td>技术</td><td class="editable" contenteditable="true">每日异常事件数</td><td>ads_monitor_d_zl</td><td><select style="font-size:10px;padding:2px;border-radius:4px;border:1px solid #d9d9d9"><option selected>❌ 数据异常</option><option>✅ 已确认</option></select></td></tr>
+<tr><td style="font-weight:600">数据基座周会</td><td class="mono" style="font-size:10px">886-2345-6789</td><td>Suri、马巍、嘉辉</td><td style="font-size:12px">① "Skill"命名有歧义需改 ② 归因分析由中台负责 ③ 核心指标须业务确认</td><td style="font-size:10px;color:var(--ink3)">04-16</td><td><span class="tag tag-green">✅ 已确认</span></td></tr>
+<tr><td style="font-weight:600">文化实验室月度复盘</td><td class="mono" style="font-size:10px">886-3456-7890</td><td>刘芳、赵宇、wind</td><td style="font-size:12px">① 清明活动 DAU 9,920 ② 5·18 博物馆日规划 ③ AI解说上线评估</td><td style="font-size:10px;color:var(--ink3)">04-10</td><td><span class="tag tag-amber">⚠️ 待确认</span></td></tr>
 </tbody>
 </table>
 </div>
 
-<!-- ====== A2: 探元平台（博物馆管理） ====== -->
-<div style="background:#f0f5ff;border-radius:10px;padding:16px;margin-bottom:16px;border:1px solid #91caff">
-<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
-<h3 style="font-size:14px;color:var(--p)">A2 · 探元平台（博物馆管理 · B 端）</h3>
-<div style="display:flex;gap:6px">
-<span class="b bb">tanyuan_db</span>
-<span class="b bo">内容管理</span>
-</div>
-</div>
-
-<div style="font-size:12px;font-weight:600;margin-bottom:6px;color:var(--p)">⭐ 核心数据</div>
-<table style="margin-bottom:12px">
-<thead><tr><th>指标</th><th>当前值</th><th>口径定义</th><th>计算逻辑</th><th>来源表</th><th>再确认</th></tr></thead>
+<div class="card">
+<div class="card-title">📝 腾讯文档（已解析 2 份）</div>
+<table>
+<thead><tr><th>文档名称</th><th>类型</th><th>提取摘要</th><th>关联</th><th>时间</th><th>状态</th></tr></thead>
 <tbody>
-<tr>
-<td><strong>已入驻博物馆数</strong></td>
-<td style="font-weight:700;color:var(--p)">370 <span style="font-size:10px;color:var(--o)">/6,639(5.6%)</span></td>
-<td class="editable" contenteditable="true">"已入驻"状态的全国博物馆总数</td>
-<td style="font-size:10px">直取 <code>in_on_tanyuan_cnt</code></td>
-<td style="font-size:10px">ads_tanyuan_museum_indices_d_ql</td>
-<td><select style="font-size:10px;padding:2px;border-radius:4px;border:1px solid #d9d9d9"><option>✅ 已确认</option><option>⚠️ 待确认</option></select></td>
-</tr>
-<tr>
-<td><strong>繁星计划馆数</strong></td>
-<td style="font-weight:700;color:var(--o)">260 <span style="font-size:10px;color:var(--pu)">占70.3%</span></td>
-<td class="editable" contenteditable="true">已入驻且入选繁星计划的博物馆数</td>
-<td style="font-size:10px">直取 <code>in_on_star_cnt</code></td>
-<td style="font-size:10px">ads_tanyuan_museum_indices_d_ql</td>
-<td><select style="font-size:10px;padding:2px;border-radius:4px;border:1px solid #d9d9d9"><option>⚠️ 待确认</option><option>✅ 已确认</option></select></td>
-</tr>
-<tr>
-<td><strong>数字文物资产数</strong></td>
-<td style="font-weight:700">—</td>
-<td class="editable" contenteditable="true">平台收录的数字文物总数</td>
-<td style="font-size:10px"><code>COUNT(*)</code></td>
-<td style="font-size:10px">dim_tanyuan_heritage_d_ql</td>
-<td><select style="font-size:10px;padding:2px;border-radius:4px;border:1px solid #d9d9d9"><option>✅ 已确认</option><option>⚠️ 待确认</option></select></td>
-</tr>
-<tr>
-<td><strong>素材资产数</strong></td>
-<td style="font-weight:700">—</td>
-<td class="editable" contenteditable="true">平台收录的创作素材总数</td>
-<td style="font-size:10px"><code>COUNT(*)</code></td>
-<td style="font-size:10px">dim_tanyuan_material_d_ql</td>
-<td><select style="font-size:10px;padding:2px;border-radius:4px;border:1px solid #d9d9d9"><option>✅ 已确认</option><option>⚠️ 待确认</option></select></td>
-</tr>
-</tbody>
-</table>
-
-<div style="font-size:12px;font-weight:600;margin-bottom:6px;color:var(--p)">📊 二层业务逻辑</div>
-<table style="font-size:11px">
-<thead><tr><th>关联维度</th><th>所属核心</th><th>口径</th><th>来源</th><th>再确认</th></tr></thead>
-<tbody>
-<tr><td>按主题类型入驻分布</td><td>入驻数</td><td class="editable" contenteditable="true">7类主题×入驻状态</td><td>museum_indices theme_*</td><td><select style="font-size:10px;padding:2px;border-radius:4px;border:1px solid #d9d9d9"><option>✅ 已确认</option></select></td></tr>
-<tr><td>按等级入驻分布</td><td>入驻数</td><td class="editable" contenteditable="true">1/2/3级+未定级×入驻状态</td><td>museum_indices grade_*</td><td><select style="font-size:10px;padding:2px;border-radius:4px;border:1px solid #d9d9d9"><option selected>❌ 数据异常(全0)</option><option>✅ 已确认</option></select></td></tr>
-<tr><td>按地区分布</td><td>入驻数</td><td class="editable" contenteditable="true">按省份/城市拆分</td><td>需关联 dim 地理字段</td><td><select style="font-size:10px;padding:2px;border-radius:4px;border:1px solid #d9d9d9"><option selected>🟡 尚无数据</option><option>✅ 已确认</option></select></td></tr>
-<tr><td>按文物目录类型分布</td><td>文物资产</td><td class="editable" contenteditable="true">dim=1 按 type_id 拆分</td><td>ads_tanyuan_type_stat_d_ql</td><td><select style="font-size:10px;padding:2px;border-radius:4px;border:1px solid #d9d9d9"><option>✅ 已确认</option></select></td></tr>
-<tr><td>按素材创作类型分布</td><td>素材资产</td><td class="editable" contenteditable="true">dim=2 按 type_id 拆分</td><td>ads_tanyuan_type_stat_d_ql</td><td><select style="font-size:10px;padding:2px;border-radius:4px;border:1px solid #d9d9d9"><option>✅ 已确认</option></select></td></tr>
-<tr><td>博物馆地区分布统计</td><td>入驻数</td><td class="editable" contenteditable="true">按区域聚合博物馆数</td><td>ads_tanyuan_museum_area_distribution_d_ql</td><td><select style="font-size:10px;padding:2px;border-radius:4px;border:1px solid #d9d9d9"><option>✅ 已确认</option></select></td></tr>
+<tr><td style="font-weight:600">2026Q1 经营回顾.pptx</td><td><span class="tag tag-violet">PPT</span></td><td style="font-size:12px">P3: Q1入驻目标400家(现370) · P8: AI创作使用率目标15% · P12: 5·18大促</td><td><span class="tag tag-blue">OKR</span></td><td style="font-size:10px;color:var(--ink3)">04-08</td><td><span class="tag tag-green">✅ 已确认</span></td></tr>
+<tr><td style="font-weight:600">文化实验室数据字段说明.xlsx</td><td><span class="tag tag-green">Excel</span></td><td style="font-size:12px">47 张工蜂文档表 + 74 张 TDW 表，约 27 张表缺文档</td><td><span class="tag tag-blue">数据字典</span></td><td style="font-size:10px;color:var(--ink3)">04-12</td><td><span class="tag tag-amber">⚠️ 待补充</span></td></tr>
 </tbody>
 </table>
 </div>
 
-<!-- ====== A3: 大甲骨 + 子产品 ====== -->
-<div style="background:#f6ffed;border-radius:10px;padding:16px;margin-bottom:16px;border:1px solid #b7eb8f">
-<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
-<h3 style="font-size:14px;color:var(--g)">A3 · 大甲骨及子产品（互动体验线）</h3>
-<div style="display:flex;gap:6px">
-<span class="b bg">great_oracle_mp</span>
-<span class="b bc">cloud_axis / scenes_code / star_project</span>
+<div class="src">📎 以上内容由系统自动解析生成，<b>数据组同学</b>确认后生效</div>
+</div>
+
+<!-- ==================== Tab 2: 业务数据确认 ==================== -->
+<div class="sec" id="s-t2">
+
+<div style="font-size:13px;color:var(--ink2);margin-bottom:16px">此页面定义了「文化实验室」的数据口径标准。当任何人通过 AI 询问相关指标时，系统严格按此口径计算和答复。<strong style="color:var(--blue)">口径一经确认，即为唯一标准</strong>——老板看板、周报、AI 回答，来源一致、口径一致。</div>
+
+<!-- 核心数据看板编辑器 -->
+<div class="card card-accent">
+<div class="card-title">📊 核心数据看板编辑器</div>
+<p style="font-size:12px;color:var(--ink3);margin-bottom:16px">配置老板看板展示哪些核心指标。点击指标卡展开口径详情。</p>
+
+<!-- 指标1: 探元 DAU -->
+<div style="background:var(--white);border:1px solid var(--bd);border-radius:var(--r-md);margin-bottom:12px;overflow:hidden">
+<div style="padding:14px 18px;display:flex;align-items:center;gap:12px;cursor:pointer" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'block':'none';this.querySelector('.arrow').textContent=this.nextElementSibling.style.display==='none'?'▶':'▼'">
+<span style="color:var(--ink4);cursor:grab">⠿</span>
+<div style="flex:1"><div style="font-size:14px;font-weight:700">📱 探元小程序 DAU</div><div style="font-size:11px;color:var(--ink3)">每日有页面访问行为的去重用户数</div></div>
+<span class="tag tag-green">核心</span>
+<select style="font-size:10px;padding:2px 6px;border-radius:4px;border:1px solid var(--bd)" onclick="event.stopPropagation()"><option>折线图</option><option>数值卡片</option><option>柱状图</option></select>
+<span class="arrow" style="color:var(--ink3);font-size:10px">▶</span>
+</div>
+<div style="display:none;border-top:1px solid var(--bd-light);padding:18px;background:var(--bg-subtle)">
+<!-- 口径体系图 -->
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:14px">
+<div>
+<div style="font-size:11px;font-weight:700;color:var(--blue);margin-bottom:8px;text-transform:uppercase;letter-spacing:.8px">📐 口径定义</div>
+<table style="font-size:12px">
+<tr><td style="font-weight:600;width:100px;color:var(--ink2)">指标名称</td><td>探元小程序 DAU</td></tr>
+<tr><td style="font-weight:600;color:var(--ink2)">计算逻辑</td><td><code style="background:var(--blue-bg);padding:2px 6px;border-radius:3px;font-family:var(--fm);font-size:11px">COUNT(*) FROM dws_tanyuan_mp_page_aggr_d_zl WHERE imp_date = ?</code></td></tr>
+<tr><td style="font-weight:600;color:var(--ink2)">去重字段</td><td><code style="background:var(--bg);padding:2px 6px;border-radius:3px;font-family:var(--fm);font-size:11px">h5_qimei</code>（设备维度）</td></tr>
+<tr><td style="font-weight:600;color:var(--ink2)">数据粒度</td><td>日级（imp_date，格式 YYYYMMDD）</td></tr>
+<tr><td style="font-weight:600;color:var(--ink2)">来源表</td><td><code style="background:var(--bg);padding:2px 6px;border-radius:3px;font-family:var(--fm);font-size:11px">dws_tanyuan_mp_page_aggr_d_zl</code></td></tr>
+<tr><td style="font-weight:600;color:var(--ink2)">数据层级</td><td>DWS（汇总层）</td></tr>
+</table>
+</div>
+<div>
+<div style="font-size:11px;font-weight:700;color:var(--green);margin-bottom:8px;text-transform:uppercase;letter-spacing:.8px">📊 指标体系</div>
+<div style="background:var(--white);border:1px solid var(--bd);border-radius:var(--r-sm);padding:12px;font-size:12px">
+<div style="text-align:center;padding:8px;background:var(--blue-bg);border-radius:var(--r-sm);font-weight:700;color:var(--blue);margin-bottom:8px">探元 DAU</div>
+<div style="display:flex;justify-content:center;color:var(--ink4);font-size:10px;margin-bottom:6px">┌────────┼────────┐</div>
+<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;text-align:center">
+<div style="padding:6px;background:var(--green-bg);border-radius:4px;font-size:10px;color:var(--green)">按省份<br>GROUP BY province</div>
+<div style="padding:6px;background:var(--amber-bg);border-radius:4px;font-size:10px;color:var(--amber)">按页面<br>GROUP BY pgid</div>
+<div style="padding:6px;background:var(--violet-bg);border-radius:4px;font-size:10px;color:var(--violet)">新增/回访<br>首次日期比对</div>
+</div>
+<div style="margin-top:8px;font-size:10px;color:var(--ink3);text-align:center">↓ 下钻维度 ↓</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:6px;text-align:center">
+<div style="padding:4px;background:var(--bg);border-radius:4px;font-size:9px;color:var(--ink3)">AI 功能 UV / DAU</div>
+<div style="padding:4px;background:var(--bg);border-radius:4px;font-size:9px;color:var(--ink3)">异常监控 checker</div>
+</div>
+</div>
+</div>
+</div>
+<div style="display:flex;gap:8px;align-items:center">
+<span style="font-size:11px;color:var(--ink3)">确认状态：</span>
+<select style="font-size:11px;padding:3px 8px;border-radius:4px;border:1px solid var(--bd)"><option>✅ 已确认</option><option>⚠️ 待确认</option><option>❌ 需调整</option></select>
+<span style="font-size:11px;color:var(--ink3);margin-left:auto">确认人：</span>
+<input class="input" style="width:120px;padding:4px 8px;font-size:11px" placeholder="如：刘芳" value="刘芳">
+<button class="btn btn-primary btn-sm">💾 保存口径</button>
+</div>
 </div>
 </div>
 
-<div style="font-size:12px;font-weight:600;margin-bottom:6px;color:var(--g)">⭐ 核心数据</div>
-<table style="margin-bottom:12px">
-<thead><tr><th>指标</th><th>当前值</th><th>口径定义</th><th>计算逻辑</th><th>来源表</th><th>再确认</th></tr></thead>
-<tbody>
-<tr>
-<td><strong>大甲骨 DAU</strong></td>
-<td style="font-weight:700;color:var(--g)">662</td>
-<td class="editable" contenteditable="true">大甲骨小程序每日去重活跃用户</td>
-<td style="font-size:10px"><code>COUNT(DISTINCT h5_qimei)</code></td>
-<td style="font-size:10px">dws_great_oracle_mp_page_aggr_d_zl</td>
-<td><select style="font-size:10px;padding:2px;border-radius:4px;border:1px solid #d9d9d9"><option>✅ 已确认</option></select></td>
-</tr>
-<tr>
-<td><strong>云游 DAU</strong></td>
-<td style="font-weight:700">—</td>
-<td class="editable" contenteditable="true">云游小程序每日去重活跃用户</td>
-<td style="font-size:10px"><code>COUNT(DISTINCT)</code></td>
-<td style="font-size:10px">dws_cloud_axis_mp_*</td>
-<td><select style="font-size:10px;padding:2px;border-radius:4px;border:1px solid #d9d9d9"><option>⚠️ 待确认</option></select></td>
-</tr>
-<tr>
-<td><strong>场景码使用量</strong></td>
-<td style="font-weight:700">—</td>
-<td class="editable" contenteditable="true">场景码小程序每日扫码使用次数</td>
-<td style="font-size:10px"><code>COUNT(*)</code></td>
-<td style="font-size:10px">dws_scenes_code_mp_*</td>
-<td><select style="font-size:10px;padding:2px;border-radius:4px;border:1px solid #d9d9d9"><option>⚠️ 待确认</option></select></td>
-</tr>
-</tbody>
+<!-- 指标2: 已入驻博物馆数 -->
+<div style="background:var(--white);border:1px solid var(--bd);border-radius:var(--r-md);margin-bottom:12px;overflow:hidden">
+<div style="padding:14px 18px;display:flex;align-items:center;gap:12px;cursor:pointer" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'block':'none';this.querySelector('.arrow').textContent=this.nextElementSibling.style.display==='none'?'▶':'▼'">
+<span style="color:var(--ink4);cursor:grab">⠿</span>
+<div style="flex:1"><div style="font-size:14px;font-weight:700">🏛️ 已入驻博物馆数</div><div style="font-size:11px;color:var(--ink3)">"已入驻"状态的全国博物馆总数</div></div>
+<span class="tag tag-green">核心</span>
+<select style="font-size:10px;padding:2px 6px;border-radius:4px;border:1px solid var(--bd)" onclick="event.stopPropagation()"><option>数值卡片</option><option>折线图</option></select>
+<span class="arrow" style="color:var(--ink3);font-size:10px">▶</span>
+</div>
+<div style="display:none;border-top:1px solid var(--bd-light);padding:18px;background:var(--bg-subtle)">
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:14px">
+<div>
+<div style="font-size:11px;font-weight:700;color:var(--blue);margin-bottom:8px;text-transform:uppercase;letter-spacing:.8px">📐 口径定义</div>
+<table style="font-size:12px">
+<tr><td style="font-weight:600;width:100px;color:var(--ink2)">指标名称</td><td>已入驻博物馆数</td></tr>
+<tr><td style="font-weight:600;color:var(--ink2)">计算逻辑</td><td><code style="background:var(--blue-bg);padding:2px 6px;border-radius:3px;font-family:var(--fm);font-size:11px">直取 in_on_tanyuan_cnt</code></td></tr>
+<tr><td style="font-weight:600;color:var(--ink2)">分母</td><td>全国博物馆总数 6,639（<code style="font-family:var(--fm);font-size:11px">all_museum_cnt</code>）</td></tr>
+<tr><td style="font-weight:600;color:var(--ink2)">来源表</td><td><code style="background:var(--bg);padding:2px 6px;border-radius:3px;font-family:var(--fm);font-size:11px">ads_tanyuan_museum_indices_d_ql</code></td></tr>
+<tr><td style="font-weight:600;color:var(--ink2)">数据层级</td><td>ADS（应用层，日全量快照）</td></tr>
 </table>
+</div>
+<div>
+<div style="font-size:11px;font-weight:700;color:var(--green);margin-bottom:8px;text-transform:uppercase;letter-spacing:.8px">📊 指标体系</div>
+<div style="background:var(--white);border:1px solid var(--bd);border-radius:var(--r-sm);padding:12px;font-size:12px">
+<div style="text-align:center;padding:8px;background:var(--blue-bg);border-radius:var(--r-sm);font-weight:700;color:var(--blue);margin-bottom:8px">入驻博物馆 370 / 6,639</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;text-align:center">
+<div style="padding:6px;background:var(--green-bg);border-radius:4px;font-size:10px;color:var(--green)">按主题类型<br>theme_1~5_cnt</div>
+<div style="padding:6px;background:var(--amber-bg);border-radius:4px;font-size:10px;color:var(--amber)">繁星计划<br>in_on_star_cnt</div>
+</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:6px;text-align:center">
+<div style="padding:4px;background:var(--bg);border-radius:4px;font-size:9px;color:var(--ink3)">按等级 grade_*<br><span style="color:var(--red)">⚠️ 全为0</span></div>
+<div style="padding:4px;background:var(--bg);border-radius:4px;font-size:9px;color:var(--ink3)">按地区分布<br>area_distribution</div>
+</div>
+</div>
+</div>
+</div>
+<div style="display:flex;gap:8px;align-items:center">
+<span style="font-size:11px;color:var(--ink3)">确认状态：</span>
+<select style="font-size:11px;padding:3px 8px;border-radius:4px;border:1px solid var(--bd)"><option>✅ 已确认</option><option>⚠️ 待确认</option></select>
+<span style="font-size:11px;color:var(--ink3);margin-left:auto">确认人：</span>
+<input class="input" style="width:120px;padding:4px 8px;font-size:11px" value="赵宇">
+<button class="btn btn-primary btn-sm">💾 保存口径</button>
+</div>
+</div>
+</div>
 
-<div style="font-size:12px;font-weight:600;margin-bottom:6px;color:var(--g)">📊 二层业务逻辑</div>
-<table style="font-size:11px">
-<thead><tr><th>关联维度</th><th>所属核心</th><th>口径</th><th>来源</th><th>再确认</th></tr></thead>
-<tbody>
-<tr><td>大甲骨页面分布</td><td>DAU</td><td class="editable" contenteditable="true">GROUP BY pgid</td><td>great_oracle page_aggr</td><td><select style="font-size:10px;padding:2px;border-radius:4px;border:1px solid #d9d9d9"><option>✅ 已确认</option></select></td></tr>
-<tr><td>大甲骨启动来源</td><td>DAU</td><td class="editable" contenteditable="true">GROUP BY lach_code</td><td>great_oracle lach_aggr</td><td><select style="font-size:10px;padding:2px;border-radius:4px;border:1px solid #d9d9d9"><option>✅ 已确认</option></select></td></tr>
-<tr><td>大甲骨用户身份分布</td><td>DAU</td><td class="editable" contenteditable="true">openid vs login_user_id</td><td>great_oracle party_*</td><td><select style="font-size:10px;padding:2px;border-radius:4px;border:1px solid #d9d9d9"><option>⚠️ 待确认</option></select></td></tr>
-</tbody>
+<!-- 指标3: 大甲骨 DAU -->
+<div style="background:var(--white);border:1px solid var(--bd);border-radius:var(--r-md);margin-bottom:12px;overflow:hidden">
+<div style="padding:14px 18px;display:flex;align-items:center;gap:12px;cursor:pointer" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'block':'none';this.querySelector('.arrow').textContent=this.nextElementSibling.style.display==='none'?'▶':'▼'">
+<span style="color:var(--ink4);cursor:grab">⠿</span>
+<div style="flex:1"><div style="font-size:14px;font-weight:700">🎮 大甲骨 DAU</div><div style="font-size:11px;color:var(--ink3)">大甲骨小程序每日去重活跃用户</div></div>
+<span class="tag tag-green">核心</span>
+<select style="font-size:10px;padding:2px 6px;border-radius:4px;border:1px solid var(--bd)" onclick="event.stopPropagation()"><option>折线图</option><option>数值卡片</option></select>
+<span class="arrow" style="color:var(--ink3);font-size:10px">▶</span>
+</div>
+<div style="display:none;border-top:1px solid var(--bd-light);padding:18px;background:var(--bg-subtle)">
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:14px">
+<div>
+<div style="font-size:11px;font-weight:700;color:var(--blue);margin-bottom:8px;text-transform:uppercase;letter-spacing:.8px">📐 口径定义</div>
+<table style="font-size:12px">
+<tr><td style="font-weight:600;width:100px;color:var(--ink2)">指标名称</td><td>大甲骨 DAU</td></tr>
+<tr><td style="font-weight:600;color:var(--ink2)">计算逻辑</td><td><code style="background:var(--blue-bg);padding:2px 6px;border-radius:3px;font-family:var(--fm);font-size:11px">COUNT(DISTINCT h5_qimei) FROM dws_great_oracle_mp_page_aggr_d_zl</code></td></tr>
+<tr><td style="font-weight:600;color:var(--ink2)">去重字段</td><td><code style="background:var(--bg);padding:2px 6px;border-radius:3px;font-family:var(--fm);font-size:11px">h5_qimei</code></td></tr>
+<tr><td style="font-weight:600;color:var(--ink2)">来源表</td><td><code style="background:var(--bg);padding:2px 6px;border-radius:3px;font-family:var(--fm);font-size:11px">dws_great_oracle_mp_page_aggr_d_zl</code></td></tr>
+<tr><td style="font-weight:600;color:var(--ink2)">数据层级</td><td>DWS（汇总层，日增量）</td></tr>
 </table>
+</div>
+<div>
+<div style="font-size:11px;font-weight:700;color:var(--green);margin-bottom:8px;text-transform:uppercase;letter-spacing:.8px">📊 指标体系</div>
+<div style="background:var(--white);border:1px solid var(--bd);border-radius:var(--r-sm);padding:12px;font-size:12px">
+<div style="text-align:center;padding:8px;background:var(--green-bg);border-radius:var(--r-sm);font-weight:700;color:var(--green);margin-bottom:8px">大甲骨 DAU</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;text-align:center">
+<div style="padding:6px;background:var(--blue-bg);border-radius:4px;font-size:10px;color:var(--blue)">按页面分布<br>GROUP BY pgid</div>
+<div style="padding:6px;background:var(--amber-bg);border-radius:4px;font-size:10px;color:var(--amber)">启动来源<br>GROUP BY lach_code</div>
+</div>
+</div>
+</div>
+</div>
+<div style="display:flex;gap:8px;align-items:center">
+<span style="font-size:11px;color:var(--ink3)">确认状态：</span>
+<select style="font-size:11px;padding:3px 8px;border-radius:4px;border:1px solid var(--bd)"><option>✅ 已确认</option><option>⚠️ 待确认</option></select>
+<span style="font-size:11px;color:var(--ink3);margin-left:auto">确认人：</span>
+<input class="input" style="width:120px;padding:4px 8px;font-size:11px" value="wind">
+<button class="btn btn-primary btn-sm">💾 保存口径</button>
+</div>
+</div>
+</div>
+
+<!-- 指标4: 繁星计划 -->
+<div style="background:var(--white);border:1px solid var(--bd);border-radius:var(--r-md);margin-bottom:12px;overflow:hidden">
+<div style="padding:14px 18px;display:flex;align-items:center;gap:12px;cursor:pointer" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'block':'none';this.querySelector('.arrow').textContent=this.nextElementSibling.style.display==='none'?'▶':'▼'">
+<span style="color:var(--ink4);cursor:grab">⠿</span>
+<div style="flex:1"><div style="font-size:14px;font-weight:700">⭐ 繁星计划馆数</div><div style="font-size:11px;color:var(--ink3)">已入驻且入选繁星计划的博物馆数</div></div>
+<span class="tag tag-blue">关联</span>
+<select style="font-size:10px;padding:2px 6px;border-radius:4px;border:1px solid var(--bd)" onclick="event.stopPropagation()"><option>数值卡片</option><option>折线图</option></select>
+<span class="arrow" style="color:var(--ink3);font-size:10px">▶</span>
+</div>
+<div style="display:none;border-top:1px solid var(--bd-light);padding:18px;background:var(--bg-subtle)">
+<table style="font-size:12px">
+<tr><td style="font-weight:600;width:100px;color:var(--ink2)">计算逻辑</td><td><code style="background:var(--blue-bg);padding:2px 6px;border-radius:3px;font-family:var(--fm);font-size:11px">直取 in_on_star_cnt</code></td></tr>
+<tr><td style="font-weight:600;color:var(--ink2)">来源表</td><td><code style="background:var(--bg);padding:2px 6px;border-radius:3px;font-family:var(--fm);font-size:11px">ads_tanyuan_museum_indices_d_ql</code></td></tr>
+<tr><td style="font-weight:600;color:var(--ink2)">关联指标</td><td>占比 = in_on_star_cnt / in_on_tanyuan_cnt（当前 70.3%）</td></tr>
+<tr><td style="font-weight:600;color:var(--ink2)">⚠️ 待确认</td><td style="color:var(--amber)">"繁星计划"入选标准定义尚不明确，需业务方补充</td></tr>
+</table>
+<div style="display:flex;gap:8px;align-items:center;margin-top:12px">
+<span style="font-size:11px;color:var(--ink3)">确认状态：</span>
+<select style="font-size:11px;padding:3px 8px;border-radius:4px;border:1px solid var(--bd)"><option>⚠️ 待确认</option><option>✅ 已确认</option></select>
+<button class="btn btn-primary btn-sm" style="margin-left:auto">💾 保存口径</button>
+</div>
+</div>
+</div>
+
+<div style="display:flex;gap:8px;margin-top:4px;position:relative">
+<button class="btn btn-ghost btn-sm" onclick="document.getElementById('addMetricPanel').style.display=document.getElementById('addMetricPanel').style.display==='none'?'block':'none'">+ 添加指标</button>
+<button class="btn btn-primary btn-sm">💾 保存全部看板配置</button>
+
+<!-- 添加指标选择面板 -->
+<div id="addMetricPanel" style="display:none;position:absolute;top:36px;left:0;z-index:50;width:520px;background:var(--white);border:1px solid var(--bd);border-radius:var(--r-lg);box-shadow:var(--sh-lg);padding:16px">
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+<div style="font-size:13px;font-weight:700">从已确认的业务字段中添加</div>
+<span style="cursor:pointer;color:var(--ink3);font-size:14px" onclick="document.getElementById('addMetricPanel').style.display='none'">✕</span>
+</div>
+<input class="input" style="margin-bottom:10px;font-size:12px;padding:8px 12px" placeholder="🔍 搜索指标名称或表名...">
+
+<div style="font-size:10px;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px">A1 · 探元小程序</div>
+<div style="display:flex;flex-direction:column;gap:4px;margin-bottom:10px">
+<div style="display:flex;align-items:center;gap:8px;padding:8px 10px;border:1px solid var(--bd-light);border-radius:var(--r-sm);cursor:pointer;transition:.12s;font-size:12px" onmouseover="this.style.borderColor='var(--blue)';this.style.background='var(--blue-bg)'" onmouseout="this.style.borderColor='var(--bd-light)';this.style.background=''" onclick="alert('已添加到看板：按省份 UV 分布');document.getElementById('addMetricPanel').style.display='none'">
+<span class="dot dot-g"></span><span style="flex:1">按省份 UV 分布</span><code style="font-size:10px;color:var(--ink3);font-family:var(--fm)">GROUP BY province</code><span class="tag tag-green" style="font-size:9px">已确认</span></div>
+<div style="display:flex;align-items:center;gap:8px;padding:8px 10px;border:1px solid var(--bd-light);border-radius:var(--r-sm);cursor:pointer;transition:.12s;font-size:12px" onmouseover="this.style.borderColor='var(--blue)';this.style.background='var(--blue-bg)'" onmouseout="this.style.borderColor='var(--bd-light)';this.style.background=''" onclick="alert('已添加到看板：新增/回访拆分');document.getElementById('addMetricPanel').style.display='none'">
+<span class="dot dot-g"></span><span style="flex:1">新增 / 回访拆分</span><code style="font-size:10px;color:var(--ink3);font-family:var(--fm)">首次日期比对</code><span class="tag tag-green" style="font-size:9px">已确认</span></div>
+<div style="display:flex;align-items:center;gap:8px;padding:8px 10px;border:1px solid var(--bd-light);border-radius:var(--r-sm);cursor:pointer;transition:.12s;font-size:12px;opacity:.5" onmouseover="this.style.borderColor='var(--amber)';this.style.background='var(--amber-bg)'" onmouseout="this.style.borderColor='var(--bd-light)';this.style.background=''">
+<span class="dot dot-o"></span><span style="flex:1">人均停留时长</span><code style="font-size:10px;color:var(--ink3);font-family:var(--fm)">AVG(in_lvtm_ms)/1000</code><span class="tag tag-amber" style="font-size:9px">待确认</span></div>
+<div style="display:flex;align-items:center;gap:8px;padding:8px 10px;border:1px solid var(--bd-light);border-radius:var(--r-sm);cursor:pointer;transition:.12s;font-size:12px;opacity:.5" onmouseover="this.style.borderColor='var(--amber)';this.style.background='var(--amber-bg)'" onmouseout="this.style.borderColor='var(--bd-light)';this.style.background=''">
+<span class="dot dot-x"></span><span style="flex:1">AI 功能使用率</span><code style="font-size:10px;color:var(--ink3);font-family:var(--fm)">AI页UV / DAU</code><span class="tag tag-amber" style="font-size:9px">待确认</span></div>
+</div>
+
+<div style="font-size:10px;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px">A2 · 探元平台</div>
+<div style="display:flex;flex-direction:column;gap:4px;margin-bottom:10px">
+<div style="display:flex;align-items:center;gap:8px;padding:8px 10px;border:1px solid var(--bd-light);border-radius:var(--r-sm);cursor:pointer;transition:.12s;font-size:12px" onmouseover="this.style.borderColor='var(--blue)';this.style.background='var(--blue-bg)'" onmouseout="this.style.borderColor='var(--bd-light)';this.style.background=''" onclick="alert('已添加到看板：按主题类型分布');document.getElementById('addMetricPanel').style.display='none'">
+<span class="dot dot-o"></span><span style="flex:1">按主题类型分布</span><code style="font-size:10px;color:var(--ink3);font-family:var(--fm)">theme_1~5_cnt</code><span class="tag tag-amber" style="font-size:9px">待确认</span></div>
+<div style="display:flex;align-items:center;gap:8px;padding:8px 10px;border:1px solid var(--bd-light);border-radius:var(--r-sm);cursor:pointer;transition:.12s;font-size:12px" onmouseover="this.style.borderColor='var(--blue)';this.style.background='var(--blue-bg)'" onmouseout="this.style.borderColor='var(--bd-light)';this.style.background=''" onclick="alert('已添加到看板：数字文物资产数');document.getElementById('addMetricPanel').style.display='none'">
+<span class="dot dot-x"></span><span style="flex:1">数字文物资产数</span><code style="font-size:10px;color:var(--ink3);font-family:var(--fm)">dim_tanyuan_heritage</code><span class="tag tag-blue" style="font-size:9px">非核心</span></div>
+</div>
+
+<div style="font-size:10px;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px">A3 · 大甲骨</div>
+<div style="display:flex;flex-direction:column;gap:4px;margin-bottom:10px">
+<div style="display:flex;align-items:center;gap:8px;padding:8px 10px;border:1px solid var(--bd-light);border-radius:var(--r-sm);cursor:pointer;transition:.12s;font-size:12px;opacity:.5" onmouseover="this.style.borderColor='var(--amber)';this.style.background='var(--amber-bg)'" onmouseout="this.style.borderColor='var(--bd-light)';this.style.background=''">
+<span class="dot dot-o"></span><span style="flex:1">云游 DAU</span><code style="font-size:10px;color:var(--ink3);font-family:var(--fm)">dws_cloud_axis_mp_*</code><span class="tag tag-amber" style="font-size:9px">待确认</span></div>
+<div style="display:flex;align-items:center;gap:8px;padding:8px 10px;border:1px solid var(--bd-light);border-radius:var(--r-sm);cursor:pointer;transition:.12s;font-size:12px;opacity:.5" onmouseover="this.style.borderColor='var(--amber)';this.style.background='var(--amber-bg)'" onmouseout="this.style.borderColor='var(--bd-light)';this.style.background=''">
+<span class="dot dot-o"></span><span style="flex:1">场景码使用量</span><code style="font-size:10px;color:var(--ink3);font-family:var(--fm)">dws_scenes_code_mp_*</code><span class="tag tag-amber" style="font-size:9px">待确认</span></div>
+</div>
+
+<div style="border-top:1px solid var(--bd-light);padding-top:8px;font-size:10px;color:var(--ink3)">💡 <strong style="color:var(--blue)">已确认</strong>的指标可直接添加 · <span style="opacity:.6">待确认</span>的指标添加后需先完成确认</div>
+</div>
+</div>
+</div>
+
+<!-- 业务字段确认（可编辑指标卡 + AI 建议） -->
+<div class="card" style="border-left:3px solid var(--green)">
+<div class="card-title">🌳 业务字段确认</div>
+<p style="font-size:12px;color:var(--ink3);margin-bottom:6px">每个指标均可展开查看/编辑完整 SQL 口径和示例数据。所有字段均可编辑。</p>
+<p style="font-size:12px;color:var(--blue);margin-bottom:16px;font-weight:500">💡 点击指标行展开详情 · 点击圆点切换核心/非核心 · 所有 SQL 和字段可直接编辑</p>
+
+<!-- ====== A1 · 探元小程序 ====== -->
+<div style="margin-bottom:20px">
+<div style="font-size:14px;font-weight:700;padding:8px 12px;background:var(--green-bg);border-radius:var(--r-sm);display:inline-flex;align-items:center;gap:6px;margin-bottom:10px"><span class="dot dot-g"></span> A1 · 探元小程序 <span class="tag tag-green">核心业务线</span></div>
+
+<!-- DAU -->
+<div style="border:1px solid var(--bd);border-radius:var(--r-md);margin-bottom:8px;overflow:hidden">
+<div style="padding:10px 16px;display:flex;align-items:center;gap:10px;cursor:pointer;background:var(--white)" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'block':'none'">
+<span class="dot dot-g" style="flex-shrink:0" onclick="event.stopPropagation();togC(this.parentElement)"></span>
+<strong style="font-size:13px;flex:1">DAU（日活跃用户）</strong>
+<span class="tag tag-green">核心</span>
+<span style="font-size:18px;font-weight:800;font-family:var(--fh);color:var(--blue)">2,711</span>
+<span style="font-size:10px;color:var(--ink3)">04-15</span>
+<span style="font-size:10px;color:var(--ink4)">▼</span>
+</div>
+<div style="display:none;border-top:1px solid var(--bd-light);padding:16px;background:var(--bg-subtle)">
+<div style="font-size:11px;font-weight:700;color:var(--blue);margin-bottom:6px;text-transform:uppercase;letter-spacing:.8px">SQL 口径</div>
+<textarea class="input" rows="3" style="font-family:var(--fm);font-size:11px;background:var(--white);margin-bottom:10px">SELECT COUNT(*) AS dau
+FROM ssv_data_lake.dws_tanyuan_mp_page_aggr_d_zl
+WHERE imp_date = '20260415'</textarea>
+<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:10px">
+<div><div style="font-size:10px;color:var(--ink3);margin-bottom:3px">去重字段</div><input class="input" style="font-size:11px;padding:6px 8px;font-family:var(--fm)" value="h5_qimei（设备维度）"></div>
+<div><div style="font-size:10px;color:var(--ink3);margin-bottom:3px">来源表</div><input class="input" style="font-size:11px;padding:6px 8px;font-family:var(--fm)" value="dws_tanyuan_mp_page_aggr_d_zl"></div>
+<div><div style="font-size:10px;color:var(--ink3);margin-bottom:3px">数据层级</div><input class="input" style="font-size:11px;padding:6px 8px" value="DWS 汇总层 · 日增量"></div>
+</div>
+<div style="font-size:11px;font-weight:700;color:var(--green);margin-bottom:6px">📊 示例数据（近 7 天）</div>
+<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px">
+<span style="padding:4px 10px;background:var(--white);border:1px solid var(--bd);border-radius:4px;font-size:11px;font-family:var(--fh)">04-09: <strong>1,709</strong></span>
+<span style="padding:4px 10px;background:var(--white);border:1px solid var(--bd);border-radius:4px;font-size:11px;font-family:var(--fh)">04-10: <strong>2,806</strong></span>
+<span style="padding:4px 10px;background:var(--white);border:1px solid var(--bd);border-radius:4px;font-size:11px;font-family:var(--fh)">04-11: <strong>3,511</strong></span>
+<span style="padding:4px 10px;background:var(--white);border:1px solid var(--bd);border-radius:4px;font-size:11px;font-family:var(--fh)">04-12: <strong>3,326</strong></span>
+<span style="padding:4px 10px;background:var(--red-bg);border:1px solid var(--red);border-radius:4px;font-size:11px;font-family:var(--fh);color:var(--red)">04-13: <strong>1,217</strong> ⚠️</span>
+<span style="padding:4px 10px;background:var(--white);border:1px solid var(--bd);border-radius:4px;font-size:11px;font-family:var(--fh)">04-14: <strong>2,667</strong></span>
+<span style="padding:4px 10px;background:var(--blue-bg);border:1px solid var(--blue);border-radius:4px;font-size:11px;font-family:var(--fh);color:var(--blue)">04-15: <strong>2,711</strong> 今</span>
+</div>
+<div style="display:flex;gap:8px;align-items:center">
+<select style="font-size:11px;padding:3px 8px;border-radius:4px;border:1px solid var(--bd)"><option>✅ 已确认</option><option>⚠️ 待确认</option><option>❌ 需调整</option></select>
+<input class="input" style="width:100px;padding:4px 8px;font-size:11px" placeholder="确认人" value="刘芳">
+<button class="btn btn-primary btn-sm" style="margin-left:auto">💾 保存</button>
+</div>
+</div>
+</div>
+
+<!-- 按省份 UV -->
+<div style="border:1px solid var(--bd-light);border-radius:var(--r-sm);margin-bottom:6px;margin-left:28px;overflow:hidden">
+<div style="padding:8px 14px;display:flex;align-items:center;gap:8px;cursor:pointer;background:var(--white);font-size:12px" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'block':'none'">
+<span class="dot dot-g" style="flex-shrink:0"></span> <span style="flex:1">按省份 UV 分布</span> <span class="tag tag-green" style="font-size:9px">核心</span> <span style="color:var(--ink4);font-size:9px">▼</span>
+</div>
+<div style="display:none;border-top:1px solid var(--bd-light);padding:12px;background:var(--bg-subtle);font-size:11px">
+<textarea class="input" rows="2" style="font-family:var(--fm);font-size:10px;margin-bottom:8px">SELECT province, COUNT(*) AS uv FROM ssv_data_lake.dws_tanyuan_mp_page_aggr_d_zl WHERE imp_date='20260415' GROUP BY province ORDER BY uv DESC LIMIT 10</textarea>
+<div style="font-size:10px;font-weight:600;color:var(--green);margin-bottom:4px">示例（04-15 Top5）</div>
+<div style="display:flex;gap:6px;flex-wrap:wrap"><span style="padding:2px 8px;background:var(--white);border:1px solid var(--bd);border-radius:3px;font-size:10px">湖北 <strong>312</strong></span><span style="padding:2px 8px;background:var(--white);border:1px solid var(--bd);border-radius:3px;font-size:10px">河北 <strong>266</strong></span><span style="padding:2px 8px;background:var(--white);border:1px solid var(--bd);border-radius:3px;font-size:10px">河南 <strong>223</strong></span><span style="padding:2px 8px;background:var(--white);border:1px solid var(--bd);border-radius:3px;font-size:10px">陕西 <strong>176</strong></span><span style="padding:2px 8px;background:var(--white);border:1px solid var(--bd);border-radius:3px;font-size:10px">江苏 <strong>114</strong></span></div>
+</div>
+</div>
+
+<!-- 新增/回访 -->
+<div style="border:1px solid var(--bd-light);border-radius:var(--r-sm);margin-bottom:6px;margin-left:28px;overflow:hidden">
+<div style="padding:8px 14px;display:flex;align-items:center;gap:8px;cursor:pointer;background:var(--white);font-size:12px" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'block':'none'">
+<span class="dot dot-g" style="flex-shrink:0"></span> <span style="flex:1">新增 / 回访拆分</span> <span class="tag tag-green" style="font-size:9px">核心</span> <span style="color:var(--ink4);font-size:9px">▼</span>
+</div>
+<div style="display:none;border-top:1px solid var(--bd-light);padding:12px;background:var(--bg-subtle);font-size:11px">
+<textarea class="input" rows="2" style="font-family:var(--fm);font-size:10px;margin-bottom:6px">-- 需跨表关联 user_first_date
+-- 当日首次出现 = 新增用户，否则 = 回访用户</textarea>
+<div style="color:var(--amber);font-size:10px">⚠️ 需跨表关联 user_first_date 表，目前尚未建立</div>
+</div>
+</div>
+
+<!-- 页面 PV -->
+<div style="border:1px solid var(--bd);border-radius:var(--r-md);margin-bottom:8px;overflow:hidden">
+<div style="padding:10px 16px;display:flex;align-items:center;gap:10px;cursor:pointer;background:var(--white)" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'block':'none'">
+<span class="dot dot-g" style="flex-shrink:0"></span>
+<strong style="font-size:13px;flex:1">页面 PV</strong>
+<span class="tag tag-green">核心</span>
+<span style="font-size:18px;font-weight:800;font-family:var(--fh);color:var(--ink2)">—</span>
+<span style="color:var(--ink4);font-size:10px">▼</span>
+</div>
+<div style="display:none;border-top:1px solid var(--bd-light);padding:16px;background:var(--bg-subtle)">
+<textarea class="input" rows="2" style="font-family:var(--fm);font-size:11px;margin-bottom:8px">SELECT SUM(in_pgin_cnt) AS total_pv
+FROM ssv_data_lake.dws_tanyuan_mp_page_aggr_d_zl
+WHERE imp_date = '20260415'</textarea>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:8px">
+<div><div style="font-size:10px;color:var(--ink3);margin-bottom:3px">聚合方式</div><input class="input" style="font-size:11px;padding:6px 8px" value="SUM(in_pgin_cnt)"></div>
+<div><div style="font-size:10px;color:var(--ink3);margin-bottom:3px">来源表</div><input class="input" style="font-size:11px;padding:6px 8px;font-family:var(--fm)" value="dws_tanyuan_mp_page_aggr_d_zl"></div>
+</div>
+<div style="display:flex;gap:8px;align-items:center">
+<select style="font-size:11px;padding:3px 8px;border-radius:4px;border:1px solid var(--bd)"><option>✅ 已确认</option><option>⚠️ 待确认</option></select>
+<button class="btn btn-primary btn-sm" style="margin-left:auto">💾 保存</button>
+</div>
+</div>
+</div>
+
+<!-- 人均停留时长 -->
+<div style="border:1px solid var(--bd);border-radius:var(--r-md);margin-bottom:8px;overflow:hidden;border-left:3px solid var(--amber)">
+<div style="padding:10px 16px;display:flex;align-items:center;gap:10px;cursor:pointer;background:var(--white)" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'block':'none'">
+<span class="dot dot-o" style="flex-shrink:0"></span>
+<span style="font-size:13px;flex:1">人均停留时长</span>
+<span class="tag tag-amber">待确认</span>
+<span style="color:var(--ink4);font-size:10px">▼</span>
+</div>
+<div style="display:none;border-top:1px solid var(--bd-light);padding:16px;background:var(--bg-subtle)">
+<textarea class="input" rows="2" style="font-family:var(--fm);font-size:11px;margin-bottom:8px">SELECT AVG(in_lvtm_ms) / 1000 AS avg_stay_sec
+FROM ssv_data_lake.dws_tanyuan_mp_page_aggr_d_zl
+WHERE imp_date = '20260415'</textarea>
+<div style="color:var(--amber);font-size:11px;margin-bottom:8px">⚠️ 口径待确认：in_lvtm_ms 为毫秒，需除 1000 转换为秒。是否需要排除停留 &lt;3 秒的异常记录？</div>
+<div style="display:flex;gap:8px;align-items:center">
+<select style="font-size:11px;padding:3px 8px;border-radius:4px;border:1px solid var(--bd)"><option>⚠️ 待确认</option><option>✅ 已确认</option></select>
+<button class="btn btn-primary btn-sm" style="margin-left:auto">💾 保存</button>
+</div>
+</div>
+</div>
+</div>
+
+<!-- ====== A2 · 探元平台 ====== -->
+<div style="margin-bottom:20px">
+<div style="font-size:14px;font-weight:700;padding:8px 12px;background:var(--blue-bg);border-radius:var(--r-sm);display:inline-flex;align-items:center;gap:6px;margin-bottom:10px"><span class="dot dot-b"></span> A2 · 探元平台（博物馆管理）<span class="tag tag-blue">核心业务线</span></div>
+
+<!-- 已入驻博物馆 -->
+<div style="border:1px solid var(--bd);border-radius:var(--r-md);margin-bottom:8px;overflow:hidden">
+<div style="padding:10px 16px;display:flex;align-items:center;gap:10px;cursor:pointer;background:var(--white)" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'block':'none'">
+<span class="dot dot-g" style="flex-shrink:0"></span>
+<strong style="font-size:13px;flex:1">已入驻博物馆数</strong>
+<span class="tag tag-green">核心</span>
+<span style="font-size:18px;font-weight:800;font-family:var(--fh);color:var(--blue)">370</span>
+<span style="font-size:11px;color:var(--ink3)">/ 6,639 (5.6%)</span>
+<span style="color:var(--ink4);font-size:10px">▼</span>
+</div>
+<div style="display:none;border-top:1px solid var(--bd-light);padding:16px;background:var(--bg-subtle)">
+<textarea class="input" rows="3" style="font-family:var(--fm);font-size:11px;margin-bottom:10px">SELECT in_on_tanyuan_cnt AS entered,
+       all_museum_cnt AS total,
+       ROUND(in_on_tanyuan_cnt * 100.0 / all_museum_cnt, 1) AS enter_rate
+FROM ssv_data_lake.ads_tanyuan_museum_indices_d_ql
+WHERE imp_date = '20260415'</textarea>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
+<div><div style="font-size:10px;color:var(--ink3);margin-bottom:3px">核心字段</div><input class="input" style="font-size:11px;padding:6px 8px;font-family:var(--fm)" value="in_on_tanyuan_cnt"></div>
+<div><div style="font-size:10px;color:var(--ink3);margin-bottom:3px">来源表</div><input class="input" style="font-size:11px;padding:6px 8px;font-family:var(--fm)" value="ads_tanyuan_museum_indices_d_ql"></div>
+</div>
+<div style="font-size:11px;font-weight:700;color:var(--green);margin-bottom:4px">示例：46天变化</div>
+<div style="display:flex;gap:8px;margin-bottom:10px"><span style="padding:4px 10px;background:var(--white);border:1px solid var(--bd);border-radius:4px;font-size:11px;font-family:var(--fh)">03-01: <strong>369</strong></span><span style="padding:4px 10px;background:var(--blue-bg);border:1px solid var(--blue);border-radius:4px;font-size:11px;font-family:var(--fh);color:var(--blue)">04-15: <strong>370</strong> (+1)</span></div>
+<div style="display:flex;gap:8px;align-items:center">
+<select style="font-size:11px;padding:3px 8px;border-radius:4px;border:1px solid var(--bd)"><option>✅ 已确认</option><option>⚠️ 待确认</option></select>
+<input class="input" style="width:100px;padding:4px 8px;font-size:11px" value="赵宇">
+<button class="btn btn-primary btn-sm" style="margin-left:auto">💾 保存</button>
+</div>
+</div>
+</div>
+
+<!-- 繁星计划 -->
+<div style="border:1px solid var(--bd);border-radius:var(--r-md);margin-bottom:8px;overflow:hidden;border-left:3px solid var(--amber)">
+<div style="padding:10px 16px;display:flex;align-items:center;gap:10px;cursor:pointer;background:var(--white)" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'block':'none'">
+<span class="dot dot-o" style="flex-shrink:0"></span>
+<span style="font-size:13px;flex:1">繁星计划馆数</span>
+<span class="tag tag-amber">待确认</span>
+<span style="font-size:18px;font-weight:800;font-family:var(--fh);color:var(--amber)">260</span>
+<span style="font-size:11px;color:var(--ink3)">占 70.3%</span>
+<span style="color:var(--ink4);font-size:10px">▼</span>
+</div>
+<div style="display:none;border-top:1px solid var(--bd-light);padding:16px;background:var(--bg-subtle)">
+<textarea class="input" rows="2" style="font-family:var(--fm);font-size:11px;margin-bottom:8px">SELECT in_on_star_cnt FROM ssv_data_lake.ads_tanyuan_museum_indices_d_ql WHERE imp_date = '20260415'</textarea>
+<div style="color:var(--amber);font-size:11px;margin-bottom:8px">⚠️ "繁星计划"入选标准定义尚不明确，需业务方补充具体入选条件</div>
+<div style="display:flex;gap:8px;align-items:center">
+<select style="font-size:11px;padding:3px 8px;border-radius:4px;border:1px solid var(--bd)"><option>⚠️ 待确认</option><option>✅ 已确认</option></select>
+<button class="btn btn-primary btn-sm" style="margin-left:auto">💾 保存</button>
+</div>
+</div>
+</div>
+</div>
+
+<!-- ====== A3 · 大甲骨 ====== -->
+<div style="margin-bottom:20px">
+<div style="font-size:14px;font-weight:700;padding:8px 12px;background:var(--green-bg);border-radius:var(--r-sm);display:inline-flex;align-items:center;gap:6px;margin-bottom:10px"><span class="dot dot-g"></span> A3 · 大甲骨及子产品 <span class="tag tag-green">核心业务线</span></div>
+
+<div style="border:1px solid var(--bd);border-radius:var(--r-md);margin-bottom:8px;overflow:hidden">
+<div style="padding:10px 16px;display:flex;align-items:center;gap:10px;cursor:pointer;background:var(--white)" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'block':'none'">
+<span class="dot dot-g" style="flex-shrink:0"></span>
+<strong style="font-size:13px;flex:1">大甲骨 DAU</strong>
+<span class="tag tag-green">核心</span>
+<span style="font-size:18px;font-weight:800;font-family:var(--fh);color:var(--green)">662</span>
+<span style="font-size:10px;color:var(--ink3)">04-15</span>
+<span style="color:var(--ink4);font-size:10px">▼</span>
+</div>
+<div style="display:none;border-top:1px solid var(--bd-light);padding:16px;background:var(--bg-subtle)">
+<textarea class="input" rows="3" style="font-family:var(--fm);font-size:11px;margin-bottom:10px">SELECT COUNT(DISTINCT h5_qimei) AS dau
+FROM ssv_data_lake.dws_great_oracle_mp_page_aggr_d_zl
+WHERE imp_date = '20260415'</textarea>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
+<div><div style="font-size:10px;color:var(--ink3);margin-bottom:3px">去重字段</div><input class="input" style="font-size:11px;padding:6px 8px;font-family:var(--fm)" value="h5_qimei"></div>
+<div><div style="font-size:10px;color:var(--ink3);margin-bottom:3px">来源表</div><input class="input" style="font-size:11px;padding:6px 8px;font-family:var(--fm)" value="dws_great_oracle_mp_page_aggr_d_zl"></div>
+</div>
+<div style="font-size:11px;font-weight:700;color:var(--green);margin-bottom:4px">示例（近 5 天）</div>
+<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px">
+<span style="padding:3px 8px;background:var(--white);border:1px solid var(--bd);border-radius:4px;font-size:10px;font-family:var(--fh)">04-11: <strong>365</strong></span>
+<span style="padding:3px 8px;background:var(--white);border:1px solid var(--bd);border-radius:4px;font-size:10px;font-family:var(--fh)">04-12: <strong>334</strong></span>
+<span style="padding:3px 8px;background:var(--white);border:1px solid var(--bd);border-radius:4px;font-size:10px;font-family:var(--fh)">04-13: <strong>573</strong></span>
+<span style="padding:3px 8px;background:var(--white);border:1px solid var(--bd);border-radius:4px;font-size:10px;font-family:var(--fh)">04-14: <strong>713</strong></span>
+<span style="padding:3px 8px;background:var(--green-bg);border:1px solid var(--green);border-radius:4px;font-size:10px;font-family:var(--fh);color:var(--green)">04-15: <strong>662</strong></span>
+</div>
+<div style="display:flex;gap:8px;align-items:center">
+<select style="font-size:11px;padding:3px 8px;border-radius:4px;border:1px solid var(--bd)"><option>✅ 已确认</option></select>
+<input class="input" style="width:100px;padding:4px 8px;font-size:11px" value="wind">
+<button class="btn btn-primary btn-sm" style="margin-left:auto">💾 保存</button>
+</div>
+</div>
+</div>
+</div>
+
+<!-- 新增指标按钮 -->
+<div style="margin-bottom:16px;display:flex;gap:8px">
+<button class="btn btn-ghost btn-sm">+ 新增指标</button>
+<button class="btn btn-primary btn-sm">💾 保存全部字段配置</button>
 </div>
 
 <!-- 汇总统计 -->
-<div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:8px">
-<div style="padding:6px 12px;background:#f9f0ff;border-radius:6px;font-size:11px">A1 探元小程序：核心 <strong>3</strong> + 二层 <strong>6</strong></div>
-<div style="padding:6px 12px;background:#e6f4ff;border-radius:6px;font-size:11px">A2 探元平台：核心 <strong>4</strong> + 二层 <strong>6</strong></div>
-<div style="padding:6px 12px;background:#f6ffed;border-radius:6px;font-size:11px">A3 大甲骨+子产品：核心 <strong>3</strong> + 二层 <strong>3</strong></div>
-<div style="padding:6px 12px;background:#fff7e6;border-radius:6px;font-size:11px">总计：核心 <strong>10</strong> 个 · 二层 <strong>15</strong> 个 · ✅ 确认 14 · ⚠️ 待确认 7 · ❌ 异常 2</div>
-</div>
-<div class="src">📎 <span>WeData MCP</span> + <span>工蜂 MCP</span> · 口径和确认状态可直接编辑 · 下拉框选择确认状态</div>
-</div>
-
-<!-- 核心指标卡片（带图表） -->
-<div class="cd" style="border-left:4px solid var(--pu)">
-<div class="ct">🎯 核心指标 · 趋势图</div>
-<div class="g2">
-<!-- 探元 DAU -->
-<div class="metric-card" style="border-top:3px solid var(--pu)">
-<div class="mc-head"><div class="mc-title">📊 探元小程序 DAU</div><span class="b bg">系统自动</span></div>
-<div class="mc-val" style="color:var(--pu)">2,711 <span style="font-size:11px;color:var(--t3)">04-15</span></div>
-<div class="mc-sub">口径：<code>COUNT(*) FROM dws_tanyuan_mp_page_aggr_d_zl</code></div>
-<div class="mini-chart">
-<div class="mc-bar" style="height:27%;background:var(--pu)" title="04-01: 2,698"></div>
-<div class="mc-bar" style="height:38%;background:var(--pu)" title="04-02: 3,815"></div>
-<div class="mc-bar" style="height:37%;background:var(--pu)" title="04-03: 3,666"></div>
-<div class="mc-bar" style="height:69%;background:var(--pu)" title="04-04: 6,824"></div>
-<div class="mc-bar" style="height:100%;background:#b37feb" title="04-05: 9,920 ★"></div>
-<div class="mc-bar" style="height:54%;background:var(--pu)" title="04-06: 5,391"></div>
-<div class="mc-bar" style="height:26%;background:var(--pu)" title="04-07: 2,603"></div>
-<div class="mc-bar" style="height:36%;background:var(--pu)" title="04-08: 3,606"></div>
-<div class="mc-bar" style="height:17%;background:var(--r)" title="04-09: 1,709"></div>
-<div class="mc-bar" style="height:28%;background:var(--pu)" title="04-10: 2,806"></div>
-<div class="mc-bar" style="height:35%;background:var(--pu)" title="04-11: 3,511"></div>
-<div class="mc-bar" style="height:34%;background:var(--pu)" title="04-12: 3,326"></div>
-<div class="mc-bar" style="height:12%;background:var(--r)" title="04-13: 1,217 ⚠️"></div>
-<div class="mc-bar" style="height:27%;background:var(--pu)" title="04-14: 2,667"></div>
-<div class="mc-bar" style="height:27%;background:var(--pu)" title="04-15: 2,711"></div>
-</div>
-<div style="display:flex;justify-content:space-between;font-size:9px;color:var(--t3)"><span>04-01</span><span>均值 3,791</span><span>04-15</span></div>
-<div class="mc-insight">📌 清明峰值 9,920 · 04-13 异常低谷 1,217 · 周末高/工作日低</div>
-</div>
-<!-- 大甲骨 DAU -->
-<div class="metric-card" style="border-top:3px solid var(--g)">
-<div class="mc-head"><div class="mc-title">📱 大甲骨 DAU</div><span class="b bg">系统自动</span></div>
-<div class="mc-val" style="color:var(--g)">662 <span style="font-size:11px;color:var(--t3)">04-15</span></div>
-<div class="mc-sub">口径：<code>COUNT(DISTINCT h5_qimei) FROM dws_great_oracle_mp_page_aggr_d_zl</code></div>
-<div class="mini-chart">
-<div class="mc-bar" style="height:26%;background:var(--g)" title="04-01: 662"></div>
-<div class="mc-bar" style="height:24%;background:var(--g)" title="04-02: 627"></div>
-<div class="mc-bar" style="height:18%;background:var(--g)" title="04-03: 478"></div>
-<div class="mc-bar" style="height:11%;background:var(--r)" title="04-04: 283"></div>
-<div class="mc-bar" style="height:12%;background:var(--g)" title="04-05: 322"></div>
-<div class="mc-bar" style="height:14%;background:var(--g)" title="04-06: 351"></div>
-<div class="mc-bar" style="height:24%;background:var(--g)" title="04-07: 610"></div>
-<div class="mc-bar" style="height:26%;background:var(--g)" title="04-08: 661"></div>
-<div class="mc-bar" style="height:33%;background:#52c41a" title="04-09: 829 ★"></div>
-<div class="mc-bar" style="height:20%;background:var(--g)" title="04-10: 499"></div>
-<div class="mc-bar" style="height:14%;background:var(--g)" title="04-11: 365"></div>
-<div class="mc-bar" style="height:13%;background:var(--g)" title="04-12: 334"></div>
-<div class="mc-bar" style="height:22%;background:var(--g)" title="04-13: 573"></div>
-<div class="mc-bar" style="height:28%;background:var(--g)" title="04-14: 713"></div>
-<div class="mc-bar" style="height:26%;background:var(--g)" title="04-15: 662"></div>
-</div>
-<div style="display:flex;justify-content:space-between;font-size:9px;color:var(--t3)"><span>04-01</span><span>4月均值 509</span><span>04-15</span></div>
-<div class="mc-insight">📌 与探元反向：工作日高/假日低 · 04-09 峰值 829</div>
-</div>
-<!-- 博物馆 -->
-<div class="metric-card" style="border-top:3px solid var(--pu)">
-<div class="mc-head"><div class="mc-title">🏛️ 已入驻博物馆</div><span class="b bg">系统自动</span></div>
-<div class="mc-val" style="color:var(--pu)">370 <span style="font-size:11px;color:var(--o)">/ 6,639（5.6%）</span></div>
-<div class="mc-sub">口径：<code>in_on_tanyuan_cnt</code> FROM ads_tanyuan_museum_indices_d_ql</div>
-<div style="height:6px;background:#f0f0f0;border-radius:3px;overflow:hidden;margin-top:8px"><div style="width:5.6%;height:100%;background:var(--pu)"></div></div>
-<div class="mini-chart" style="height:30px">
-<div class="mc-bar" style="height:98%;background:#d3adf7" title="03月: 369"></div><div class="mc-bar" style="height:98%;background:#d3adf7"></div><div class="mc-bar" style="height:98%;background:#d3adf7"></div><div class="mc-bar" style="height:98%;background:#d3adf7"></div>
-<div class="mc-bar" style="height:99%;background:#b37feb" title="03-26: +1→370"></div>
-<div class="mc-bar" style="height:99%;background:var(--pu)" title="04月: 370"></div><div class="mc-bar" style="height:99%;background:var(--pu)"></div><div class="mc-bar" style="height:99%;background:var(--pu)"></div>
-</div>
-<div class="mc-insight">📌 46 天仅 +1 家，入驻增长几乎停滞</div>
-</div>
-<!-- 繁星 -->
-<div class="metric-card" style="border-top:3px solid var(--o)">
-<div class="mc-head"><div class="mc-title">⭐ 繁星计划馆</div><span class="b bg">系统自动</span></div>
-<div class="mc-val" style="color:var(--o)">260 <span style="font-size:11px;color:var(--pu)">占入驻 70.3%</span></div>
-<div class="mc-sub">口径：<code>in_on_star_cnt</code> FROM ads_tanyuan_museum_indices_d_ql</div>
-<div style="height:6px;background:#f0f0f0;border-radius:3px;overflow:hidden;margin-top:8px"><div style="width:70.3%;height:100%;background:var(--o)"></div></div>
-<div class="mini-chart" style="height:30px">
-<div class="mc-bar" style="height:96%;background:#ffe58f" title="03月初: 258"></div><div class="mc-bar" style="height:96%;background:#ffe58f"></div>
-<div class="mc-bar" style="height:97%;background:#ffc53d" title="03-17: +1→259"></div><div class="mc-bar" style="height:97%;background:#ffc53d"></div>
-<div class="mc-bar" style="height:98%;background:var(--o)" title="03-26: +1→260"></div><div class="mc-bar" style="height:98%;background:var(--o)"></div><div class="mc-bar" style="height:98%;background:var(--o)"></div>
-</div>
-<div class="mc-insight">📌 258→260，46天+2。<span class="b bo">⚠️ 待确认"繁星计划"入选标准</span></div>
-</div>
+<div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px">
+<span style="font-size:11px;padding:4px 10px;background:var(--green-bg);border-radius:var(--r-sm);color:var(--green)">🟢 核心已确认 6 项</span>
+<span style="font-size:11px;padding:4px 10px;background:var(--amber-bg);border-radius:var(--r-sm);color:var(--amber)">🟡 待确认 3 项</span>
+<span style="font-size:11px;padding:4px 10px;background:var(--bg);border-radius:var(--r-sm);color:var(--ink3)">⚪ 非核心 2 项</span>
 </div>
 </div>
 
-<!-- 业务指标下钻 -->
-<div class="cd" style="border-left:4px solid var(--p)">
-<div class="ct">📈 业务指标下钻</div>
-<div style="background:#f0f5ff;border-radius:8px;padding:14px 16px;margin-bottom:12px">
-<h4 style="font-size:13px;margin-bottom:8px">🏛️ 已入驻博物馆（370）→ 主题分布</h4>
-<table style="font-size:11px">
-<thead><tr><th>类型</th><th>已入驻</th><th>未入驻</th><th>入驻率</th><th>口径字段</th></tr></thead>
+<!-- AI 数据关联分析 -->
+<div class="card" style="border-left:3px solid var(--violet);background:linear-gradient(135deg,var(--violet-bg),var(--white))">
+<div class="card-title">🤖 AI 数据关联分析</div>
+<p style="font-size:12px;color:var(--ink3);margin-bottom:16px">基于当前已确认的指标和 TDW 表结构，AI 自动分析数据关联情况和潜在可补充字段</p>
+
+<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:16px">
+<div style="background:var(--white);border:1px solid var(--bd);border-radius:var(--r-md);padding:14px;text-align:center">
+<div style="font-size:24px;font-weight:800;font-family:var(--fh);color:var(--blue)">8</div>
+<div style="font-size:11px;color:var(--ink3)">已关联库表</div>
+<div style="font-size:10px;color:var(--ink3);margin-top:4px">dws_*_page_aggr (3) · ads_*_indices (2) · dim_* (2) · dwd_* (1)</div>
+</div>
+<div style="background:var(--white);border:1px solid var(--bd);border-radius:var(--r-md);padding:14px;text-align:center">
+<div style="font-size:24px;font-weight:800;font-family:var(--fh);color:var(--green)">23</div>
+<div style="font-size:11px;color:var(--ink3)">已纳入字段</div>
+<div style="font-size:10px;color:var(--ink3);margin-top:4px">核心指标 6 + 下钻维度 9 + 辅助字段 8</div>
+</div>
+<div style="background:var(--white);border:1px solid var(--bd);border-radius:var(--r-md);padding:14px;text-align:center">
+<div style="font-size:24px;font-weight:800;font-family:var(--fh);color:var(--amber)">12</div>
+<div style="font-size:11px;color:var(--ink3)">AI 建议补充</div>
+<div style="font-size:10px;color:var(--ink3);margin-top:4px">以下字段在库表中存在但尚未纳入</div>
+</div>
+</div>
+
+<div style="font-size:12px;font-weight:700;margin-bottom:8px">💡 AI 建议补充的字段（可一键添加）</div>
+<table>
+<thead><tr><th>字段名</th><th>所在表</th><th>说明</th><th>推荐原因</th><th>操作</th></tr></thead>
 <tbody>
-<tr><td>历史文化馆</td><td>168</td><td>2,242</td><td><span class="b bg">7.0%</span></td><td><code>theme_1_cnt</code></td></tr>
-<tr><td>综合地志馆</td><td>134</td><td>843</td><td><span class="b bg">13.7%</span></td><td><code>theme_2_cnt</code></td></tr>
-<tr><td>考古遗址馆</td><td>33</td><td>151</td><td><span class="b bg">17.9%</span></td><td><code>theme_4_cnt</code></td></tr>
-<tr><td>革命纪念馆</td><td>9</td><td>1,036</td><td><span class="b br">0.9%</span></td><td><code>theme_3_cnt</code></td></tr>
-<tr><td>艺术馆</td><td>5</td><td>660</td><td><span class="b br">0.8%</span></td><td><code>theme_5_cnt</code></td></tr>
+<tr><td style="font-family:var(--fm);font-size:11px;color:var(--blue)">in_click_cnt</td><td class="mono" style="font-size:10px">dws_tanyuan_mp_ele_aggr_d_zl</td><td>元素点击总次数</td><td style="font-size:11px;color:var(--ink2)">可衡量用户交互深度，与 PV 互补</td><td><button class="btn btn-ghost btn-sm">+ 添加</button></td></tr>
+<tr><td style="font-family:var(--fm);font-size:11px;color:var(--blue)">share_cnt</td><td class="mono" style="font-size:10px">dws_tanyuan_mp_page_aggr_d_zl</td><td>分享次数</td><td style="font-size:11px;color:var(--ink2)">衡量传播力，老板常关注</td><td><button class="btn btn-ghost btn-sm">+ 添加</button></td></tr>
+<tr><td style="font-family:var(--fm);font-size:11px;color:var(--blue)">ai_chat_uv</td><td class="mono" style="font-size:10px">dws_tanyuan_mp_page_aggr_d_zl</td><td>AI 对话用户数</td><td style="font-size:11px;color:var(--ink2)">AI 功能使用率的分子，当前为"待确认"</td><td><button class="btn btn-ghost btn-sm">+ 添加</button></td></tr>
+<tr><td style="font-family:var(--fm);font-size:11px;color:var(--blue)">new_user_cnt</td><td class="mono" style="font-size:10px">ads_tanyuan_mp_monitor_d_zl</td><td>每日新增用户</td><td style="font-size:11px;color:var(--ink2)">新增/回访拆分依赖此字段</td><td><button class="btn btn-ghost btn-sm">+ 添加</button></td></tr>
+<tr><td style="font-family:var(--fm);font-size:11px;color:var(--blue)">museum_area_*</td><td class="mono" style="font-size:10px">ads_tanyuan_museum_area_distribution_d_ql</td><td>博物馆地区分布</td><td style="font-size:11px;color:var(--ink2)">入驻的地区维度当前缺失</td><td><button class="btn btn-ghost btn-sm">+ 添加</button></td></tr>
 </tbody>
 </table>
-</div>
-<div style="background:#f6ffed;border-radius:8px;padding:14px 16px">
-<h4 style="font-size:13px;margin-bottom:8px">📊 探元 DAU 省份分布（04-05 正常日）</h4>
-<table style="font-size:11px">
-<thead><tr><th>省份</th><th>UV</th><th>占比</th><th>备注</th></tr></thead>
-<tbody>
-<tr><td><strong>湖北</strong></td><td style="font-weight:700">630</td><td>35.2%</td><td>清明活动主阵地</td></tr>
-<tr><td>河北</td><td>266</td><td>14.9%</td><td></td></tr>
-<tr><td>河南</td><td>223</td><td>12.5%</td><td></td></tr>
-<tr><td>陕西</td><td>176</td><td>9.8%</td><td>文博大省</td></tr>
-<tr><td>江苏</td><td>114</td><td>6.4%</td><td></td></tr>
-</tbody>
-</table>
-<div class="src">📎 <span>WeData MCP</span> · GROUP BY province · 真实数据</div>
+
+<div style="margin-top:12px;padding:10px 14px;background:var(--bg-subtle);border-radius:var(--r-sm);border:1px dashed var(--bd);font-size:11px;color:var(--ink2)">
+📊 <strong>TDW 覆盖率</strong>：当前 74+ 张表中已关联 8 张（10.8%），建议优先补充 <code style="font-family:var(--fm);background:var(--blue-bg);padding:1px 4px;border-radius:2px">ads_tanyuan_mp_monitor_d_zl</code>（异常监控）和 <code style="font-family:var(--fm);background:var(--blue-bg);padding:1px 4px;border-radius:2px">ads_tanyuan_museum_area_distribution_d_ql</code>（地区分布），可将核心指标覆盖度从 6 项提升至 8 项。
 </div>
 </div>
 
-<!-- 待研发确认 -->
-<div class="cd" style="border-left:4px solid var(--r)">
-<div class="ct">🔧 待研发确认的异常</div>
-<div class="al al-d"><div>🔴</div><div><strong>博物馆等级字段全为 0</strong>：ads_tanyuan_museum_indices_d_ql 的 grade_1/2/3/0_cnt 全部为 0。需检查 dim 表是否填充等级数据。</div></div>
-<div class="al al-d"><div>🔴</div><div><strong>异常监控数据恒定不变</strong>：ads_tanyuan_mp_monitor_d_zl 04-01~15 每日均 241 条。需检查上游 checker 任务是否产出差异化数据。</div></div>
-<div class="al al-w"><div>🟡</div><div><strong>pg_page_name 字段大量为空</strong>：页面分析只能用 pgid（技术路径），无法用友好名称。需确认前端埋点是否正确上报。</div></div>
-<div class="al al-w"><div>🟡</div><div><strong>大甲骨与探元波动方向相反</strong>：探元假日高/工作日低，大甲骨相反。需确认大甲骨推广策略是否集中在工作日。</div></div>
+</div>
+
+<!-- ==================== Tab 3: 数据工作流配置 ==================== -->
+<div class="sec" id="s-t3">
+
+<div style="font-size:13px;color:var(--ink2);margin-bottom:16px">允许数据同学针对常见的数据波动做 AI 层面的确认和确权，同时汇总展示用户通过 WorkBuddy 生成的数据工作流应用。</div>
+
+<!-- 已配置工作流列表 -->
+<div class="card card-accent">
+<div class="card-title">📂 已配置工作流</div>
+
+<!-- 筛选栏 -->
+<div style="display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap">
+<button class="btn btn-primary btn-sm" style="border-radius:20px">全部 (5)</button>
+<button class="btn btn-ghost btn-sm" style="border-radius:20px">👤 个人 (2)</button>
+<button class="btn btn-ghost btn-sm" style="border-radius:20px">🏢 部门 (2)</button>
+<button class="btn btn-ghost btn-sm" style="border-radius:20px">🌐 SSV-Mate (1)</button>
+</div>
+
+<!-- 工作流1: SSV-Mate 公开 -->
+<div class="wf" style="border-left:3px solid var(--violet)">
+<div style="display:flex;justify-content:space-between;align-items:flex-start">
+<div>
+<div style="display:flex;align-items:center;gap:6px;margin-bottom:4px">
+<div class="wf-name">📊 文化实验室周报</div>
+<span class="tag tag-violet" style="font-size:9px">🌐 SSV-Mate</span>
+</div>
+<div class="wf-desc">每周一从腾讯会议周会录制 + WeData 最新数据自动生成周报，推送到企微群</div>
+</div>
+<span class="tag tag-green">✅ 运行中</span>
+</div>
+<div style="margin-top:8px;padding:8px 12px;background:var(--bg-subtle);border-radius:var(--r-sm);font-size:11px;color:var(--ink2)">
+<strong>数据源：</strong><span class="tag tag-blue" style="font-size:9px">WeData TDW</span> <span class="tag tag-blue" style="font-size:9px">TAPD</span> <span class="tag tag-cyan" style="font-size:9px">腾讯会议</span><br>
+<strong>会议链接：</strong><code style="font-family:var(--fm);font-size:10px;background:var(--blue-bg);padding:1px 4px;border-radius:2px">886-2345-6789</code>（固定周会号，系统自动读取最新录制）<br>
+<strong>触发：</strong>每周一 09:00 自动 · <strong>输出：</strong>企微群消息 + PPT 附件 · <strong>上次执行：</strong>04-14 09:01<br>
+<strong>配置人：</strong>马巍 · <strong>录入方式：</strong><span class="tag tag-blue" style="font-size:9px">PC 配置</span>
 </div>
 </div>
 
-<!-- ===================== Tab 3: 技能配置 ===================== -->
-<div class="sec" id="s-l3">
-
-<!-- DAU 波动实例（置顶） -->
-<div class="cd" style="border-left:4px solid var(--r)">
-<div class="ct">📊 Skill 运行实例 · DAU 异动告警（置顶）</div>
-<div class="al al-d"><div>🔴</div><div><strong>04-13 DAU 1,217</strong>，较上周日 5,391 下降 77.4% → L1总量(自动) → L2省份：湖北-94.3%(自动) → L3监控：排除技术故障(自动) → L4归因：清明活动下线(人工)</div></div>
+<!-- 工作流2: 部门级 -->
+<div class="wf" style="border-left:3px solid var(--blue)">
+<div style="display:flex;justify-content:space-between;align-items:flex-start">
+<div>
+<div style="display:flex;align-items:center;gap:6px;margin-bottom:4px">
+<div class="wf-name">🏛️ 博物馆入驻月报</div>
+<span class="tag tag-blue" style="font-size:9px">🏢 部门</span>
 </div>
-
-<!-- 模式一：问题型 Skill Demo -->
-<div class="cd" style="border-left:4px solid var(--pu)">
-<div class="ct">💬 模式一 · 基于问题的 Skill（交互 Demo）</div>
-<p style="font-size:12px;color:var(--t2);margin-bottom:8px">点击"下一步"查看系统如何一步步处理问题</p>
-<div class="step-demo" id="stepDemo1">
-<div class="step-controls"><button class="btn btn-outline btn-sm" onclick="resetSteps('stepDemo1')">🔄 重置</button><button class="btn btn-primary btn-sm" onclick="nextStep('stepDemo1')">▶ 下一步</button><button class="btn btn-outline btn-sm" onclick="autoPlay('stepDemo1')">⏩ 自动</button></div>
-<div class="step" data-step="0"><div class="step-head"><span class="step-num pu">1</span> 用户输入</div><div class="step-body">老板问："最近入驻情况有什么波动？"</div><div class="step-result"><input class="input-box" value="最近入驻情况有什么波动？为什么？" readonly style="font-size:11px"></div></div>
-<div class="wf-arrow">↓</div>
-<div class="step" data-step="1"><div class="step-head"><span class="step-num pu">2</span> 意图识别 <span class="pulse-dot"></span></div><div class="step-result" style="font-size:11px">关键词：<span class="b bp">入驻</span><span class="b bb">波动</span> → 匹配：<strong>🏛️ 博物馆入驻追踪</strong> + <strong>📊 DAU 归因</strong></div></div>
-<div class="wf-arrow">↓</div>
-<div class="step" data-step="2"><div class="step-head"><span class="step-num b">3</span> 数据查询 <span class="pulse-dot"></span></div><div class="step-result" style="font-size:11px"><code>SELECT imp_date, in_on_tanyuan_cnt FROM ads_tanyuan_museum_indices_d_ql</code><br>结果：369→370（46天仅+1家）· 入驻率5.6%</div></div>
-<div class="wf-arrow">↓</div>
-<div class="step" data-step="3"><div class="step-head"><span class="step-num g">4</span> 生成结果（可编辑）</div><div class="step-result"><div class="editable" contenteditable="true" style="font-size:11px;min-height:50px"><strong>结论</strong>：入驻增长停滞（46天+1家），非波动而是增长停滞。革命纪念馆/艺术馆入驻率<1%，建议定向招募。</div><div style="text-align:right;margin-top:6px"><button class="btn btn-outline btn-sm">🔄 重新生成</button> <button class="btn btn-primary btn-sm">✅ 确认</button></div></div></div>
+<div class="wf-desc">每月 1 日汇总入驻变化、主题分布、繁星进度，生成 PPT 给管理层</div>
+</div>
+<span class="tag tag-green">✅ 运行中</span>
+</div>
+<div style="margin-top:8px;padding:8px 12px;background:var(--bg-subtle);border-radius:var(--r-sm);font-size:11px;color:var(--ink2)">
+<strong>数据源：</strong><span class="tag tag-blue" style="font-size:9px">WeData TDW</span><br>
+<strong>触发：</strong>每月 1 日 09:00 · <strong>输出：</strong>PPT 报告 · <strong>上次执行：</strong>04-01<br>
+<strong>配置人：</strong>赵宇 · <strong>录入方式：</strong><span class="tag tag-blue" style="font-size:9px">PC 配置</span>
 </div>
 </div>
 
-<!-- 模式二：例行化工作流 -->
-<div class="cd" style="border-left:4px solid var(--o)">
-<div class="ct">📑 模式二 · 例行化工作流</div>
-<div style="background:#fff7e6;border-radius:8px;padding:12px 16px;margin-bottom:12px">
-<h4 style="font-size:13px;margin-bottom:6px">📥 信息源配置</h4>
-<table style="font-size:11px">
-<thead><tr><th>信息源</th><th>示例</th><th>触发</th><th>状态</th></tr></thead>
-<tbody>
-<tr><td>📊 <strong>TDW 数据</strong></td><td>ssv_data_lake 全量表</td><td>定时/异动</td><td><span class="b bg">✅</span></td></tr>
-<tr><td>📋 <strong>TAPD</strong></td><td>需求/Bug/迭代</td><td>状态变更</td><td><span class="b bb">🔵</span></td></tr>
-<tr><td>📄 <strong>Form 表单</strong></td><td>调研问卷/反馈表</td><td>提交时</td><td><span class="b bo">🟡</span></td></tr>
-<tr><td>🎤 <strong>腾讯会议</strong></td><td>周会/访谈录制</td><td>结束后转写</td><td><span class="b bb">🔵</span></td></tr>
-<tr><td>📝 <strong>腾讯文档</strong></td><td>方案文档</td><td>更新时</td><td><span class="b bo">🟡</span></td></tr>
-<tr><td>💬 <strong>用户反馈</strong></td><td>小程序反馈/社交</td><td>关键词触发</td><td><span class="b bo">🟡</span></td></tr>
-<tr><td>📑 <strong>PPT/PDF</strong></td><td>路演材料</td><td>上传解析</td><td><span class="b bb">🔵</span></td></tr>
-</tbody>
-</table>
+<!-- 工作流3: 部门级 -->
+<div class="wf" style="border-left:3px solid var(--amber)">
+<div style="display:flex;justify-content:space-between;align-items:flex-start">
+<div>
+<div style="display:flex;align-items:center;gap:6px;margin-bottom:4px">
+<div class="wf-name">🔴 DAU 异动告警</div>
+<span class="tag tag-blue" style="font-size:9px">🏢 部门</span>
+</div>
+<div class="wf-desc">DAU 较上周同日下降超 30% 时自动告警，附带省份维度归因分析</div>
+</div>
+<span class="tag tag-amber">⚠️ 待测试</span>
+</div>
+<div style="margin-top:8px;padding:8px 12px;background:var(--bg-subtle);border-radius:var(--r-sm);font-size:11px;color:var(--ink2)">
+<strong>数据源：</strong><span class="tag tag-blue" style="font-size:9px">WeData TDW</span><br>
+<strong>触发：</strong>指标异动时自动 · <strong>输出：</strong>企微群消息 · <strong>上次触发：</strong>04-13（DAU -77.4%）<br>
+<strong>配置人：</strong>嘉辉 · <strong>录入方式：</strong><span class="tag tag-blue" style="font-size:9px">PC 配置</span>
+</div>
 </div>
 
-<!-- 机构访谈流 Demo -->
-<div style="background:#f0f5ff;border-radius:8px;padding:14px 16px;margin-bottom:12px">
-<h4 style="font-size:13px;margin-bottom:4px">🎤 工作流 Demo · 机构访谈流</h4>
-<p style="font-size:11px;color:var(--t3);margin-bottom:8px">每月路演，固定腾讯会议访谈 → 系统自动生成全链路产出</p>
-<div class="step-demo" id="stepDemo2">
-<div class="step-controls"><button class="btn btn-outline btn-sm" onclick="resetSteps('stepDemo2')">🔄 重置</button><button class="btn btn-primary btn-sm" onclick="nextStep('stepDemo2')">▶ 下一步</button><button class="btn btn-outline btn-sm" onclick="autoPlay('stepDemo2')">⏩ 自动</button></div>
-<div class="step" data-step="0"><div class="step-head"><span class="step-num pu">1</span> 前置：自动生成访谈提纲</div><div class="step-result" style="font-size:11px">🏛️ 目标：湖北省博 · 近期：04-05 UV 602 → 04-13 仅 36<br>提纲：① 清明效果回顾 ② 5·18 计划 ③ AI 解说配置需求 ④ 资源投入</div></div>
-<div class="wf-arrow">↓</div>
-<div class="step" data-step="1"><div class="step-head"><span class="step-num b">2</span> 访谈：腾讯会议录制 <span class="pulse-dot"></span></div><div class="step-result" style="font-size:11px">🎤 会议号 886-2345-6789 · 45分钟 · 自动转写 ✅<br>👥 PM小王 + 张馆长 + 运营小李</div></div>
-<div class="wf-arrow">↓</div>
-<div class="step" data-step="2"><div class="step-head"><span class="step-num o">3</span> 解析：提取关键信息 <span class="pulse-dot"></span></div><div class="step-result" style="font-size:11px"><strong>合作</strong>：5·18 愿参加，需提前2周 · <strong>需求</strong>：3个展厅AI解说配置<br><strong>Action</strong>：① PM 4/20 方案 ② 运营 4/22 配置 ③ 研发确认排期</div></div>
-<div class="wf-arrow">↓</div>
-<div class="step" data-step="3"><div class="step-head"><span class="step-num g">4</span> 产出：归档+链接</div><div class="step-result" style="font-size:11px">📄 <a href="#" style="color:var(--p)">访谈纪要</a> · <a href="#" style="color:var(--p)">湖北数据报告</a> · <a href="#" style="color:var(--p)">3条TAPD任务</a> · <a href="#" style="color:var(--p)">5·18方案草稿</a><br>预估：5·18 DAU 8,000-12,000（参照清明 9,920）</div></div>
+<!-- 工作流4: 个人级 -->
+<div class="wf" style="border-left:3px solid var(--ink4)">
+<div style="display:flex;justify-content:space-between;align-items:flex-start">
+<div>
+<div style="display:flex;align-items:center;gap:6px;margin-bottom:4px">
+<div class="wf-name">📋 我的经营回顾 PPT</div>
+<span style="font-size:9px;padding:2px 6px;background:var(--bg);border-radius:10px;color:var(--ink3)">👤 个人</span>
+</div>
+<div class="wf-desc">基于上月经营回顾 PPT 模板，刷新最新数据后生成本月报告</div>
+</div>
+<span class="tag tag-green">✅ 可用</span>
+</div>
+<div style="margin-top:8px;padding:8px 12px;background:var(--bg-subtle);border-radius:var(--r-sm);font-size:11px;color:var(--ink2)">
+<strong>触发词：</strong>"生成本月经营报告" · <strong>输出：</strong>PPT 文件<br>
+<strong>配置人：</strong>weima · <strong>录入方式：</strong><span class="tag tag-violet" style="font-size:9px">WorkBuddy 生成</span>
+</div>
+</div>
+
+<!-- 工作流5: 个人级 -->
+<div class="wf" style="border-left:3px solid var(--ink4)">
+<div style="display:flex;justify-content:space-between;align-items:flex-start">
+<div>
+<div style="display:flex;align-items:center;gap:6px;margin-bottom:4px">
+<div class="wf-name">📝 我的日报摘要</div>
+<span style="font-size:9px;padding:2px 6px;background:var(--bg);border-radius:10px;color:var(--ink3)">👤 个人</span>
+</div>
+<div class="wf-desc">每日 18:00 汇总当日 TAPD 进展和关键数据变化，发到个人企微</div>
+</div>
+<span class="tag tag-green">✅ 可用</span>
+</div>
+<div style="margin-top:8px;padding:8px 12px;background:var(--bg-subtle);border-radius:var(--r-sm);font-size:11px;color:var(--ink2)">
+<strong>触发：</strong>每日 18:00 · <strong>输出：</strong>企微个人消息<br>
+<strong>配置人：</strong>weima · <strong>录入方式：</strong><span class="tag tag-blue" style="font-size:9px">PC 配置</span>
+</div>
 </div>
 </div>
 
 <!-- 新建工作流 -->
-<div style="background:#f6ffed;border-radius:8px;padding:12px 16px;margin-bottom:12px">
-<h4 style="font-size:12px;margin-bottom:6px">➕ 新建工作流</h4>
-<div class="input-row"><span style="font-size:11px;width:60px">名称</span><input class="input-box" placeholder="如：月度机构访谈流"></div>
-<div class="input-row"><span style="font-size:11px;width:60px">指令</span><textarea class="input-box" rows="2" placeholder="如：调用腾讯会议#886-2345-6789 最新录制，结合 DAU 和入驻数据分析"></textarea></div>
-<div class="input-row"><span style="font-size:11px;width:60px">触发</span><select class="input-box" style="flex:1"><option>会议结束后自动</option><option>每月1日</option><option>手动触发</option></select></div>
-<div style="text-align:right"><button class="btn btn-primary btn-sm">+ 创建</button></div>
+<div class="card">
+<div class="card-title">➕ 新建工作流</div>
+<div style="background:var(--blue-bg);border-radius:var(--r-md);padding:16px">
+<div class="input-row"><span style="font-size:12px;width:80px;flex-shrink:0">名称</span><input class="input" placeholder="如：文化实验室周报"></div>
+<div class="input-row"><span style="font-size:12px;width:80px;flex-shrink:0">公开范围</span>
+<select class="input" style="flex:1"><option>👤 个人（仅自己可用）</option><option>🏢 部门（文化实验室可用）</option><option>🌐 SSV-Mate（全组织公开）</option></select></div>
+<div class="input-row"><span style="font-size:12px;width:80px;flex-shrink:0">数据源</span>
+<div class="tag-input" style="flex:1;min-height:32px"><div class="tag-chip">📊 WeData TDW <span class="x">✕</span></div></div></div>
+<div class="input-row"><span style="font-size:12px;width:80px;flex-shrink:0">会议链接</span><input class="input" placeholder="（可选）固定周会号，如 886-2345-6789，系统读取最新录制"></div>
+<div class="input-row"><span style="font-size:12px;width:80px;flex-shrink:0">指令说明</span><textarea class="input" rows="2" placeholder="描述工作流要做什么，如：提取最新周会内容+DAU数据，生成文化实验室周报"></textarea></div>
+<div class="input-row"><span style="font-size:12px;width:80px;flex-shrink:0">输出格式</span><select class="input" style="flex:1"><option>企微群消息</option><option>PPT 报告</option><option>邮件</option><option>Markdown</option></select></div>
+<div class="input-row"><span style="font-size:12px;width:80px;flex-shrink:0">触发方式</span><select class="input" style="flex:1"><option>每周一 09:00</option><option>每日 10:00</option><option>每月 1 日</option><option>手动触发</option><option>指标异动时</option></select></div>
+<div style="display:flex;gap:8px;justify-content:flex-end;margin-top:6px">
+<div class="upload" style="flex:1;padding:12px;font-size:11px;border-width:1px">📎 或上传历史报告（PPT/PDF），AI 自动生成工作流</div>
+<button class="btn btn-primary">+ 创建工作流</button>
+</div>
+</div>
+</div>
 </div>
 
-<!-- PPT 上传 -->
-<div style="border:2px dashed #d9d9d9;border-radius:8px;padding:16px;text-align:center;cursor:pointer;transition:.2s" onmouseover="this.style.borderColor='#722ed1';this.style.background='#f9f0ff'" onmouseout="this.style.borderColor='#d9d9d9';this.style.background='transparent'">
-📎 拖拽上传 PPT/PDF → 自动解析为调度规则
-</div>
+<!-- ==================== Tab 4: 质检 ==================== -->
+<div class="sec" id="s-t4">
+
+<div style="font-size:13px;color:var(--ink2);margin-bottom:16px">用户通过 AI 问询数据后沉淀的质检结果，用于持续优化回答准确性和用户体验。</div>
+
+<!-- 总览 -->
+<div class="card card-accent">
+<div class="card-title">📊 质检总览</div>
+<div style="display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-bottom:16px">
+<div class="stat-card"><div class="stat-val" style="color:var(--green);font-size:22px">847</div><div class="stat-label">本月总提问</div></div>
+<div class="stat-card"><div class="stat-val" style="color:var(--green);font-size:22px">78.2%</div><div class="stat-label">满意率</div></div>
+<div class="stat-card"><div class="stat-val" style="color:var(--blue);font-size:22px">82.5</div><div class="stat-label">AI 均分</div></div>
+<div class="stat-card"><div class="stat-val" style="color:var(--amber);font-size:22px">23</div><div class="stat-label">待抽查</div></div>
+<div class="stat-card"><div class="stat-val" style="color:var(--violet);font-size:22px">2.3</div><div class="stat-label">平均对话轮次</div></div>
+<div class="stat-card"><div class="stat-val" style="color:var(--cyan);font-size:22px">34%</div><div class="stat-label">多轮深挖率</div></div>
 </div>
 
-<!-- 评分 -->
-<div class="cd" style="border-left:4px solid var(--g)">
-<div class="ct">✅ Skill 质量评分</div>
-<table>
-<thead><tr><th>Skill</th><th>分数</th><th>准确</th><th>口径</th><th>覆盖</th><th>时效</th><th>缺失</th></tr></thead>
+<!-- 分类筛选 -->
+<div style="display:flex;gap:6px;margin-bottom:14px">
+<button class="btn btn-primary btn-sm" style="border-radius:20px">全部 (847)</button>
+<button class="btn btn-ghost btn-sm" style="border-radius:20px">📊 业务口径取数 (523)</button>
+<button class="btn btn-ghost btn-sm" style="border-radius:20px">📋 数据工作流生产 (324)</button>
+</div>
+
+<!-- 业务口径取数 -->
+<div style="font-size:12px;font-weight:700;margin-bottom:8px;display:flex;align-items:center;gap:6px"><span style="width:12px;height:12px;background:var(--blue);border-radius:2px;display:inline-block"></span> 业务口径取数 <span style="font-size:10px;color:var(--ink3);font-weight:400">用户直接查数据、问口径、问波动原因</span></div>
+<table style="margin-bottom:16px">
+<thead><tr><th>#</th><th>用户提问</th><th>系统回答</th><th>轮次</th><th>评价</th><th>AI 分</th><th>关联数据</th><th>质检</th></tr></thead>
 <tbody>
-<tr><td><strong>📊 DAU 监控</strong></td><td><span style="font-size:14px;font-weight:700;color:var(--g)">82</span></td><td>90</td><td>85</td><td>70</td><td>82</td><td style="font-size:9px;color:var(--o)">缺新增/回访</td></tr>
-<tr><td><strong>🏛️ 入驻追踪</strong></td><td><span style="font-size:14px;font-weight:700;color:var(--o)">65</span></td><td>85</td><td>70</td><td>45</td><td>60</td><td style="font-size:9px;color:var(--r)">等级全0·缺地区</td></tr>
-<tr><td><strong>🔗 发版分析</strong></td><td><span style="font-size:14px;font-weight:700;color:var(--o)">58</span></td><td>60</td><td>50</td><td>55</td><td>65</td><td style="font-size:9px;color:var(--r)">TAPD未对接</td></tr>
-<tr><td><strong>🤖 问答机器人</strong></td><td><span style="font-size:14px;font-weight:700;color:var(--g)">78</span></td><td>85</td><td>80</td><td>70</td><td>75</td><td style="font-size:9px;color:var(--o)">缺知识库</td></tr>
-</tbody>
-</table>
-</div>
-<div class="cd" style="border-left:4px solid var(--pu)">
-<div class="ct">🧩 已配置技能（Skills）</div>
-<div class="g3" style="margin-bottom:12px">
-<div style="background:var(--c);border:1px solid #e8e8e8;border-radius:var(--rd);padding:14px;border-top:3px solid var(--pu)">
-<div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="font-size:15px">📊</span><span class="b bg">✅ 启用</span></div>
-<h4 style="font-size:12px;margin-bottom:4px">DAU 监控与归因</h4>
-<p style="font-size:10px;color:var(--t2)">异动时自动多维归因（省份/页面/监控）</p>
-</div>
-<div style="background:var(--c);border:1px solid #e8e8e8;border-radius:var(--rd);padding:14px;border-top:3px solid var(--g)">
-<div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="font-size:15px">🏛️</span><span class="b bg">✅ 启用</span></div>
-<h4 style="font-size:12px;margin-bottom:4px">博物馆入驻追踪</h4>
-<p style="font-size:10px;color:var(--t2)">入驻变化+主题/等级/地区维度拆解</p>
-</div>
-<div style="background:var(--c);border:1px solid #e8e8e8;border-radius:var(--rd);padding:14px;border-top:3px solid var(--p)">
-<div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="font-size:15px">🔗</span><span class="b bg">✅ 启用</span></div>
-<h4 style="font-size:12px;margin-bottom:4px">发版影响分析</h4>
-<p style="font-size:10px;color:var(--t2)">发版前后指标对比+TAPD 关联</p>
-</div>
-<div style="background:var(--c);border:1px solid #e8e8e8;border-radius:var(--rd);padding:14px;border-top:3px solid var(--cy)">
-<div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="font-size:15px">🤖</span><span class="b bg">✅ 启用</span></div>
-<h4 style="font-size:12px;margin-bottom:4px">数据问答机器人</h4>
-<p style="font-size:10px;color:var(--t2)">自然语言查数据，自动转 SQL 执行</p>
-</div>
-<div style="background:var(--c);border:1px solid #e8e8e8;border-radius:var(--rd);padding:14px;border-top:3px solid var(--o)">
-<div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="font-size:15px">📑</span><span class="b bb">🔵 配置中</span></div>
-<h4 style="font-size:12px;margin-bottom:4px">PPT/PDF 解析调度</h4>
-<p style="font-size:10px;color:var(--t2)">上传文档自动生成监控调度规则</p>
-</div>
-<div style="background:var(--c);border:1px solid #e8e8e8;border-radius:var(--rd);padding:14px;border-top:3px solid var(--r)">
-<div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="font-size:15px">🔧</span><span class="b bo">🟡 待开发</span></div>
-<h4 style="font-size:12px;margin-bottom:4px">代码异常检测</h4>
-<p style="font-size:10px;color:var(--t2)">MR 合入时预警指标影响</p>
-</div>
-</div>
-</div>
-
-<!-- ====== 模式一：问题型 Skill ====== -->
-<div class="cd" style="border-left:4px solid var(--pu)">
-<div class="ct">💬 模式一 · 基于特定问题的 Skill 配置</div>
-<p style="font-size:12px;color:var(--t2);margin-bottom:12px">上传图片/输入问题 → 系统识别意图 → 匹配 Skill → 生成分析结果 → 支持在线编辑</p>
-
-<!-- 输入区 -->
-<div style="background:#f9f0ff;border-radius:8px;padding:14px 16px;margin-bottom:12px">
-<h4 style="font-size:13px;margin-bottom:8px">📥 问题输入</h4>
-<div class="input-row">
-<input class="input-box" placeholder="输入问题，如：最近入驻情况有什么波动？为什么有波动？" style="flex:1">
-<button class="btn btn-primary">🔍 分析</button>
-</div>
-<div style="display:flex;gap:8px;margin-top:8px">
-<div style="border:2px dashed #d9d9d9;border-radius:8px;padding:12px 20px;text-align:center;cursor:pointer;flex:1;font-size:11px;color:var(--t2);transition:.2s" onmouseover="this.style.borderColor='#722ed1'" onmouseout="this.style.borderColor='#d9d9d9'">📷 上传截图（如老板的提问截图）</div>
-<div style="border:2px dashed #d9d9d9;border-radius:8px;padding:12px 20px;text-align:center;cursor:pointer;flex:1;font-size:11px;color:var(--t2);transition:.2s" onmouseover="this.style.borderColor='#722ed1'" onmouseout="this.style.borderColor='#d9d9d9'">🔗 粘贴腾讯会议/文档链接</div>
-</div>
-</div>
-
-<!-- 示例：识别+工作流+结果 -->
-<div style="background:#f0f5ff;border-radius:8px;padding:14px 16px;margin-bottom:12px">
-<h4 style="font-size:13px;margin-bottom:8px">📋 示例 · 老板问"什么时候上线的？最近有什么波动？"</h4>
-
-<div style="margin-bottom:10px">
-<div style="font-size:11px;font-weight:600;color:var(--p);margin-bottom:4px">Step 1 · 意图识别</div>
-<div style="font-size:11px;color:var(--t2);padding:6px 10px;background:#fff;border-radius:6px;border:1px solid #e8e8e8">
-识别结果：<span class="b bp">时间查询</span> + <span class="b bb">波动分析</span><br>
-匹配 Skill：<strong>发版影响分析</strong> + <strong>DAU 监控与归因</strong>
-</div>
-</div>
-
-<div style="margin-bottom:10px">
-<div style="font-size:11px;font-weight:600;color:var(--p);margin-bottom:4px">Step 2 · 关联数据</div>
-<div style="font-size:11px;color:var(--t2);padding:6px 10px;background:#fff;border-radius:6px;border:1px solid #e8e8e8">
-关联字段：DAU（A1核心）· 发版记录 · 省份分布 · 页面 PV · 异常监控<br>
-时间范围：自动选取近 3 个月（01-15 ~ 04-15）
-</div>
-</div>
-
-<div>
-<div style="font-size:11px;font-weight:600;color:var(--p);margin-bottom:4px">Step 3 · 生成结果（可编辑）</div>
-<div class="editable" contenteditable="true" style="font-size:11px;color:var(--t2);padding:10px;background:#fff;border-radius:6px;border:1px solid #d9d9d9;min-height:80px">
-<strong>探元小程序上线时间</strong>：2024 年（具体日期需确认 TAPD 首个需求）<br><br>
-<strong>近 3 个月波动分析</strong>：<br>
-• 2月高峰：02-10 DAU 16,966（春节文博旅游 +253%）<br>
-• 3月低谷：月均 2,906（春节后回落，缺运营活动）<br>
-• 4月回升：清明假期 04-05 达 9,920，但 04-13 异常低（1,217，湖北活动下线 -94.3% UV）<br><br>
-<strong>核心发现</strong>：流量高度依赖节假日+线下活动，湖北为最大 UV 来源（35%）。非节假日基线约 2,500-3,500。
-</div>
-<div style="display:flex;gap:8px;margin-top:8px;justify-content:flex-end">
-<button class="btn btn-outline btn-sm">🔄 重新生成</button>
-<button class="btn btn-outline btn-sm">➕ 增加维度</button>
-<button class="btn btn-primary btn-sm">✅ 确认保存</button>
-</div>
-</div>
-</div>
-</div>
-
-<!-- ====== 模式二：例行化 Skill ====== -->
-<div class="cd" style="border-left:4px solid var(--o)">
-<div class="ct">📑 模式二 · 例行化工作配置</div>
-<p style="font-size:12px;color:var(--t2);margin-bottom:12px">上传 PPT/PDF/文档 → 系统理解业务分析逻辑 → 生成例行调度 → 支持校验配置</p>
-
-<div style="background:#fff7e6;border-radius:8px;padding:14px 16px;margin-bottom:12px">
-<h4 style="font-size:13px;margin-bottom:8px">📤 文档上传</h4>
-<div style="border:2px dashed #d9d9d9;border-radius:8px;padding:24px;text-align:center;cursor:pointer;transition:.2s" onmouseover="this.style.borderColor='#722ed1';this.style.background='#f9f0ff'" onmouseout="this.style.borderColor='#d9d9d9';this.style.background='transparent'">
-<div style="font-size:24px;margin-bottom:4px">📎</div>
-<div style="font-size:12px;color:var(--t2)">拖拽上传 PPT / PDF / Word</div>
-</div>
-</div>
-
-<!-- 录入指令 -->
-<div style="background:#f0f5ff;border-radius:8px;padding:14px 16px;margin-bottom:12px">
-<h4 style="font-size:13px;margin-bottom:8px">🎯 录入指令</h4>
-<p style="font-size:11px;color:var(--t3);margin-bottom:8px">指定系统需要调用的数据源和分析维度</p>
-<div class="input-row"><span style="font-size:11px;width:70px;flex-shrink:0">数据源</span>
-<div class="tag-input" style="flex:1;min-height:32px" id="skillSources">
-<div class="tag-item"><span>📊</span> WeData TDW <span class="tag-close" onclick="this.parentElement.remove()">✕</span></div>
-<div class="tag-item"><span>📋</span> TAPD API <span class="tag-close" onclick="this.parentElement.remove()">✕</span></div>
-</div>
-</div>
-<div class="input-row"><span style="font-size:11px;width:70px;flex-shrink:0">分析指令</span><textarea class="input-box" rows="2" placeholder="如：调用腾讯会议 2026-04-10 的周会内容，对照 DAU 数据进行多维度分析"></textarea></div>
-<div class="input-row"><span style="font-size:11px;width:70px;flex-shrink:0">输出格式</span>
-<select class="input-box" style="flex:1"><option>企微群消息</option><option>PPT 报告</option><option>邮件</option><option>Markdown 文档</option></select>
-</div>
-<div class="input-row"><span style="font-size:11px;width:70px;flex-shrink:0">调度频率</span>
-<select class="input-box" style="flex:1"><option>每日 10:00</option><option>每周一 09:00</option><option>每月1日</option><option>触发式（指标异动时）</option><option>一次性</option></select>
-</div>
-<div style="text-align:right"><button class="btn btn-primary">+ 创建 Skill</button></div>
-</div>
-
-<!-- PPT 解析示例 -->
-<div style="background:#f6ffed;border-radius:8px;padding:14px 16px;margin-bottom:12px">
-<h4 style="font-size:13px;margin-bottom:8px">📋 解析示例 · 《2026Q1 经营回顾.pptx》</h4>
-<div class="tl">
-<div class="ti tg"><div class="tt">PPT P3: "Q1 入驻目标 400 家"</div><div class="td">→ 每日监控 in_on_tanyuan_cnt（当前 370，差 30 家）· 04-30 前未达 380 → 预警</div></div>
-<div class="ti tg"><div class="tt">PPT P8: "AI 创作使用率目标 15%"</div><div class="td">→ 每日 AI 创作页 UV / 总 DAU · 关联 pgid LIKE '%ai_creation%'</div></div>
-<div class="ti to"><div class="tt">PPT P12: "5·18 博物馆日大促"</div><div class="td">→ 05-18 ±7 天小时级 DAU 监控 · 当日 &lt;10,000 → 红色告警</div></div>
-</div>
-</div>
-</div>
-
-<!-- ====== 数据校验与评分 ====== -->
-<div class="cd" style="border-left:4px solid var(--g)">
-<div class="ct">✅ 数据校验 · Skill 质量评分</div>
-<p style="font-size:12px;color:var(--t2);margin-bottom:12px">Skill 负责人可查看每个 Skill 的运行质量评分，其他使用者可查看评价</p>
-
-<table>
-<thead><tr><th>Skill</th><th>总分</th><th>数据准确性</th><th>口径一致性</th><th>覆盖完整度</th><th>响应时效</th><th>缺失项</th></tr></thead>
-<tbody>
-<tr>
-<td><strong>📊 DAU 监控与归因</strong></td>
-<td><span style="font-size:16px;font-weight:700;color:var(--g)">82</span><span style="font-size:10px;color:var(--t3)">/100</span></td>
-<td><div style="width:60px;height:6px;background:#f0f0f0;border-radius:3px;display:inline-block;vertical-align:middle"><div style="width:90%;height:100%;background:var(--g);border-radius:3px"></div></div> 90</td>
-<td><div style="width:60px;height:6px;background:#f0f0f0;border-radius:3px;display:inline-block;vertical-align:middle"><div style="width:85%;height:100%;background:var(--g);border-radius:3px"></div></div> 85</td>
-<td><div style="width:60px;height:6px;background:#f0f0f0;border-radius:3px;display:inline-block;vertical-align:middle"><div style="width:70%;height:100%;background:var(--o);border-radius:3px"></div></div> 70</td>
-<td><div style="width:60px;height:6px;background:#f0f0f0;border-radius:3px;display:inline-block;vertical-align:middle"><div style="width:82%;height:100%;background:var(--g);border-radius:3px"></div></div> 82</td>
-<td style="font-size:10px;color:var(--o)">缺新增/回访拆分维度<br>pg_page_name 空值影响可读性</td>
-</tr>
-<tr>
-<td><strong>🏛️ 博物馆入驻追踪</strong></td>
-<td><span style="font-size:16px;font-weight:700;color:var(--o)">65</span><span style="font-size:10px;color:var(--t3)">/100</span></td>
-<td><div style="width:60px;height:6px;background:#f0f0f0;border-radius:3px;display:inline-block;vertical-align:middle"><div style="width:85%;height:100%;background:var(--g);border-radius:3px"></div></div> 85</td>
-<td><div style="width:60px;height:6px;background:#f0f0f0;border-radius:3px;display:inline-block;vertical-align:middle"><div style="width:70%;height:100%;background:var(--o);border-radius:3px"></div></div> 70</td>
-<td><div style="width:60px;height:6px;background:#f0f0f0;border-radius:3px;display:inline-block;vertical-align:middle"><div style="width:45%;height:100%;background:var(--r);border-radius:3px"></div></div> 45</td>
-<td><div style="width:60px;height:6px;background:#f0f0f0;border-radius:3px;display:inline-block;vertical-align:middle"><div style="width:60%;height:100%;background:var(--o);border-radius:3px"></div></div> 60</td>
-<td style="font-size:10px;color:var(--r)">❌ 等级字段全为0<br>❌ 缺地区分布维度<br>⚠️ 繁星计划定义未确认</td>
-</tr>
-<tr>
-<td><strong>🔗 发版影响分析</strong></td>
-<td><span style="font-size:16px;font-weight:700;color:var(--o)">58</span><span style="font-size:10px;color:var(--t3)">/100</span></td>
-<td><div style="width:60px;height:6px;background:#f0f0f0;border-radius:3px;display:inline-block;vertical-align:middle"><div style="width:60%;height:100%;background:var(--o);border-radius:3px"></div></div> 60</td>
-<td><div style="width:60px;height:6px;background:#f0f0f0;border-radius:3px;display:inline-block;vertical-align:middle"><div style="width:50%;height:100%;background:var(--o);border-radius:3px"></div></div> 50</td>
-<td><div style="width:60px;height:6px;background:#f0f0f0;border-radius:3px;display:inline-block;vertical-align:middle"><div style="width:55%;height:100%;background:var(--o);border-radius:3px"></div></div> 55</td>
-<td><div style="width:60px;height:6px;background:#f0f0f0;border-radius:3px;display:inline-block;vertical-align:middle"><div style="width:65%;height:100%;background:var(--o);border-radius:3px"></div></div> 65</td>
-<td style="font-size:10px;color:var(--r)">❌ TAPD 数据尚未对接<br>❌ 发版时间轴为虚构<br>⚠️ 需对接发布系统 API</td>
-</tr>
-<tr>
-<td><strong>🤖 数据问答机器人</strong></td>
-<td><span style="font-size:16px;font-weight:700;color:var(--g)">78</span><span style="font-size:10px;color:var(--t3)">/100</span></td>
-<td><div style="width:60px;height:6px;background:#f0f0f0;border-radius:3px;display:inline-block;vertical-align:middle"><div style="width:85%;height:100%;background:var(--g);border-radius:3px"></div></div> 85</td>
-<td><div style="width:60px;height:6px;background:#f0f0f0;border-radius:3px;display:inline-block;vertical-align:middle"><div style="width:80%;height:100%;background:var(--g);border-radius:3px"></div></div> 80</td>
-<td><div style="width:60px;height:6px;background:#f0f0f0;border-radius:3px;display:inline-block;vertical-align:middle"><div style="width:70%;height:100%;background:var(--o);border-radius:3px"></div></div> 70</td>
-<td><div style="width:60px;height:6px;background:#f0f0f0;border-radius:3px;display:inline-block;vertical-align:middle"><div style="width:75%;height:100%;background:var(--g);border-radius:3px"></div></div> 75</td>
-<td style="font-size:10px;color:var(--o)">⚠️ 仅支持 TDW 查询<br>⚠️ 缺业务知识库支撑</td>
-</tr>
+<tr><td>1</td><td>探元 DAU 最近怎么样？</td><td style="font-size:11px">均值 3,791，04-13 异常 1,217</td><td style="text-align:center">1</td><td>👍</td><td><strong style="color:var(--green)">92</strong></td><td class="mono" style="font-size:10px">page_aggr</td><td><select style="font-size:10px;padding:2px;border-radius:4px;border:1px solid var(--bd)"><option>✅ 通过</option><option>待抽查</option></select></td></tr>
+<tr><td>2</td><td>博物馆入驻情况？</td><td style="font-size:11px">370/6,639=5.6%，繁星260</td><td style="text-align:center">1</td><td>👍</td><td><strong style="color:var(--green)">95</strong></td><td class="mono" style="font-size:10px">museum_indices</td><td><select style="font-size:10px;padding:2px;border-radius:4px;border:1px solid var(--bd)"><option>✅ 通过</option></select></td></tr>
+<tr><td>3</td><td>04-13 为什么暴跌？</td><td style="font-size:11px">湖北 UV -94.3%，清明下线</td><td style="text-align:center;color:var(--violet);font-weight:600">3</td><td>👍</td><td><strong style="color:var(--green)">88</strong></td><td class="mono" style="font-size:10px">province 归因</td><td><select style="font-size:10px;padding:2px;border-radius:4px;border:1px solid var(--bd)"><option>✅ 通过</option></select></td></tr>
+<tr style="background:var(--red-bg)"><td>4</td><td>大甲骨和探元区别？</td><td style="font-size:11px">探元文博平台，大甲骨甲骨文</td><td style="text-align:center">1</td><td>👎</td><td><strong style="color:var(--red)">45</strong></td><td style="font-size:10px;color:var(--ink3)">无关联</td><td><select style="font-size:10px;padding:2px;border-radius:4px;border:1px solid var(--bd)"><option>❌ 不通过</option></select></td></tr>
 </tbody>
 </table>
 
-<div style="margin-top:12px;font-size:11px;color:var(--t3)">
-<strong>评分维度说明</strong>：数据准确性（数据来源可验证）· 口径一致性（与确认口径匹配）· 覆盖完整度（维度和字段覆盖率）· 响应时效（生成速度和实时性）
-</div>
-</div>
-
-<!-- Skill 运行实例 -->
-<div class="cd" style="border-left:4px solid var(--r)">
-<div class="ct">📊 Skill 运行实例 · DAU 异动告警（04-13）</div>
-<div class="al al-d"><div>🔴</div><div><strong>触发</strong>：04-13 DAU 1,217，较上周日 5,391 下降 77.4%</div></div>
-<div class="tl" style="margin-top:8px">
-<div class="ti to"><div class="tt">L1 总量 <span class="b bg">自动</span></div><div class="td">1,217 vs 上周 5,391 → -77.4%</div></div>
-<div class="ti to"><div class="tt">L2 省份 <span class="b bg">自动</span></div><div class="td">湖北 630→36 (-94.3%) · 河北消失</div></div>
-<div class="ti tg"><div class="tt">L3 监控 <span class="b bg">自动</span></div><div class="td">异常上报 241 条恒定 → 排除技术故障</div></div>
-<div class="ti to"><div class="tt">L4 归因 <span class="b bo">人工</span></div><div class="td">清明活动下线 + 湖北联动结束</div></div>
-</div>
-</div>
-</div>
-
-<!-- ===================== Tab 4: Demo & 质检 ===================== -->
-<div class="sec" id="s-l4">
-
-<!-- WorkBuddy Demo 1: 博物馆活跃分析 -->
-<div class="cd" style="border:2px solid var(--pu);border-radius:var(--rd);overflow:hidden;padding:0">
-<!-- WorkBuddy 窗口头部 -->
-<div style="background:linear-gradient(135deg,#722ed1,#531dab);color:#fff;padding:10px 16px;display:flex;align-items:center;gap:8px;font-size:13px">
-<span style="font-size:16px">🤖</span>
-<strong>WorkBuddy</strong>
-<span style="font-size:11px;opacity:.7;margin-left:auto">SSV Data Cloud · 数据基座</span>
-</div>
-<!-- 聊天区域 -->
-<div style="padding:16px;background:#f5f5f5;max-height:none">
-<div style="font-size:12px;font-weight:600;color:var(--pu);margin-bottom:10px">📋 案例 1 · 近期博物馆活跃情况分析</div>
-
-<div class="step-demo" id="stepDemo3">
-<div class="step-controls"><button class="btn btn-outline btn-sm" onclick="resetSteps('stepDemo3')">🔄</button><button class="btn btn-primary btn-sm" onclick="nextStep('stepDemo3')">▶ 下一步</button><button class="btn btn-outline btn-sm" onclick="autoPlay('stepDemo3')">⏩ 自动</button></div>
-
-<!-- Step 1: 用户发起 -->
-<div class="step" data-step="0">
-<div style="text-align:right;margin-bottom:8px"><div class="bub" style="background:var(--pu);color:#fff;border-radius:12px;border-bottom-right-radius:4px;display:inline-block;padding:10px 14px;font-size:12px">帮我分析一下近期博物馆的活跃情况，包括入驻变化和用户访问趋势</div></div>
-<div style="margin-bottom:8px"><div style="display:flex;gap:8px;align-items:flex-start">
-<div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#722ed1,#531dab);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0">🤖</div>
-<div class="bub" style="background:#fff;border:1px solid #e8e8e8;border-radius:12px;border-bottom-left-radius:4px;display:inline-block;padding:10px 14px;font-size:12px">
-收到！我来调用 <strong>🏛️ 博物馆入驻追踪</strong> 和 <strong>📊 DAU 监控</strong> 两个 Skill 进行分析...<span class="pulse-dot"></span>
-</div>
-</div></div>
-</div>
-
-<div class="wf-arrow">↓</div>
-
-<!-- Step 2: 数据拉取 -->
-<div class="step" data-step="1">
-<div style="display:flex;gap:8px;align-items:flex-start;margin-bottom:8px">
-<div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#722ed1,#531dab);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0">🤖</div>
-<div style="flex:1">
-<div class="bub" style="background:#fff;border:1px solid #e8e8e8;border-radius:12px;border-bottom-left-radius:4px;padding:10px 14px;font-size:12px;width:100%">
-<div style="font-size:11px;color:var(--t3);margin-bottom:6px">正在查询数据...</div>
-<div class="cr">📊 博物馆入驻（04-15）
-已入驻: 370 / 6,639（入驻率 5.6%）
-繁星计划: 260（占 70.3%）
-近 46 天变化: 369 → 370（+1 家）
-
-📈 探元 DAU 趋势（04-01~15）
-均值: 3,791 | 峰值: 9,920（04-05）
-谷值: 1,217（04-13）⚠️
-
-🏛️ 入驻分布 TOP3：
-历史文化馆 168（7.0%）
-综合地志馆 134（13.7%）
-考古遗址馆 33（17.9%）
-
-⚠️ 革命纪念馆 0.9% / 艺术馆 0.8%</div>
-</div>
-</div>
-</div>
-</div>
-
-<div class="wf-arrow">↓</div>
-
-<!-- Step 3: 分析结论 -->
-<div class="step" data-step="2">
-<div style="display:flex;gap:8px;align-items:flex-start">
-<div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#722ed1,#531dab);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0">🤖</div>
-<div style="flex:1">
-<div class="bub" style="background:#fff;border:1px solid #e8e8e8;border-radius:12px;border-bottom-left-radius:4px;padding:10px 14px;font-size:12px;width:100%">
-<strong>📋 分析报告</strong><br><br>
-<strong>1. 入驻增长停滞</strong>：46 天仅+1 家，入驻率 5.6%。增长动力不足，需启动主动招募。<br><br>
-<strong>2. 用户活跃强依赖活动</strong>：清明期间 DAU 达 9,920（湖北 UV 占 35%），活动结束后 04-13 骤降至 1,217。基线仅 2,500-3,500。<br><br>
-<strong>3. 结构性机会</strong>：革命纪念馆（0.9%）和艺术馆（0.8%）入驻率极低，全国共 1,705 家未入驻——是最大增量空间。<br><br>
-<strong>💡 建议</strong>：<br>
-① 定向招募革命纪念馆+艺术馆（目标每月+20家）<br>
-② 建立非节假日常态化运营（降低活动依赖）<br>
-③ 5·18 博物馆日做大型活动（目标 DAU 10,000+）
-<div style="display:flex;gap:6px;margin-top:8px">
-<button class="btn btn-outline btn-sm">📤 导出报告</button>
-<button class="btn btn-outline btn-sm">📋 创建 TAPD</button>
-<button class="btn btn-primary btn-sm">✅ 完成</button>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-
-<!-- WorkBuddy Demo 2: 博物馆扩展调研 -->
-<div class="cd" style="border:2px solid var(--g);border-radius:var(--rd);overflow:hidden;padding:0;margin-top:16px">
-<div style="background:linear-gradient(135deg,#52c41a,#389e0d);color:#fff;padding:10px 16px;display:flex;align-items:center;gap:8px;font-size:13px">
-<span style="font-size:16px">🤖</span>
-<strong>WorkBuddy</strong>
-<span style="font-size:11px;opacity:.7;margin-left:auto">调研工作流</span>
-</div>
-<div style="padding:16px;background:#f5f5f5">
-<div style="font-size:12px;font-weight:600;color:var(--g);margin-bottom:10px">📋 案例 2 · 博物馆扩展调研工作流</div>
-
-<div class="step-demo" id="stepDemo4">
-<div class="step-controls"><button class="btn btn-outline btn-sm" onclick="resetSteps('stepDemo4')">🔄</button><button class="btn btn-primary btn-sm" onclick="nextStep('stepDemo4')">▶ 下一步</button><button class="btn btn-outline btn-sm" onclick="autoPlay('stepDemo4')">⏩ 自动</button></div>
-
-<!-- Step 1: 新建调研任务 -->
-<div class="step" data-step="0">
-<div style="text-align:right;margin-bottom:8px"><div class="bub" style="background:var(--g);color:#fff;border-radius:12px;border-bottom-right-radius:4px;display:inline-block;padding:10px 14px;font-size:12px">新建一个调研任务：我要调研革命纪念馆的入驻可行性，帮我生成调研提纲</div></div>
-<div style="display:flex;gap:8px;align-items:flex-start">
-<div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#52c41a,#389e0d);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0">🤖</div>
-<div style="flex:1"><div class="bub" style="background:#fff;border:1px solid #e8e8e8;border-radius:12px;border-bottom-left-radius:4px;padding:10px 14px;font-size:12px;width:100%">
-<strong>📋 调研提纲（自动生成）</strong><br><br>
-<strong>调研对象</strong>：革命纪念馆（全国 1,045 家未入驻，当前仅 9 家入驻，入驻率 0.9%）<br><br>
-<strong>建议调研馆</strong>：<br>
-① 中国人民革命军事博物馆（北京）— 一级馆<br>
-② 南昌八一起义纪念馆（江西）— 一级馆<br>
-③ 遵义会议纪念馆（贵州）— 一级馆<br><br>
-<strong>调研提问</strong>：<br>
-1️⃣ 贵馆目前数字化建设现状？有无线上展览需求？<br>
-2️⃣ 对"探元"平台的了解程度？入驻顾虑有哪些？<br>
-3️⃣ 内容资源情况？是否有可数字化的文物/展品？<br>
-4️⃣ 5·18 博物馆日是否有合作意向？<br>
-5️⃣ 预期投入的人力和资源？<br><br>
-<strong>相关数据</strong>：<br>
-· 已入驻的 9 家革命纪念馆平均月 UV：—（需查询）<br>
-· 同类型考古遗址馆入驻率 17.9%，可作参照
-<div style="display:flex;gap:6px;margin-top:8px">
-<button class="btn btn-outline btn-sm">✏️ 编辑提纲</button>
-<button class="btn btn-primary btn-sm">📤 发送给访谈对象</button>
-</div>
-</div></div>
-</div>
-</div>
-
-<div class="wf-arrow">↓</div>
-
-<!-- Step 2: 访谈录音返回 -->
-<div class="step" data-step="1">
-<div style="text-align:right;margin-bottom:8px"><div class="bub" style="background:var(--g);color:#fff;border-radius:12px;border-bottom-right-radius:4px;display:inline-block;padding:10px 14px;font-size:12px">访谈完成了，录音链接：https://meeting.tencent.com/crw/xxx<br>帮我生成调研结果报告</div></div>
-<div style="display:flex;gap:8px;align-items:flex-start">
-<div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#52c41a,#389e0d);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0">🤖</div>
-<div style="flex:1"><div class="bub" style="background:#fff;border:1px solid #e8e8e8;border-radius:12px;border-bottom-left-radius:4px;padding:10px 14px;font-size:12px;width:100%">
-正在解析录音...<span class="pulse-dot"></span><br>
-<span style="font-size:10px;color:var(--t3)">转写中 → 提取关键信息 → 关联数据 → 生成报告</span>
-</div></div>
-</div>
-</div>
-
-<div class="wf-arrow">↓</div>
-
-<!-- Step 3: 最终报告 -->
-<div class="step" data-step="2">
-<div style="display:flex;gap:8px;align-items:flex-start">
-<div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#52c41a,#389e0d);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0">🤖</div>
-<div style="flex:1"><div class="bub" style="background:#fff;border:1px solid #e8e8e8;border-radius:12px;border-bottom-left-radius:4px;padding:10px 14px;font-size:12px;width:100%">
-<strong>📋 调研结果报告 · 军事博物馆</strong><br><br>
-<strong>访谈对象</strong>：军博数字化部 刘主任<br>
-<strong>访谈时长</strong>：38 分钟<br><br>
-<strong>🔍 核心发现</strong>：<br>
-① 军博已有自建的数字展厅，但访问量低（月 UV <500）<br>
-② 对探元平台感兴趣，主要看中 AI 解说和场景码能力<br>
-③ 有 200+ 件可数字化文物，但版权审批流程较长（约 2 个月）<br>
-④ 5·18 愿意合作，但需领导审批（预计 4 月底回复）<br><br>
-<strong>📊 数据关联</strong>：<br>
-· 参照已入驻革命纪念馆数据：平均月 UV 约 1,200<br>
-· 军博体量预估：入驻后月 UV 可达 3,000-5,000<br>
-· 对整体入驻率影响：+1 家不改变 0.9%（需批量推进）<br><br>
-<strong>✅ Action Items</strong>：<br>
-① 4/25 前准备合作方案发给刘主任<br>
-② 同步联系南昌/遵义两馆（扩大样本）<br>
-③ 推动版权审批流程模板化
-<div style="display:flex;gap:6px;margin-top:8px">
-<button class="btn btn-outline btn-sm">📤 导出 PDF</button>
-<button class="btn btn-outline btn-sm">📋 创建 TAPD</button>
-<button class="btn btn-outline btn-sm">📧 发送邮件</button>
-<button class="btn btn-primary btn-sm">✅ 归档</button>
-</div>
-</div></div>
-</div>
-</div>
-</div>
-</div>
-</div>
-
-<!-- ====== 数据质检板块 ====== -->
-<div class="cd" style="border-left:4px solid var(--o)">
-<div class="ct">🔍 数据质检</div>
-<p style="font-size:12px;color:var(--t2);margin-bottom:12px">监控用户提问质量、回答准确性和满意度，供质检同学抽查和优化 Skill</p>
-
-<!-- 质检概览 -->
-<div class="sg" style="margin-bottom:12px">
-<div class="sk"><div class="sv" style="color:var(--g)">847</div><div class="sl">本月总提问数</div></div>
-<div class="sk"><div class="sv" style="color:var(--g)">78.2%</div><div class="sl">用户满意率</div><div class="sc u">👍 662 / 👎 185</div></div>
-<div class="sk"><div class="sv" style="color:var(--p)">82.5</div><div class="sl">AI 评价均分</div><div class="sc" style="color:var(--t3)">/100</div></div>
-<div class="sk"><div class="sv" style="color:var(--o)">23</div><div class="sl">待抽查记录</div></div>
-</div>
-
-<!-- 质检明细 -->
+<!-- 数据工作流生产 -->
+<div style="font-size:12px;font-weight:700;margin-bottom:8px;display:flex;align-items:center;gap:6px"><span style="width:12px;height:12px;background:var(--green);border-radius:2px;display:inline-block"></span> 数据工作流生产 <span style="font-size:10px;color:var(--ink3);font-weight:400">通过模板生成报告、PPT、告警等</span></div>
 <table>
-<thead><tr><th style="width:5%">#</th><th style="width:22%">用户提问</th><th style="width:25%">系统回答摘要</th><th>用户评价</th><th>AI 评分</th><th>Skill</th><th>质检</th></tr></thead>
+<thead><tr><th>#</th><th>触发内容</th><th>生成结果</th><th>轮次</th><th>评价</th><th>AI 分</th><th>工作流</th><th>质检</th></tr></thead>
 <tbody>
-<tr>
-<td>1</td>
-<td style="font-size:11px">探元 DAU 最近怎么样？</td>
-<td style="font-size:11px">均值 3,791，04-13 异常 1,217...</td>
-<td style="font-size:16px">👍</td>
-<td><span style="font-weight:700;color:var(--g)">92</span><br><span style="font-size:9px;color:var(--t3)">数据准确·结论合理</span></td>
-<td style="font-size:10px">📊 DAU 监控</td>
-<td><select style="font-size:10px;padding:2px;border-radius:4px;border:1px solid #d9d9d9"><option>— 待抽查</option><option>✅ 通过</option><option>❌ 不通过</option></select></td>
-</tr>
-<tr>
-<td>2</td>
-<td style="font-size:11px">博物馆入驻率是多少？</td>
-<td style="font-size:11px">370/6,639=5.6%，繁星 260...</td>
-<td style="font-size:16px">👍</td>
-<td><span style="font-weight:700;color:var(--g)">95</span><br><span style="font-size:9px;color:var(--t3)">数据精确·口径一致</span></td>
-<td style="font-size:10px">🏛️ 入驻追踪</td>
-<td><select style="font-size:10px;padding:2px;border-radius:4px;border:1px solid #d9d9d9"><option>✅ 通过</option><option>— 待抽查</option><option>❌ 不通过</option></select></td>
-</tr>
-<tr style="background:#fff2f0">
-<td>3</td>
-<td style="font-size:11px">大甲骨和探元的区别？</td>
-<td style="font-size:11px">探元是文博平台，大甲骨是甲骨文...</td>
-<td style="font-size:16px">👎</td>
-<td><span style="font-weight:700;color:var(--r)">45</span><br><span style="font-size:9px;color:var(--r)">❌ 缺少数据对比<br>❌ 未关联 DAU 差异</span></td>
-<td style="font-size:10px">🤖 问答</td>
-<td><select style="font-size:10px;padding:2px;border-radius:4px;border:1px solid #d9d9d9"><option selected>❌ 不通过</option><option>✅ 通过</option></select></td>
-</tr>
-<tr>
-<td>4</td>
-<td style="font-size:11px">04-13 DAU 为什么暴跌？</td>
-<td style="font-size:11px">湖北 UV -94.3%，清明活动下线...</td>
-<td style="font-size:16px">👍</td>
-<td><span style="font-weight:700;color:var(--g)">88</span><br><span style="font-size:9px;color:var(--t3)">归因合理·省份关联</span></td>
-<td style="font-size:10px">📊 DAU 监控</td>
-<td><select style="font-size:10px;padding:2px;border-radius:4px;border:1px solid #d9d9d9"><option>✅ 通过</option><option>— 待抽查</option></select></td>
-</tr>
-<tr style="background:#fff7e6">
-<td>5</td>
-<td style="font-size:11px">繁星计划是什么？入选标准？</td>
-<td style="font-size:11px">繁星计划是探元的博物馆激励计划...</td>
-<td style="font-size:16px">👎</td>
-<td><span style="font-weight:700;color:var(--o)">55</span><br><span style="font-size:9px;color:var(--o)">⚠️ 入选标准定义模糊<br>⚠️ 缺少权威来源引用</span></td>
-<td style="font-size:10px">🤖 问答</td>
-<td><select style="font-size:10px;padding:2px;border-radius:4px;border:1px solid #d9d9d9"><option>— 待抽查</option><option>✅ 通过</option><option>❌ 不通过</option></select></td>
-</tr>
+<tr><td>1</td><td>"生成本月经营报告"</td><td style="font-size:11px">4月经营回顾 PPT（含 DAU/入驻/TAPD）</td><td style="text-align:center">1</td><td>👍</td><td><strong style="color:var(--green)">90</strong></td><td style="font-size:10px">月度经营报告</td><td><select style="font-size:10px;padding:2px;border-radius:4px;border:1px solid var(--bd)"><option>✅ 通过</option></select></td></tr>
+<tr><td>2</td><td>"生成文化实验室周报"</td><td style="font-size:11px">04-11~17 周报（企微群消息）</td><td style="text-align:center;color:var(--violet);font-weight:600">2</td><td>👍</td><td><strong style="color:var(--green)">85</strong></td><td style="font-size:10px">文化实验室周报</td><td><select style="font-size:10px;padding:2px;border-radius:4px;border:1px solid var(--bd)"><option>✅ 通过</option></select></td></tr>
+<tr style="background:var(--amber-bg)"><td>3</td><td>"帮我分析上周入驻变化"</td><td style="font-size:11px">入驻变化分析（缺繁星定义）</td><td style="text-align:center;color:var(--violet);font-weight:600">4</td><td>👎</td><td><strong style="color:var(--amber)">55</strong></td><td style="font-size:10px">—（临时分析）</td><td><select style="font-size:10px;padding:2px;border-radius:4px;border:1px solid var(--bd)"><option>待抽查</option></select></td></tr>
 </tbody>
 </table>
+</div>
 
 <!-- 质检洞察 -->
-<div style="margin-top:12px">
-<h4 style="font-size:13px;margin-bottom:8px">📊 质检洞察</h4>
-<div class="g2">
+<div class="card">
+<div class="card-title">📈 质检洞察</div>
+
+<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:16px">
+<!-- 维度满意率 -->
 <div>
-<div style="font-size:12px;font-weight:500;margin-bottom:6px">按 Skill 满意率</div>
-<div class="tr"><div class="tr-n">DAU 监控</div><div class="tr-bg"><div class="tr-f" style="width:89%;background:var(--g)"></div></div><div class="tr-v" style="color:var(--g)">89%</div></div>
-<div class="tr"><div class="tr-n">入驻追踪</div><div class="tr-bg"><div class="tr-f" style="width:85%;background:var(--g)"></div></div><div class="tr-v" style="color:var(--g)">85%</div></div>
-<div class="tr"><div class="tr-n">发版分析</div><div class="tr-bg"><div class="tr-f" style="width:72%;background:var(--o)"></div></div><div class="tr-v" style="color:var(--o)">72%</div></div>
-<div class="tr"><div class="tr-n">问答机器人</div><div class="tr-bg"><div class="tr-f" style="width:65%;background:var(--o)"></div></div><div class="tr-v" style="color:var(--o)">65%</div></div>
+<div style="font-size:12px;font-weight:700;margin-bottom:8px">按维度满意率</div>
+<div style="margin-bottom:5px;display:flex;align-items:center;gap:8px;font-size:11px"><span style="width:70px">DAU 查询</span><div class="score-bg"><div class="score-fill" style="width:89%;background:var(--green)"></div></div><span style="color:var(--green);font-weight:700">89%</span></div>
+<div style="margin-bottom:5px;display:flex;align-items:center;gap:8px;font-size:11px"><span style="width:70px">入驻数据</span><div class="score-bg"><div class="score-fill" style="width:85%;background:var(--green)"></div></div><span style="color:var(--green);font-weight:700">85%</span></div>
+<div style="margin-bottom:5px;display:flex;align-items:center;gap:8px;font-size:11px"><span style="width:70px">归因分析</span><div class="score-bg"><div class="score-fill" style="width:72%;background:var(--amber)"></div></div><span style="color:var(--amber);font-weight:700">72%</span></div>
+<div style="margin-bottom:5px;display:flex;align-items:center;gap:8px;font-size:11px"><span style="width:70px">概念解释</span><div class="score-bg"><div class="score-fill" style="width:55%;background:var(--amber)"></div></div><span style="color:var(--amber);font-weight:700">55%</span></div>
+<div style="margin-bottom:5px;display:flex;align-items:center;gap:8px;font-size:11px"><span style="width:70px">工作流</span><div class="score-bg"><div class="score-fill" style="width:82%;background:var(--green)"></div></div><span style="color:var(--green);font-weight:700">82%</span></div>
 </div>
+
+<!-- 多轮互动分析 -->
 <div>
-<div style="font-size:12px;font-weight:500;margin-bottom:6px">常见低分原因</div>
-<div class="al al-d" style="font-size:11px;padding:6px 10px"><div>1.</div><div>缺少数据对比维度（出现 12 次）</div></div>
-<div class="al al-w" style="font-size:11px;padding:6px 10px"><div>2.</div><div>口径定义不明确/未引用来源（出现 8 次）</div></div>
-<div class="al al-w" style="font-size:11px;padding:6px 10px"><div>3.</div><div>繁星计划等业务概念解释模糊（出现 5 次）</div></div>
-<div class="al al-i" style="font-size:11px;padding:6px 10px"><div>💡</div><div><strong>优化建议</strong>：补充繁星计划知识库 + 增加跨产品对比 Skill</div></div>
+<div style="font-size:12px;font-weight:700;margin-bottom:8px">多轮对话分析</div>
+<div style="margin-bottom:5px;display:flex;align-items:center;gap:8px;font-size:11px"><span style="width:70px">1 轮完成</span><div class="score-bg"><div class="score-fill" style="width:66%;background:var(--green)"></div></div><span style="font-weight:600">66%</span></div>
+<div style="margin-bottom:5px;display:flex;align-items:center;gap:8px;font-size:11px"><span style="width:70px">2 轮完成</span><div class="score-bg"><div class="score-fill" style="width:22%;background:var(--blue)"></div></div><span style="font-weight:600">22%</span></div>
+<div style="margin-bottom:5px;display:flex;align-items:center;gap:8px;font-size:11px"><span style="width:70px">3 轮完成</span><div class="score-bg"><div class="score-fill" style="width:8%;background:var(--violet)"></div></div><span style="font-weight:600">8%</span></div>
+<div style="margin-bottom:5px;display:flex;align-items:center;gap:8px;font-size:11px"><span style="width:70px">4 轮+</span><div class="score-bg"><div class="score-fill" style="width:4%;background:var(--red)"></div></div><span style="font-weight:600;color:var(--red)">4% ⚠️</span></div>
+<div style="font-size:10px;color:var(--ink3);margin-top:4px">💡 4 轮以上多为口径不清晰或需跨表关联的复杂问题</div>
+</div>
+
+<!-- 用户反馈 -->
+<div>
+<div style="font-size:12px;font-weight:700;margin-bottom:8px">用户反馈分布</div>
+<div style="margin-bottom:5px;display:flex;align-items:center;gap:8px;font-size:11px"><span style="width:70px">👍 满意</span><div class="score-bg"><div class="score-fill" style="width:78%;background:var(--green)"></div></div><span style="font-weight:600;color:var(--green)">662</span></div>
+<div style="margin-bottom:5px;display:flex;align-items:center;gap:8px;font-size:11px"><span style="width:70px">👎 不满</span><div class="score-bg"><div class="score-fill" style="width:15%;background:var(--red)"></div></div><span style="font-weight:600;color:var(--red)">127</span></div>
+<div style="margin-bottom:5px;display:flex;align-items:center;gap:8px;font-size:11px"><span style="width:70px">🤷 未评价</span><div class="score-bg"><div class="score-fill" style="width:7%;background:var(--ink4)"></div></div><span style="font-weight:600">58</span></div>
+<div style="font-size:10px;color:var(--ink3);margin-top:4px">未评价主要集中在工作流类（自动触发无交互）</div>
 </div>
 </div>
+
+<!-- 低分原因 -->
+<div style="font-size:12px;font-weight:700;margin-bottom:8px">常见低分原因 TOP5</div>
+<div style="padding:8px 12px;background:var(--red-bg);border-radius:var(--r-sm);font-size:12px;margin-bottom:5px;border-left:3px solid var(--red)">1. 缺少数据对比维度，回答不够深入（12 次）</div>
+<div style="padding:8px 12px;background:var(--amber-bg);border-radius:var(--r-sm);font-size:12px;margin-bottom:5px;border-left:3px solid var(--amber)">2. 口径定义不明确，数字与用户预期不一致（8 次）</div>
+<div style="padding:8px 12px;background:var(--amber-bg);border-radius:var(--r-sm);font-size:12px;margin-bottom:5px;border-left:3px solid var(--amber)">3. 繁星计划等概念解释模糊（5 次）</div>
+<div style="padding:8px 12px;background:var(--amber-bg);border-radius:var(--r-sm);font-size:12px;margin-bottom:5px;border-left:3px solid var(--amber)">4. 多轮追问后仍无法给出明确归因（4 次）</div>
+<div style="padding:8px 12px;background:var(--blue-bg);border-radius:var(--r-sm);font-size:12px;border-left:3px solid var(--blue)">5. 工作流生成的报告格式不符预期（3 次）</div>
+<div style="margin-top:10px;padding:10px 14px;background:var(--bg-subtle);border-radius:var(--r-sm);border:1px dashed var(--bd);font-size:11px;color:var(--ink2)">
+💡 <strong>优化建议：</strong>① 补充繁星计划知识库定义 ② 增加跨产品对比能力 ③ 优化多轮追问时的上下文保持 ④ 工作流模板增加格式预览
+</div>
+</div>
+</div>
+
+<!-- ==================== Tab 5: WorkBuddy 使用示例 ==================== -->
+<div class="sec" id="s-t5">
+
+<div style="font-size:13px;color:var(--ink2);margin-bottom:16px">WorkBuddy 端三个典型使用场景的 Demo 演示。</div>
+
+<!-- 场景一：基础数据查询 -->
+<div class="chat-win" style="margin-bottom:16px">
+<div class="chat-hd"><span>🤖</span> WorkBuddy <span style="font-size:11px;opacity:.6;margin-left:auto">场景一 · 基础数据查询</span></div>
+<div class="chat-body">
+<div style="font-size:11px;padding:6px 10px;background:var(--blue-bg);border-radius:var(--r-sm);color:var(--blue);margin-bottom:10px;font-weight:500">💡 适用于：问某个指标的具体数值、趋势图、对比等基础数据需求</div>
+
+<div class="cm u"><div class="nm">产品同学 · 14:00</div><div class="bub">近一个月探元小程序的 DAU 波动是什么样子的？</div></div>
+
+<div class="cm b"><div class="nm">WorkBuddy · 14:01</div><div class="bub">
+<strong>📊 探元小程序 DAU · 近 30 天趋势</strong><br><br>
+<div style="display:flex;align-items:flex-end;gap:2px;height:60px;padding:4px 0;margin-bottom:8px">
+<div style="flex:1;background:var(--blue);border-radius:2px 2px 0 0;height:30%"></div>
+<div style="flex:1;background:var(--blue);border-radius:2px 2px 0 0;height:35%"></div>
+<div style="flex:1;background:var(--blue);border-radius:2px 2px 0 0;height:28%"></div>
+<div style="flex:1;background:var(--blue);border-radius:2px 2px 0 0;height:65%"></div>
+<div style="flex:1;background:var(--blue);border-radius:2px 2px 0 0;height:85%"></div>
+<div style="flex:1;background:var(--blue);border-radius:2px 2px 0 0;height:100%;opacity:.8" title="02-10: 16,966"></div>
+<div style="flex:1;background:var(--blue);border-radius:2px 2px 0 0;height:40%"></div>
+<div style="flex:1;background:var(--blue);border-radius:2px 2px 0 0;height:28%"></div>
+<div style="flex:1;background:var(--blue);border-radius:2px 2px 0 0;height:25%"></div>
+<div style="flex:1;background:var(--blue);border-radius:2px 2px 0 0;height:30%"></div>
+<div style="flex:1;background:var(--blue);border-radius:2px 2px 0 0;height:35%"></div>
+<div style="flex:1;background:var(--blue);border-radius:2px 2px 0 0;height:60%;opacity:.8" title="04-05: 9,920"></div>
+<div style="flex:1;background:var(--red);border-radius:2px 2px 0 0;height:12%" title="04-13: 1,217"></div>
+<div style="flex:1;background:var(--blue);border-radius:2px 2px 0 0;height:27%"></div>
+<div style="flex:1;background:var(--blue);border-radius:2px 2px 0 0;height:27%"></div>
+</div>
+<div style="display:flex;justify-content:space-between;font-size:9px;color:var(--ink3);margin-bottom:8px"><span>03-18</span><span>04-17</span></div>
+<strong>关键数据：</strong><br>
+· 月均 DAU：<strong>3,245</strong><br>
+· 最高：02-10 <strong>16,966</strong>（春节文博活动）<br>
+· 清明峰值：04-05 <strong>9,920</strong>（湖北联动）<br>
+· 最低：04-13 <strong>1,217</strong>（活动下线后回落）<br>
+· 当前基线：<strong>2,500 ~ 3,500</strong>（非活动日常态）<br><br>
+<span style="font-size:10px;color:var(--ink3)">📎 口径：COUNT(*) FROM dws_tanyuan_mp_page_aggr_d_zl · 确认人：刘芳</span>
+</div></div>
+</div>
+</div>
+
+<!-- 场景二：波动原因分析（原场景三） -->
+<div class="chat-win" style="margin-bottom:16px">
+<div class="chat-hd" style="background:var(--amber)"><span>🤖</span> WorkBuddy <span style="font-size:11px;opacity:.6;margin-left:auto">场景二 · 波动原因分析</span></div>
+<div class="chat-body">
+<div style="font-size:11px;padding:6px 10px;background:var(--amber-bg);border-radius:var(--r-sm);color:var(--amber);margin-bottom:10px;font-weight:500">💡 适用于：了解某个指标为什么波动、变化原因来自谁的确认、后续可以找谁跟进</div>
+
+<div class="cm u"><div class="nm">PM 小王 · 11:00</div><div class="bub">为什么我们的博物馆入驻情况发生了变化？最近是涨了还是跌了？</div></div>
+
+<div class="cm b"><div class="nm">WorkBuddy · 11:01</div><div class="bub">
+<strong>🏛️ 博物馆入驻情况变化分析</strong><br><br>
+<strong>结论：近 46 天几乎无变化，入驻增长接近停滞。</strong><br><br>
+<strong>1. 当前数据</strong><br>
+· 已入驻：<strong>370</strong> 家 / 全国 6,639 家 = <strong>5.6%</strong><br>
+· 46 天变化：369 → 370（仅 +1 家）<br><br>
+<strong>2. 影响因素</strong><br>
+① <strong>自然增长停滞</strong>：历史文化馆入驻率 7.0%（已较高），革命纪念馆 0.9% / 艺术馆 0.8%（几乎未触达）<br>
+② <strong>缺少定向招募</strong>：当前入驻以自然申请为主，无主动招募计划<br>
+③ <strong>资源投入不足</strong>：Q1 运营重心在活动侧，入驻推广资源有限<br><br>
+<strong>3. 口径来源</strong><br>
+· 数据口径：<code style="font-family:var(--fm);font-size:10px;background:var(--blue-bg);padding:1px 4px;border-radius:2px">in_on_tanyuan_cnt FROM ads_tanyuan_museum_indices_d_ql</code><br>
+· 口径确认人：<strong>赵宇</strong>（确认于 04-15）<br><br>
+<strong>4. 后续跟进</strong><br>
+· 如对入驻口径有疑问，可联系 <strong>赵宇</strong><br>
+· 如需讨论招募策略，可联系 <strong>刘芳</strong>（文化实验室负责人）<br>
+· 相关 TAPD 需求：<a href="#" style="color:var(--blue)">探元博物馆定向招募方案</a><br><br>
+<span style="font-size:10px;color:var(--ink3)">📎 分析基于「数据管理器后台」已确认口径 · 数据截至 04-15</span>
+</div></div>
+</div>
+</div>
+
+<!-- 场景三：数据工作流配置（原场景二） -->
+<div class="chat-win">
+<div class="chat-hd" style="background:var(--green)"><span>🤖</span> WorkBuddy <span style="font-size:11px;opacity:.6;margin-left:auto">场景三 · 数据工作流配置</span></div>
+<div class="chat-body">
+<div style="font-size:11px;padding:6px 10px;background:var(--green-bg);border-radius:var(--r-sm);color:var(--green);margin-bottom:10px;font-weight:500">💡 适用于：上传历史报告，让 AI 自动生成可复用的数据工作流模板，后续一句话即可获取最新报告</div>
+
+<div class="cm u"><div class="nm">weima · 10:00</div><div class="bub" style="background:var(--green)">这是我根据上月数据生成的一份经营回顾 PPT，请根据此报告帮我生成一个数据报告模板。以后每月直接刷新数据就能用。<br><br><span style="font-size:10px;opacity:.7">📎 附件：2026Q1经营回顾.pptx</span></div></div>
+
+<div class="cm b"><div class="nm">WorkBuddy · 10:02</div><div class="bub">
+收到！正在分析你的 PPT 结构...<br><br>
+<strong>📋 检测到的数据结构：</strong>
+<div class="code">P3: "Q1 入驻目标 400 家" → in_on_tanyuan_cnt (当前370)
+P8: "AI 创作使用率目标 15%" → AI页UV / DAU
+P12: "5·18 博物馆日大促" → 05-18 小时级 DAU</div><br>
+<strong>✅ 已生成工作流模板：</strong><br>
+· 名称：<strong>月度经营报告</strong><br>
+· 数据源：WeData TDW + TAPD<br>
+· 功能：将数据刷新到最新版，生成 PPT 文案<br>
+· 触发词：<strong>"生成本月经营报告"</strong><br>
+· 范围：<strong>👤 仅个人使用</strong><br><br>
+保存这个工作流吗？
+<div style="display:flex;gap:6px;margin-top:8px"><button class="btn btn-ghost btn-sm">✏️ 编辑模板</button><button class="btn btn-ghost btn-sm">🏢 改为部门级</button><button class="btn btn-primary btn-sm">✅ 保存</button></div>
+</div></div>
+
+<div class="cm u"><div class="nm">weima · 10:03</div><div class="bub" style="background:var(--green)">保存。帮我生成本月的经营报告看看效果。</div></div>
+
+<div class="cm b"><div class="nm">WorkBuddy · 10:04</div><div class="bub">
+已保存并生成本月报告！🎉<br><br>
+<strong>📊 2026年4月 文化实验室经营报告（预览）</strong><br>
+<div style="background:var(--white);border:1px solid var(--bd);border-radius:var(--r-sm);padding:12px;margin:8px 0;font-size:11px">
+<div style="font-size:13px;font-weight:700;margin-bottom:8px;color:var(--ink)">📊 文化实验室 · 4 月经营回顾</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
+<div style="padding:8px;background:var(--blue-bg);border-radius:4px"><div style="font-size:9px;color:var(--ink3)">探元 DAU 月均</div><div style="font-size:16px;font-weight:800;font-family:var(--fh);color:var(--blue)">3,245</div><div style="font-size:9px;color:var(--red)">环比 -8.3%</div></div>
+<div style="padding:8px;background:var(--green-bg);border-radius:4px"><div style="font-size:9px;color:var(--ink3)">已入驻博物馆</div><div style="font-size:16px;font-weight:800;font-family:var(--fh);color:var(--green)">370</div><div style="font-size:9px;color:var(--amber)">+1 家 / 目标 400</div></div>
+</div>
+<div style="font-size:10px;color:var(--ink2);line-height:1.6">
+<strong>关键事件：</strong>清明活动 DAU 峰值 9,920 → 活动下线后回落至 1,217<br>
+<strong>入驻进度：</strong>370/400 = 92.5%，需在 Q2 加速定向招募<br>
+<strong>下月重点：</strong>5·18 博物馆日预热 · v3.9.0 规划
+</div>
+</div>
+<div style="display:flex;gap:6px;margin-top:4px"><button class="btn btn-ghost btn-sm">📥 下载 PPT</button><button class="btn btn-ghost btn-sm">📧 发送邮件</button><button class="btn btn-primary btn-sm">✅ 确认发布</button></div>
+<br>
+<span style="font-size:10px;color:var(--ink3)">以后每月说 💬 <strong>"生成本月经营报告"</strong> 即可获取最新版本</span>
+</div></div>
 </div>
 </div>
 
@@ -1120,55 +1052,13 @@ tr:hover td{background:#fafafa}
 
 </div>
 
-<div class="ft">数据基座 · SSV Data Cloud<br>iWiki MCP · 工蜂 MCP · WeData MCP · 2026-04-16</div>
+<div class="footer">SSV 数据管理后台 · 数据确认 · 工作流配置 · 质检 · 2026-04-17</div>
 
 <script>
-function sw(id,el){
-document.querySelectorAll('.nt').forEach(function(t){t.classList.remove('a')});
-document.querySelectorAll('.sec').forEach(function(s){s.classList.remove('a')});
-if(el)el.classList.add('a'); else document.getElementById('tab-'+id).classList.add('a');
-document.getElementById('s-'+id).classList.add('a');
-}
-function switchPerm(val){
-var n={'culture_admin':'🏛️ 文化实验室·管理员','culture_pm':'📋 文化实验室·PM','culture_data':'📊 文化实验室·数据同学','culture_dev':'🔧 文化实验室·研发','ssv_admin':'👔 SSV全局·管理员','care_admin':'💝 数字关爱·管理员','shanzhimei_pm':'🏘️ 善治美·PM'};
-var notice=document.createElement('div');
-notice.style.cssText='position:fixed;top:60px;right:20px;background:#722ed1;color:#fff;padding:10px 16px;border-radius:8px;font-size:12px;z-index:999;box-shadow:0 4px 12px rgba(0,0,0,.2);animation:fadeIn .3s';
-notice.innerHTML='🔒 已切换到：<strong>'+n[val]+'</strong><br><span style="font-size:10px;opacity:.8">数据范围将按权限过滤</span>';
-document.body.appendChild(notice);
-setTimeout(function(){notice.remove()},2500);
-}
-function addLink(){
-var v=document.getElementById('linkInput').value.trim();
-if(!v)return;
-var t=document.createElement('div');t.className='tag-item';
-t.innerHTML='<span>📄</span> '+v+' <span class="tag-close" onclick="this.parentElement.remove()">✕</span>';
-document.getElementById('linkTags').appendChild(t);
-document.getElementById('linkInput').value='';
-}
-// Step animation
-function nextStep(demoId){
-var demo=document.getElementById(demoId);
-var steps=demo.querySelectorAll('.step');
-var current=-1;
-steps.forEach(function(s,i){if(s.classList.contains('active'))current=i;});
-if(current>=0)steps[current].classList.remove('active'),steps[current].classList.add('done');
-if(current+1<steps.length)steps[current+1].classList.add('active');
-}
-function resetSteps(demoId){
-var demo=document.getElementById(demoId);
-demo.querySelectorAll('.step').forEach(function(s){s.classList.remove('active','done');});
-}
-function autoPlay(demoId){
-resetSteps(demoId);
-var demo=document.getElementById(demoId);
-var steps=demo.querySelectorAll('.step');
-var i=0;
-function go(){
-if(i>0){steps[i-1].classList.remove('active');steps[i-1].classList.add('done');}
-if(i<steps.length){steps[i].classList.add('active');i++;setTimeout(go,1500);}
-}
-go();
-}
+function sw(id,el){document.querySelectorAll('.tab-item').forEach(t=>t.classList.remove('active'));document.querySelectorAll('.sec').forEach(s=>s.classList.remove('a'));el.classList.add('active');document.getElementById('s-'+id).classList.add('a');}
+function addLink(){var v=document.getElementById('linkInput').value.trim();if(!v)return;var t=document.createElement('div');t.className='tag-chip';t.innerHTML='<span>📄</span> '+v+' <span class="x" onclick="this.parentElement.remove()">✕</span>';document.getElementById('linkTags').appendChild(t);document.getElementById('linkInput').value='';}
+function tog(el){var ul=el.parentElement.querySelector(':scope > ul');if(ul){ul.style.display=ul.style.display==='none'?'block':'none';el.textContent=ul.style.display==='none'?'▶':'▼';}}
+function togC(el){if(el.classList.contains('core')){el.classList.remove('core');el.classList.add('normal');var d=el.querySelector('.dot');if(d)d.className='dot dot-x';}else{el.classList.remove('normal');el.classList.add('core');var d=el.querySelector('.dot');if(d)d.className='dot dot-g';}}
 </script>
 </body>
 </html>

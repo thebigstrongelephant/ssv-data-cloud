@@ -882,10 +882,10 @@ function renderPulse(pulse, projects) {
 
 // ---- 文化实验室数据看板 ----
 function renderWenhuaDashboard() {
-  const DATA_ADMIN_URL = './index.html';
-  let h = `<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
-    <div><div style="font-size:16px;font-weight:700">📊 核心数据看板</div><div style="font-size:12px;color:var(--ink-muted);margin-top:4px">数据来源：SSV 数据管理后台已确认口径 · 自动更新</div></div>
-    <a href="${DATA_ADMIN_URL}" target="_blank" style="display:inline-flex;align-items:center;gap:6px;padding:8px 18px;border-radius:var(--radius-md);font-size:13px;font-weight:600;background:var(--violet);color:#fff;text-decoration:none;box-shadow:0 2px 8px rgba(124,58,237,.2);transition:all .15s" onmouseover="this.style.background='#6d28d9'" onmouseout="this.style.background='var(--violet)'">⚙️ 进入数据管理后台</a>
+  const DATA_ADMIN_URL = '../culture-data-base.html';
+  let h = `<div style="margin-bottom:20px">
+    <div style="font-size:16px;font-weight:700">📊 核心数据看板</div>
+    <div style="font-size:12px;color:var(--ink-muted);margin-top:4px">数据来源：SSV 数据管理后台已确认口径 · 自动更新</div>
   </div>`;
 
   // 核心指标卡片

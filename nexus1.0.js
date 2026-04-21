@@ -883,88 +883,116 @@ function renderPulse(pulse, projects) {
 // ---- 文化实验室数据看板 ----
 function renderWenhuaDashboard() {
   const DATA_ADMIN_URL = './index.html';
-  let h = `<div style="margin-bottom:20px">
-    <div style="font-size:16px;font-weight:700">📊 核心数据看板</div>
-    <div style="font-size:12px;color:var(--ink-muted);margin-top:4px">数据来源：SSV 数据管理后台已确认口径 · 自动更新</div>
+  let h = `<div style="margin-bottom:20px;display:flex;justify-content:space-between;align-items:flex-start">
+    <div>
+      <div style="font-size:16px;font-weight:700">📊 核心数据看板</div>
+      <div style="font-size:12px;color:var(--ink-muted);margin-top:4px">数据来源：SSV 数据管理后台已确认口径 · 基于工蜂知识库（4月21日更新） · 自动同步</div>
+    </div>
+    <span style="font-size:10px;padding:4px 10px;background:var(--emerald-light);color:var(--emerald);border-radius:12px;font-weight:600">✓ 4月21日知识库确认</span>
   </div>`;
 
-  // 核心指标卡片
-  h += `<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px">
+  // 核心指标卡片（4 个基础）
+  h += `<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:14px">
     <div style="background:var(--white);border:1px solid var(--border);border-radius:var(--radius-lg);padding:18px;box-shadow:var(--shadow-sm);border-top:3px solid var(--violet)">
-      <div style="font-size:11px;color:var(--ink-muted);margin-bottom:4px">📱 探元小程序 DAU</div>
-      <div style="font-size:26px;font-weight:800;font-family:var(--fh);color:var(--violet);letter-spacing:-0.5px">2,711</div>
-      <div style="font-size:10px;color:var(--ink-muted)">04-15 · 均值 3,791</div>
+      <div style="font-size:11px;color:var(--ink-muted);margin-bottom:4px">📱 小程序端 DAU <code style="font-size:9px;background:var(--bg-subtle);padding:1px 4px;border-radius:2px;color:var(--ink-muted)">in_mp_dau</code></div>
+      <div style="font-size:26px;font-weight:800;font-family:var(--fh);color:var(--violet);letter-spacing:-0.5px">532</div>
+      <div style="font-size:10px;color:var(--ink-muted)">04-17 · 新增 435 · 月活 17,036</div>
     </div>
     <div style="background:var(--white);border:1px solid var(--border);border-radius:var(--radius-lg);padding:18px;box-shadow:var(--shadow-sm);border-top:3px solid var(--emerald)">
-      <div style="font-size:11px;color:var(--ink-muted);margin-bottom:4px">🎮 大甲骨 DAU</div>
-      <div style="font-size:26px;font-weight:800;font-family:var(--fh);color:var(--emerald);letter-spacing:-0.5px">662</div>
-      <div style="font-size:10px;color:var(--ink-muted)">04-15 · 均值 509</div>
+      <div style="font-size:11px;color:var(--ink-muted);margin-bottom:4px">💻 H5 官网 DAU <code style="font-size:9px;background:var(--bg-subtle);padding:1px 4px;border-radius:2px;color:var(--ink-muted)">in_h5_dau</code></div>
+      <div style="font-size:26px;font-weight:800;font-family:var(--fh);color:var(--emerald);letter-spacing:-0.5px">380</div>
+      <div style="font-size:10px;color:var(--ink-muted)">04-20 · 月活 10,002 · 去重 imei</div>
     </div>
     <div style="background:var(--white);border:1px solid var(--border);border-radius:var(--radius-lg);padding:18px;box-shadow:var(--shadow-sm);border-top:3px solid var(--blue)">
-      <div style="font-size:11px;color:var(--ink-muted);margin-bottom:4px">🏛️ 已入驻博物馆</div>
+      <div style="font-size:11px;color:var(--ink-muted);margin-bottom:4px">🏛️ 已入驻博物馆 <code style="font-size:9px;background:var(--bg-subtle);padding:1px 4px;border-radius:2px;color:var(--ink-muted)">in_on_tanyuan_cnt</code></div>
       <div style="font-size:26px;font-weight:800;font-family:var(--fh);color:var(--blue);letter-spacing:-0.5px">370 <span style="font-size:13px;color:var(--amber)">/ 6,639</span></div>
-      <div style="font-size:10px;color:var(--ink-muted)">入驻率 5.6%</div>
+      <div style="font-size:10px;color:var(--ink-muted)">入驻率 5.6% · 繁星 260</div>
     </div>
     <div style="background:var(--white);border:1px solid var(--border);border-radius:var(--radius-lg);padding:18px;box-shadow:var(--shadow-sm);border-top:3px solid var(--amber)">
-      <div style="font-size:11px;color:var(--ink-muted);margin-bottom:4px">⭐ 繁星计划馆</div>
-      <div style="font-size:26px;font-weight:800;font-family:var(--fh);color:var(--amber);letter-spacing:-0.5px">260</div>
-      <div style="font-size:10px;color:var(--ink-muted)">占入驻 70.3%</div>
+      <div style="font-size:11px;color:var(--ink-muted);margin-bottom:4px">📜 引入文物 <code style="font-size:9px;background:var(--bg-subtle);padding:1px 4px;border-radius:2px;color:var(--ink-muted)">in_heritage_cnt</code></div>
+      <div style="font-size:26px;font-weight:800;font-family:var(--fh);color:var(--amber);letter-spacing:-0.5px">5,731</div>
+      <div style="font-size:10px;color:var(--ink-muted)">一级 1,577 · 二级 1,153 · 三级 1,376</div>
     </div>
   </div>`;
 
-  // DAU 折线图
+  // 第二排：资产类指标
+  h += `<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px">
+    <div style="background:var(--white);border:1px solid var(--border);border-radius:var(--radius-lg);padding:18px;box-shadow:var(--shadow-sm);border-top:3px solid var(--cyan)">
+      <div style="font-size:11px;color:var(--ink-muted);margin-bottom:4px">🎨 素材库 <code style="font-size:9px;background:var(--bg-subtle);padding:1px 4px;border-radius:2px;color:var(--ink-muted)">in_material_cnt</code></div>
+      <div style="font-size:26px;font-weight:800;font-family:var(--fh);color:var(--cyan);letter-spacing:-0.5px">20,997</div>
+      <div style="font-size:10px;color:var(--ink-muted)">素材总数</div>
+    </div>
+    <div style="background:var(--white);border:1px solid var(--border);border-radius:var(--radius-lg);padding:18px;box-shadow:var(--shadow-sm);border-top:3px solid var(--violet)">
+      <div style="font-size:11px;color:var(--ink-muted);margin-bottom:4px">🖼️ 文物资产 <code style="font-size:9px;background:var(--bg-subtle);padding:1px 4px;border-radius:2px;color:var(--ink-muted)">in_heritage_asset_cnt</code></div>
+      <div style="font-size:26px;font-weight:800;font-family:var(--fh);color:var(--violet);letter-spacing:-0.5px">9,843</div>
+      <div style="font-size:10px;color:var(--ink-muted)">已授权 7,003（71.2%）</div>
+    </div>
+    <div style="background:var(--white);border:1px solid var(--border);border-radius:var(--radius-lg);padding:18px;box-shadow:var(--shadow-sm);border-top:3px solid var(--blue)">
+      <div style="font-size:11px;color:var(--ink-muted);margin-bottom:4px">🎬 素材资产 <code style="font-size:9px;background:var(--bg-subtle);padding:1px 4px;border-radius:2px;color:var(--ink-muted)">in_material_asset_cnt</code></div>
+      <div style="font-size:26px;font-weight:800;font-family:var(--fh);color:var(--blue);letter-spacing:-0.5px">21,211</div>
+      <div style="font-size:10px;color:var(--ink-muted)">已授权 3,690（17.4%）</div>
+    </div>
+    <div style="background:var(--white);border:1px solid var(--border);border-radius:var(--radius-lg);padding:18px;box-shadow:var(--shadow-sm);border-top:3px solid var(--emerald)">
+      <div style="font-size:11px;color:var(--ink-muted);margin-bottom:4px">🛒 被购买总量 <code style="font-size:9px;background:var(--bg-subtle);padding:1px 4px;border-radius:2px;color:var(--ink-muted)">sold_cnt</code></div>
+      <div style="font-size:26px;font-weight:800;font-family:var(--fh);color:var(--emerald);letter-spacing:-0.5px">128,951</div>
+      <div style="font-size:10px;color:var(--ink-muted)">文物 118,263 · 素材 10,688</div>
+    </div>
+  </div>`;
+
+  // DAU 折线图 — 小程序 04-01 ~ 04-17 真实数据
   h += `<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:20px">
     <div style="background:var(--white);border:1px solid var(--border);border-radius:var(--radius-lg);padding:20px;box-shadow:var(--shadow-sm)">
-      <div style="font-size:13px;font-weight:700;margin-bottom:4px">📈 探元 DAU 趋势（04-01 ~ 04-15）</div>
-      <div style="font-size:10px;color:var(--ink-muted);margin-bottom:10px">口径：COUNT(*) FROM dws_tanyuan_mp_page_aggr_d_zl · 确认人：刘芳</div>
+      <div style="font-size:13px;font-weight:700;margin-bottom:4px">📈 小程序 DAU 趋势（04-01 ~ 04-17）</div>
+      <div style="font-size:10px;color:var(--ink-muted);margin-bottom:10px">口径：COUNT(DISTINCT h5_qimei) · 主表 dws_tanyuan_mp_party_act_h5_qimei_d_zl · 确认人 patricksong</div>
       <div style="display:flex;align-items:flex-end;gap:3px;height:80px;padding:4px 0">
-        <div style="flex:1;background:var(--violet);border-radius:2px 2px 0 0;height:27%" title="04-01: 2,698"></div>
-        <div style="flex:1;background:var(--violet);border-radius:2px 2px 0 0;height:38%" title="04-02: 3,815"></div>
-        <div style="flex:1;background:var(--violet);border-radius:2px 2px 0 0;height:37%" title="04-03: 3,666"></div>
-        <div style="flex:1;background:var(--violet);border-radius:2px 2px 0 0;height:69%" title="04-04: 6,824"></div>
-        <div style="flex:1;background:#9b59b6;border-radius:2px 2px 0 0;height:100%" title="04-05: 9,920 ★"></div>
-        <div style="flex:1;background:var(--violet);border-radius:2px 2px 0 0;height:54%" title="04-06: 5,391"></div>
-        <div style="flex:1;background:var(--violet);border-radius:2px 2px 0 0;height:26%" title="04-07: 2,603"></div>
-        <div style="flex:1;background:var(--violet);border-radius:2px 2px 0 0;height:36%" title="04-08: 3,606"></div>
-        <div style="flex:1;background:var(--rose);border-radius:2px 2px 0 0;height:17%" title="04-09: 1,709"></div>
-        <div style="flex:1;background:var(--violet);border-radius:2px 2px 0 0;height:28%" title="04-10: 2,806"></div>
-        <div style="flex:1;background:var(--violet);border-radius:2px 2px 0 0;height:35%" title="04-11: 3,511"></div>
-        <div style="flex:1;background:var(--violet);border-radius:2px 2px 0 0;height:34%" title="04-12: 3,326"></div>
-        <div style="flex:1;background:var(--rose);border-radius:2px 2px 0 0;height:12%" title="04-13: 1,217 ⚠️"></div>
-        <div style="flex:1;background:var(--violet);border-radius:2px 2px 0 0;height:27%" title="04-14: 2,667"></div>
-        <div style="flex:1;background:var(--violet);border-radius:2px 2px 0 0;height:27%" title="04-15: 2,711"></div>
+        <div style="flex:1;background:var(--violet);border-radius:2px 2px 0 0;height:33%" title="04-01: 573"></div>
+        <div style="flex:1;background:var(--violet);border-radius:2px 2px 0 0;height:41%" title="04-02: 698"></div>
+        <div style="flex:1;background:var(--violet);border-radius:2px 2px 0 0;height:40%" title="04-03: 692"></div>
+        <div style="flex:1;background:var(--violet);border-radius:2px 2px 0 0;height:74%" title="04-04: 1260"></div>
+        <div style="flex:1;background:#9b59b6;border-radius:2px 2px 0 0;height:100%" title="04-05: 1714 ★清明峰值"></div>
+        <div style="flex:1;background:var(--violet);border-radius:2px 2px 0 0;height:53%" title="04-06: 902"></div>
+        <div style="flex:1;background:var(--violet);border-radius:2px 2px 0 0;height:25%" title="04-07: 426"></div>
+        <div style="flex:1;background:var(--violet);border-radius:2px 2px 0 0;height:30%" title="04-08: 517"></div>
+        <div style="flex:1;background:var(--rose);border-radius:2px 2px 0 0;height:20%" title="04-09: 341"></div>
+        <div style="flex:1;background:var(--violet);border-radius:2px 2px 0 0;height:29%" title="04-10: 493"></div>
+        <div style="flex:1;background:var(--violet);border-radius:2px 2px 0 0;height:40%" title="04-11: 686"></div>
+        <div style="flex:1;background:var(--violet);border-radius:2px 2px 0 0;height:37%" title="04-12: 628"></div>
+        <div style="flex:1;background:var(--rose);border-radius:2px 2px 0 0;height:15%" title="04-13: 258 ⚠️低谷"></div>
+        <div style="flex:1;background:var(--violet);border-radius:2px 2px 0 0;height:24%" title="04-14: 417"></div>
+        <div style="flex:1;background:var(--violet);border-radius:2px 2px 0 0;height:31%" title="04-15: 529"></div>
+        <div style="flex:1;background:var(--violet);border-radius:2px 2px 0 0;height:34%" title="04-16: 585"></div>
+        <div style="flex:1;background:var(--violet);border-radius:2px 2px 0 0;height:31%" title="04-17: 532"></div>
       </div>
-      <div style="display:flex;justify-content:space-between;font-size:9px;color:var(--ink-muted);margin-top:2px"><span>04-01</span><span>均值 3,791</span><span>04-15</span></div>
-      <div style="margin-top:8px;padding:6px 10px;background:var(--bg-subtle);border-radius:var(--radius-sm);font-size:10px;color:var(--ink-secondary)">📌 清明峰值 9,920 · 04-13 异常低谷 1,217（活动下线）· 周末高 / 工作日低</div>
+      <div style="display:flex;justify-content:space-between;font-size:9px;color:var(--ink-muted);margin-top:2px"><span>04-01</span><span>均值 674</span><span>04-17</span></div>
+      <div style="margin-top:8px;padding:6px 10px;background:var(--bg-subtle);border-radius:var(--radius-sm);font-size:10px;color:var(--ink-secondary)">📌 清明 04-05 峰值 1,714 · 04-13 低谷 258（清明活动下线）</div>
     </div>
 
     <div style="background:var(--white);border:1px solid var(--border);border-radius:var(--radius-lg);padding:20px;box-shadow:var(--shadow-sm)">
-      <div style="font-size:13px;font-weight:700;margin-bottom:4px">📈 大甲骨 DAU 趋势（04-01 ~ 04-15）</div>
-      <div style="font-size:10px;color:var(--ink-muted);margin-bottom:10px">口径：COUNT(DISTINCT h5_qimei) · 确认人：wind</div>
+      <div style="font-size:13px;font-weight:700;margin-bottom:4px">📈 H5 官网 DAU 趋势（04-17 ~ 04-20）</div>
+      <div style="font-size:10px;color:var(--ink-muted);margin-bottom:10px">口径：COUNT(DISTINCT imei) · 主表 dws_cltr_tanyuan_h5_party_act_imei_d_zl · 确认人 patricksong</div>
       <div style="display:flex;align-items:flex-end;gap:3px;height:80px;padding:4px 0">
-        <div style="flex:1;background:var(--emerald);border-radius:2px 2px 0 0;height:80%" title="04-01: 662"></div>
-        <div style="flex:1;background:var(--emerald);border-radius:2px 2px 0 0;height:76%" title="04-02: 627"></div>
-        <div style="flex:1;background:var(--emerald);border-radius:2px 2px 0 0;height:58%" title="04-03: 478"></div>
-        <div style="flex:1;background:var(--emerald);border-radius:2px 2px 0 0;height:34%" title="04-04: 283"></div>
-        <div style="flex:1;background:var(--emerald);border-radius:2px 2px 0 0;height:39%" title="04-05: 322"></div>
-        <div style="flex:1;background:var(--emerald);border-radius:2px 2px 0 0;height:42%" title="04-06: 351"></div>
-        <div style="flex:1;background:var(--emerald);border-radius:2px 2px 0 0;height:74%" title="04-07: 610"></div>
-        <div style="flex:1;background:var(--emerald);border-radius:2px 2px 0 0;height:80%" title="04-08: 661"></div>
-        <div style="flex:1;background:#27ae60;border-radius:2px 2px 0 0;height:100%" title="04-09: 829 ★"></div>
-        <div style="flex:1;background:var(--emerald);border-radius:2px 2px 0 0;height:60%" title="04-10: 499"></div>
-        <div style="flex:1;background:var(--emerald);border-radius:2px 2px 0 0;height:44%" title="04-11: 365"></div>
-        <div style="flex:1;background:var(--emerald);border-radius:2px 2px 0 0;height:40%" title="04-12: 334"></div>
-        <div style="flex:1;background:var(--emerald);border-radius:2px 2px 0 0;height:69%" title="04-13: 573"></div>
-        <div style="flex:1;background:var(--emerald);border-radius:2px 2px 0 0;height:86%" title="04-14: 713"></div>
-        <div style="flex:1;background:var(--emerald);border-radius:2px 2px 0 0;height:80%" title="04-15: 662"></div>
+        <div style="flex:1;background:var(--emerald);border-radius:2px 2px 0 0;height:85%" title="04-17: 323"></div>
+        <div style="flex:1;background:var(--rose);border-radius:2px 2px 0 0;height:57%" title="04-18: 217 ⚠️低谷"></div>
+        <div style="flex:1;background:var(--emerald);border-radius:2px 2px 0 0;height:68%" title="04-19: 257"></div>
+        <div style="flex:1;background:#27ae60;border-radius:2px 2px 0 0;height:100%" title="04-20: 380 ★最高"></div>
       </div>
-      <div style="display:flex;justify-content:space-between;font-size:9px;color:var(--ink-muted);margin-top:2px"><span>04-01</span><span>均值 509</span><span>04-15</span></div>
-      <div style="margin-top:8px;padding:6px 10px;background:var(--bg-subtle);border-radius:var(--radius-sm);font-size:10px;color:var(--ink-secondary)">📌 与探元反向：工作日高 / 假日低 · 04-09 峰值 829</div>
+      <div style="display:flex;justify-content:space-between;font-size:9px;color:var(--ink-muted);margin-top:2px"><span>04-17</span><span>均值 294</span><span>04-20</span></div>
+      <div style="margin-top:8px;padding:6px 10px;background:var(--bg-subtle);border-radius:var(--radius-sm);font-size:10px;color:var(--ink-secondary)">📌 H5 端 imei 与小程序端 h5_qimei 完全独立，不能合并去重（跨端用户重复）</div>
     </div>
   </div>`;
 
-  // 跳转入口
-  h += `<div style="background:var(--white);border:1px solid var(--border);border-radius:var(--radius-lg);padding:20px;box-shadow:var(--shadow-sm);display:flex;align-items:center;gap:16px">
+  // 异常告警 + 跳转入口
+  h += `<div style="background:var(--white);border:1px solid var(--border);border-radius:var(--radius-lg);padding:20px;box-shadow:var(--shadow-sm);margin-bottom:14px">
+    <div style="font-size:13px;font-weight:700;margin-bottom:10px">⚠️ 数据异常告警</div>
+    <div style="padding:10px 14px;background:#fff1f2;border-left:3px solid var(--rose);border-radius:6px;font-size:12px;color:var(--ink-secondary);margin-bottom:8px">
+      <strong style="color:var(--rose)">🔴 博物馆等级字段全为 0</strong> — dim_tanyuan_nationwide_museum_d_ql 中 quality_grade_id 全部为 0（04-20 查询确认），需 patricksong 排查维表刷新逻辑
+    </div>
+    <div style="padding:10px 14px;background:#fffbeb;border-left:3px solid var(--amber);border-radius:6px;font-size:12px;color:var(--ink-secondary)">
+      <strong style="color:var(--amber)">🟡 素材资产授权率较低</strong> — 21,211 素材资产中仅 3,690 已授权（17.4%），相比文物授权率（71.2%）有较大差距
+    </div>
+  </div>
+
+  <div style="background:var(--white);border:1px solid var(--border);border-radius:var(--radius-lg);padding:20px;box-shadow:var(--shadow-sm);display:flex;align-items:center;gap:16px">
     <div style="flex:1">
       <div style="font-size:14px;font-weight:700;margin-bottom:4px">🔧 数据管理后台</div>
       <div style="font-size:12px;color:var(--ink-muted);line-height:1.6">在数据管理后台中可以：确认核心指标口径、编辑 SQL、配置数据工作流、查看质检结果</div>
